@@ -1,0 +1,51 @@
+<!-- Navbar -->
+<nav class="bg-white shadow-md">
+    <div class="px-4 mx-auto bg-red-400 max-w-7xl sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 bg-green-300">
+            <!-- Kiri: Logo -->
+            <a href="#" class="flex ">
+                <img  src="/assets/logo-unram.png" alt="Logo unram"  height="50">
+                <div  class="flex flex-col justify-center text-xl text-blue-600">
+                    <h3 class="font-bold ">FACULTY OF ENGINEERING</h3>
+                    <h3 class="">UNIVERSITAS MATARAM</h3>
+                </div>
+            </a>
+
+            <!-- Kanan: Tombol Login dan Menu -->
+            <div class="items-center hidden md:flex">
+                <div class="items-center hidden mr-10 space-x-6 md:flex">
+                    <a href="#" class="text-xl text-gray-700 hover:text-blue-600">Penelitian</a>
+                    <a href="#" class="text-xl text-gray-700 hover:text-blue-600">Publikasi</a>
+                    <a href="#" class="text-xl text-gray-700 hover:text-blue-600">Pengabdian</a>
+                </div>
+                <a href="/login" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Login</a>
+            </div>
+
+            <!-- Tombol Mobile Menu -->
+            <div class="flex items-center md:hidden">
+                <button id="menuButton" class="text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Mobile (Dropdown) -->
+    <div id="mobileMenu" class="hidden bg-white shadow-md md:hidden">
+        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Penelitian</a>
+        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Publikasi</a>
+        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Pengabdian</a>
+        <a href="#" class="block px-4 py-2 text-center text-white bg-blue-600 rounded-b-lg hover:bg-blue-700">Login</a>
+    </div>
+</nav>
+
+<!-- JavaScript untuk Toggle Menu Mobile -->
+<script>
+    document.getElementById('menuButton').addEventListener('click', function () {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('hidden');
+    });
+</script>

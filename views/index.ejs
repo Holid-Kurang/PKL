@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="/style/main.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+
+<body class="p-10 text-center bg-gray-100">
+    <%- include('partials/navbar') %>
+
+        <div class="flex justify-center p-5 space-x-4 overflow-x-auto bg-blue-400 scrollbar-none">
+            <div class="flex flex-row items-center justify-center flex-none gap-4 py-5 rounded-3xl bg-slate-700 px-9">
+                <img src="/assets/analytics.png" alt="" class="w-16 ">
+                <div class="">
+                    <h1 class="text-2xl font-semibold text-white">Analytics</h1>
+                    <p class="text-xl">123</p>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="text-3xl font-bold text-blue-500">
+            <%= title %>
+        </h1>
+
+        <% if (users) { %>
+            <ul class="mt-5">
+                <% users.forEach(user=> { %>
+                    <li class="text-lg">
+                        <a class="text-blue-600 underline" href="/users/<%= user.id %>">
+                            <%= user.name %>
+                        </a>
+                    </li>
+                    <% }) %>
+            </ul>
+            <% } %>
+</body>
+
+</html>
