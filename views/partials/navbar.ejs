@@ -1,24 +1,34 @@
 <!-- Navbar -->
-<nav class="bg-white shadow-md">
-    <div class="px-4 mx-auto bg-red-400 max-w-7xl sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 bg-green-300">
+<nav class="sticky top-0 left-0 right-0 bg-black ">
+    <div class="bg-[#232F58]">
+        <div class="flex justify-between px-8 py-4 ">
             <!-- Kiri: Logo -->
-            <a href="#" class="flex ">
-                <img  src="/assets/logo-unram.png" alt="Logo unram"  height="50">
-                <div  class="flex flex-col justify-center text-xl text-blue-600">
-                    <h3 class="font-bold ">FACULTY OF ENGINEERING</h3>
-                    <h3 class="">UNIVERSITAS MATARAM</h3>
+            <a href="/" class="flex gap-4">
+                <img src="/assets/logo-unram.png" alt="Logo unram" width="85">
+                <div class="flex flex-col justify-center text-xl font-bold text-white">
+                    <h3 class="hidden text-left md:block">INDEX KINERJA</h3>
+                    <h3 class="hidden text-left md:block">PENELITIAN, PENGABDIAN DAN PUBLIKASI</h3>
+                    <h3 class="text-left ">Fakultas Teknik, Universitas Mataram</h3>
                 </div>
             </a>
 
             <!-- Kanan: Tombol Login dan Menu -->
             <div class="items-center hidden md:flex">
                 <div class="items-center hidden mr-10 space-x-6 md:flex">
-                    <a href="#" class="text-xl text-gray-700 hover:text-blue-600">Penelitian</a>
-                    <a href="#" class="text-xl text-gray-700 hover:text-blue-600">Publikasi</a>
-                    <a href="#" class="text-xl text-gray-700 hover:text-blue-600">Pengabdian</a>
+                    <a href="/penelitian" class="relative text-2xl font-semibold text-white hover:text-blue-600">
+                        Penelitian
+                        <span class="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 ease-out hover:scale-x-100"></span>
+                    </a>
+                    <a href="/publikasi" class="relative text-2xl font-semibold text-white hover:text-blue-600">
+                        Publikasi
+                        <span class="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 ease-out hover:scale-x-100"></span>
+                    </a>
+                    <a href="/pengabdian" class="relative text-2xl font-semibold text-white hover:text-blue-600">
+                        Pengabdian
+                        <span class="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 ease-out hover:scale-x-100"></span>
+                    </a>
                 </div>
-                <a href="/login" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Login</a>
+                <a href="/login" class="px-6 py-2 text-xl font-semibold text-white bg-blue-600 rounded-lg font hover:bg-blue-700">LOGIN</a>
             </div>
 
             <!-- Tombol Mobile Menu -->

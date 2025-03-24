@@ -5,6 +5,10 @@
 .scrollbar-none::-webkit-scrollbar {
     display: none;
 }
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
 /* Menghilangkan scrollbar di Firefox
 .scrollbar-none {
     scrollbar-width: none;

@@ -15,13 +15,21 @@ app.use(express.urlencoded({ extended: false })); // Middleware untuk parsing x-
 
 // Import routes
 const homeRoutes = require("./routes/home");
-const userRoutes = require("./routes/users");
 const loginRoutes = require("./routes/login");
+const pengabdianRoutes = require("./routes/pengabdian");
+const penelitianRoutes = require("./routes/penelitian");
+const publikasiRoutes = require("./routes/publikasi");
+
+const userRoutes = require("./routes/users");
 const testRoutes = require("./routes/test");
 
 // Gunakan route yang sudah dibuat
 app.use("/", homeRoutes);
 app.use("/", loginRoutes);
+app.use("/", pengabdianRoutes);
+app.use("/", penelitianRoutes);
+app.use("/", publikasiRoutes);
+
 app.use("/", userRoutes);
 app.use("/", testRoutes);
 
