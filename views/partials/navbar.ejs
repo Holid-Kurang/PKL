@@ -1,54 +1,85 @@
 <!-- Navbar -->
-<nav class="sticky top-0 left-0 right-0 bg-black ">
-    <div class="bg-[#232F58]">
-        <div class="flex justify-between px-8 py-4 ">
-            <!-- Kiri: Logo -->
-            <a href="/" class="flex gap-4">
-                <img src="/assets/logo-unram.png" alt="Logo unram" width="85">
-                <div class="flex flex-col justify-center text-xl font-bold text-white">
-                    <h3 class="hidden text-left md:block">INDEX KINERJA</h3>
-                    <h3 class="hidden text-left md:block">PENELITIAN, PENGABDIAN DAN PUBLIKASI</h3>
-                    <h3 class="text-left ">Fakultas Teknik, Universitas Mataram</h3>
-                </div>
-            </a>
-
-            <!-- Kanan: Tombol Login dan Menu -->
-            <div class="items-center hidden md:flex">
-                <div class="items-center hidden mr-10 space-x-6 md:flex">
-                    <a href="/penelitian" class="relative text-2xl font-semibold text-white hover:text-blue-600">
-                        Penelitian
-                        <span class="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 ease-out hover:scale-x-100"></span>
-                    </a>
-                    <a href="/publikasi" class="relative text-2xl font-semibold text-white hover:text-blue-600">
-                        Publikasi
-                        <span class="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 ease-out hover:scale-x-100"></span>
-                    </a>
-                    <a href="/pengabdian" class="relative text-2xl font-semibold text-white hover:text-blue-600">
-                        Pengabdian
-                        <span class="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 ease-out hover:scale-x-100"></span>
-                    </a>
-                </div>
-                <a href="/login" class="px-6 py-2 text-xl font-semibold text-white bg-blue-600 rounded-lg font hover:bg-blue-700">LOGIN</a>
+<nav class="sticky top-0 left-0 right-0 ">
+    <div class="flex justify-between px-4 py-2  bg-[#232F58]">
+        <!-- Kiri: Logo -->
+        <a href="/" class="flex items-center gap-4">
+            <img src="/assets/logo-unram.png" alt="Logo unram" class="w-16 md:w-20 lg:w-24">
+            <div class="flex flex-col justify-center text-white">
+                <h3 class="text-base font-bold text-left md:text-lg lg:text-xl">INDEX KINERJA</h3>
+                <h3 class="text-sm text-left md:text-base lg:text-lg">PENELITIAN, PENGABDIAN DAN PUBLIKASI</h3>
+                <h3 class="text-sm text-left md:text-base lg:text-lg">Fakultas Teknik, Universitas Mataram</h3>
             </div>
+        </a>
 
-            <!-- Tombol Mobile Menu -->
-            <div class="flex items-center md:hidden">
-                <button id="menuButton" class="text-gray-700 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                </button>
+        <!-- Kanan: Tombol Login dan Menu -->
+        <div class="items-center hidden space-x-6 md:flex ">
+            <div class="relative content-center self-stretch group">
+                <a href="/penelitian" class="relative text-2xl font-semibold text-white hover:text-blue-600">
+                    Penelitian
+                    <span
+                        class="absolute left-0 w-0 h-1 transition-all bg-blue-600 -bottom-2 group-hover:w-full"></span>
+                </a>
+                <%- include('dropdown', {menu: "penelitian", item: ['Pusat', 'PNBP', 'Mandiri'], group: 'group' }) %>
             </div>
+            <div class="relative content-center self-stretch group">
+                <a href="/publikasi" class="relative text-2xl font-semibold text-white hover:text-blue-600">
+                    Pengabdian
+                    <span
+                        class="absolute left-0 w-0 h-1 transition-all bg-blue-600 -bottom-2 group-hover:w-full"></span>
+                </a>
+                <%- include('dropdown', {menu: "publikasi", item: ['Pusat', 'PNBP', 'Mandiri'], group: 'group' }) %>
+            </div>
+            <div class="relative content-center self-stretch group">
+                <a href="/pengabdian" class="relative text-2xl font-semibold text-white hover:text-blue-600">
+                    Publikasi
+                    <span
+                        class="absolute left-0 w-0 h-1 transition-all bg-blue-600 -bottom-2 group-hover:w-full"></span>
+                </a>
+                <%- include('dropdown', {menu: "pengabdian", item: ['Buku', 'HAKI', 'Jurnal Pengabdian'], group: 'group' }) %>
+            </div>
+            <a href="/login"
+                class="px-6 py-2 text-xl font-semibold text-white bg-blue-600 rounded-lg font hover:bg-blue-700">LOGIN</a>
+        </div>
+
+        <!-- Tombol Mobile Menu -->
+        <div class="flex items-center md:hidden">
+            <button id="menuButton" class="" aria-expanded="false" aria-controls="mobileMenu">
+                <img src="/assets/menu.svg" alt="Menu">
+            </button>
         </div>
     </div>
 
     <!-- Menu Mobile (Dropdown) -->
-    <div id="mobileMenu" class="hidden bg-white shadow-md md:hidden">
-        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Penelitian</a>
-        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Publikasi</a>
-        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Pengabdian</a>
-        <a href="#" class="block px-4 py-2 text-center text-white bg-blue-600 rounded-b-lg hover:bg-blue-700">Login</a>
+    <div id="mobileMenu" class="hidden bg-white shadow-md md:hidden rounded-b-2xl">
+        <div class="relative group">
+            <div class="flex justify-between px-4 bg-[#EDF0F1]">
+                <a href="/penelitian" class="block py-2 font-semibold">Penelitian</a>
+                <button onclick="toggleDropdown('penelitianDropdown')" class="">
+                    <img src="/assets/arrow-down.svg" alt="" class="ml-12 transition-all ">
+                </button>
+            </div>
+            <%- include('dropdown-menu-mb', {menu: "penelitian", id: "penelitianDropdown", item: ['Pusat', 'PNBP', 'Mandiri']}) %>
+        </div>
+        <div class="relative group">
+            <div class="flex justify-between px-4 bg-[#EDF0F1]">
+                <a href="/pengabdian" class="block py-2 font-semibold">Pengabdian</a>
+                <button onclick="toggleDropdown('pengabdianDropdown')">
+                    <img src="/assets/arrow-down.svg" alt="" class="ml-12 transition-all">
+                </button>
+            </div>
+            <%- include('dropdown-menu-mb', {menu: "Pengabdian", id: "pengabdianDropdown", item: ['Pusat', 'PNBP', 'Mandiri']}) %>
+        </div>
+        <div class="relative group">
+            <div class="flex justify-between px-4 bg-[#EDF0F1]">
+                <a href="/publikasi" class="block py-2 font-semibold">Publikasi</a>
+                <button onclick="toggleDropdown('publikasiDropdown')">
+                    <img src="/assets/arrow-down.svg" alt="" class="ml-12 transition-all">
+                </button>
+            </div>
+            <%- include('dropdown-menu-mb', {menu: "publikasi", id: "publikasiDropdown", item: ['Buku', 'HAKI', 'Jurnal Pengabdian'],}) %>
+        </div>
+        <a href="/login"
+            class="block px-4 py-2 font-semibold text-center text-white bg-blue-600 rounded-b-2xl hover:bg-blue-700">LOGIN</a>
     </div>
 </nav>
 
@@ -58,4 +89,10 @@
         const menu = document.getElementById('mobileMenu');
         menu.classList.toggle('hidden');
     });
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        const button = dropdown.previousElementSibling.querySelector('button img');
+        dropdown.classList.toggle('hidden');
+        button.classList.toggle('-rotate-90');
+    }
 </script>

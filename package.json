@@ -5,13 +5,13 @@
     "tailwindcss": "^3.4.17"
   },
   "dependencies": {
+    "chart.js": "^4.4.8",
     "ejs": "^3.1.10",
     "express": "^4.21.2"
   },
   "scripts": {
     "start": "node server.js",
     "dev": "concurrently \"npx tailwindcss -i ./public/style/global.css -o ./public/style/main.css --watch\" \"nodemon server.js\""
-
   },
   "name": "web",
   "version": "1.0.0",
