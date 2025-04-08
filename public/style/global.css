@@ -9,6 +9,24 @@
 * {
     font-family: 'Poppins', sans-serif;
 }
+.slide-left-fade-in {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 0.5s ease-in-out;
+}
+
+.slide-right-fade-in {
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 0.5s ease-in-out;
+}
+
+.active.slide-left-fade-in,
+.active.slide-right-fade-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 /* Menghilangkan scrollbar di Firefox
 .scrollbar-none {
     scrollbar-width: none;
