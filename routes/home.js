@@ -3,7 +3,8 @@ const router = express.Router();
 
 // Halaman utama
 router.get("/", (req, res) => {
-    res.render("index", { title: "Home" });
+    const isLogin = req.session.isLogin || false;
+    res.render("index", { title: "Home", isLogin: isLogin });
 });
 
 module.exports = router;

@@ -15,7 +15,8 @@ router.get("/publikasi", (req, res) => {
         { id: 3, name: "Charlie" },
         { id: 3, name: "Charlie" },
     ];
-    res.render("pengabdian", { title: "Users", users });
+    const isLogin = req.session.isLogin || false;
+    res.render("publikasi", { title: "Users", users, isLogin });
 });
 
 module.exports = router;

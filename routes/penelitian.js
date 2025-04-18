@@ -15,7 +15,8 @@ router.get("/penelitian", (req, res) => {
         { id: 3, name: "Charlie" },
         { id: 3, name: "Charlie" },
     ];
-    res.render("penelitian", { title: "Users", users });
+    const isLogin = req.session.isLogin || false;
+    res.render("penelitian", { title: "Users", users, isLogin });
 });
 
 module.exports = router;

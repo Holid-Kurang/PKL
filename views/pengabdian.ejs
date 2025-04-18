@@ -12,7 +12,7 @@
 </head>
 
 <body class="text-center bg-[#EDF0F1] ">
-    <%- include('partials/navbar') %>
+    <%- include('partials/navbar', {isLogin}) %>
 
         <div id="scrollable-container" class="flex p-5 space-x-4 overflow-x-auto bg-blue-400 scrollbar-none">
             <% for (let i=0; i < 7; i++) { %>
