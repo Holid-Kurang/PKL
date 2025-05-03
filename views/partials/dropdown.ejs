@@ -1,12 +1,12 @@
-<div class="absolute hidden mt-6 -translate-x-1/2 bg-white drop-shadow-2xl <%= group %>-hover:block w-52 left-1/2 ">
-    <a href="/<%= menu %>/<%= item[0] %>"
-        class="block px-4 py-2 text-center hover:bg-blue-600 hover:text-white font-semibold before:content-[''] 
-            before:hover:bg-blue-600 before:absolute before:-top-[10px]  before:left-1/2 before:-translate-x-1/2 before:h-5 before:w-5 before:bg-white before:rotate-45 before:-z-[1]">
-        <%= item[0] %></a>
-    <a href="/<%= menu %>/<%= item[1] %>"
-        class="block px-4 py-2 font-semibold text-center hover:bg-blue-600 hover:text-white"><%= item[1] %></a>
-    <a href="/<%= menu %>/<%= item[2] %>"
-        class="block px-4 py-2 font-semibold text-center hover:bg-blue-600 hover:text-white"><%= item[2] %></a>
+<div class="absolute hidden mt-8 -translate-x-1/2 bg-white shadow-[0px_10px_20px_5px] shadow-black/25 <%= group %>-hover:block w-52 left-1/2 rounded-2xl">
+    <% for (let i = 0; i < item.length; i++) { %>
+        <a href="/<%= menu %>/<%= item[i] %>"
+            class="block px-4 py-2 font-semibold text-center hover:bg-blue-600 hover:text-white 
+                <%= i === 0 ? 'rounded-t-2xl before:content-[\'\'] before:hover:bg-blue-600 before:absolute before:-top-[10px] before:left-1/2 before:-translate-x-1/2 before:h-5 before:w-5 before:bg-white before:rotate-45 before:-z-[1]' : '' %> 
+                <%= i === item.length - 1 ? 'rounded-b-2xl' : '' %>">
+            <%= item[i] %>
+        </a>
+    <% } %>
 </div>
 
 

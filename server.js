@@ -17,7 +17,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { 
         secure: false, 
-        maxAge: 5 * 60 * 1000  // Session expires in 5 minutes
+        // maxAge: 5 * 60 * 1000  // Session expires in 5 minutes
     }, 
 })); // Middleware untuk session
 app.use("/", routes); // Gunakan routes yang sudah dibuat

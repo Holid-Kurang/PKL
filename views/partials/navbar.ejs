@@ -1,8 +1,8 @@
-<!-- Navbar -->
-<nav class="sticky top-0 left-0 right-0 z-[1]">
-    <div class="flex justify-between px-4 bg-[#232F58]">
+<header>
+<nav class="sticky top-0 left-0 right-0 z-[1] ">
+    <div class="flex justify-center items-center bg-[#232F58] relative">
         <!-- Kiri: Logo -->
-        <a href="/" class="flex items-center gap-4">
+        <a href="/" class="absolute flex items-center gap-4 left-4">
             <img src="/assets/logo-unram.png" alt="Logo unram" class="w-12 md:w-16">
             <div class="flex flex-col justify-center text-white">
                 <h3 class="text-base font-bold text-left md:text-lg ">INDEX KINERJA</h3>
@@ -13,41 +13,44 @@
 
         <!-- Kanan: Tombol Login dan Menu -->
         <div class="items-center hidden space-x-8 md:flex ">
-            <div class="relative content-center self-stretch py-6 group">
+            <div class="relative py-8 group">
                 <a href="/penelitian" class="relative text-xl font-semibold text-white hover:text-blue-600">
                     Penelitian
                     <span
                         class="absolute left-0 w-0 h-1 transition-all bg-blue-600 -bottom-2 group-hover:w-full"></span>
                 </a>
-                <%- include('dropdown', {menu: "penelitian", item: ['Pusat', 'PNBP', 'Mandiri'], group: 'group' }) %>
+                <%- include('dropdown', {menu: "penelitian" , item: ['Pusat', 'PNBP' , 'Mandiri' ], group: 'group' }) %>
             </div>
-            <div class="relative content-center self-stretch py-6 group">
-                <a href="/publikasi" class="relative text-xl font-semibold text-white hover:text-blue-600">
+            <div class="relative py-8 group">
+                <a href="/pengabdian" class="relative text-xl font-semibold text-white hover:text-blue-600">
                     Pengabdian
                     <span
                         class="absolute left-0 w-0 h-1 transition-all bg-blue-600 -bottom-2 group-hover:w-full"></span>
                 </a>
-                <%- include('dropdown', {menu: "publikasi", item: ['Pusat', 'PNBP', 'Mandiri'], group: 'group' }) %>
+                <%- include('dropdown', {menu: "publikasi" , item: ['Pusat', 'PNBP' ], group: 'group' }) %>
             </div>
-            <div class="relative content-center self-stretch py-6 group">
-                <a href="/pengabdian" class="relative text-xl font-semibold text-white hover:text-blue-600">
+            <div class="relative py-8 group">
+                <a href="/publikasi" class="relative text-xl font-semibold text-white hover:text-blue-600">
                     Publikasi
                     <span
                         class="absolute left-0 w-0 h-1 transition-all bg-blue-600 -bottom-2 group-hover:w-full"></span>
                 </a>
-                <%- include('dropdown', {menu: "pengabdian", item: ['Buku', 'HAKI', 'Jurnal Pengabdian'], group: 'group' }) %>
+                <%- include('dropdown', {menu: "pengabdian" , item: ['Buku', 'HAKI' , 'Jurnal Pengabdian' ],
+                    group: 'group' }) %>
             </div>
-            <% if (!isLogin) { %>
-                <a href="/login"
-                    class="px-6 py-2 text-xl font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700">Masuk</a>
-            <% } else { %>
-                <button class="flex group" id="">
-                    <svg width="32" height="32" viewBox="0 0 24 24"  class=" group-hover:fill-blue-600" 
+        </div>
+        <% if (!isLogin) { %>
+        <a href="/login"
+            class="absolute self-center px-6 py-2 text-xl font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 right-4">Masuk</a>
+        <% } else { %>
+        <div class="absolute right-4">
+            <div class="relative ">
+                <button id="settingMenu" class="flex items-center group">
+                    <svg width="32" height="32" viewBox="0 0 24 24" class=" group-hover:fill-blue-600"
                         xmlns="http://www.w3.org/2000/svg" fill="white">
                         <g clip-path="url(#clip0_16_145)">
                             <path
-                                d="M8.68588 4.00001L11.2929 1.39301C11.4804 1.20554 11.7347 1.10022 11.9999 1.10022C12.265 1.10022 12.5194 1.20554 12.7069 1.39301L15.3139 4.00001H18.9999C19.2651 4.00001 19.5195 4.10536 19.707 4.2929C19.8945 4.48044 19.9999 4.73479 19.9999 5.00001V8.68601L22.6069 11.293C22.7944 11.4805 22.8997 11.7348 22.8997 12C22.8997 12.2652 22.7944 12.5195 22.6069 12.707L19.9999 15.314V19C19.9999 19.2652 19.8945 19.5196 19.707 19.7071C19.5195 19.8946 19.2651 20 18.9999 20H15.3139L12.7069 22.607C12.5194 22.7945 12.265 22.8998 11.9999 22.8998C11.7347 22.8998 11.4804 22.7945 11.2929 22.607L8.68588 20H4.99988C4.73467 20 4.48031 19.8946 4.29278 19.7071C4.10524 19.5196 3.99988 19.2652 3.99988 19V15.314L1.39288 12.707C1.20541 12.5195 1.1001 12.2652 1.1001 12C1.1001 11.7348 1.20541 11.4805 1.39288 11.293L3.99988 8.68601V5.00001C3.99988 4.73479 4.10524 4.48044 4.29278 4.2929C4.48031 4.10536 4.73467 4.00001 4.99988 4.00001H8.68588ZM5.99988 6.00001V9.51501L3.51488 12L5.99988 14.485V18H9.51488L11.9999 20.485L14.4849 18H17.9999V14.485L20.4849 12L17.9999 9.51501V6.00001H14.4849L11.9999 3.51501L9.51488 6.00001H5.99988ZM11.9999 16C10.939 16 9.9216 15.5786 9.17146 14.8284C8.42131 14.0783 7.99988 13.0609 7.99988 12C7.99988 10.9391 8.42131 9.92173 9.17146 9.17158C9.9216 8.42143 10.939 8.00001 11.9999 8.00001C13.0608 8.00001 14.0782 8.42143 14.8283 9.17158C15.5785 9.92173 15.9999 10.9391 15.9999 12C15.9999 13.0609 15.5785 14.0783 14.8283 14.8284C14.0782 15.5786 13.0608 16 11.9999 16ZM11.9999 14C12.5303 14 13.039 13.7893 13.4141 13.4142C13.7892 13.0391 13.9999 12.5304 13.9999 12C13.9999 11.4696 13.7892 10.9609 13.4141 10.5858C13.039 10.2107 12.5303 10 11.9999 10C11.4695 10 10.9607 10.2107 10.5857 10.5858C10.2106 10.9609 9.99988 11.4696 9.99988 12C9.99988 12.5304 10.2106 13.0391 10.5857 13.4142C10.9607 13.7893 11.4695 14 11.9999 14Z"
-                            />
+                                d="M8.68588 4.00001L11.2929 1.39301C11.4804 1.20554 11.7347 1.10022 11.9999 1.10022C12.265 1.10022 12.5194 1.20554 12.7069 1.39301L15.3139 4.00001H18.9999C19.2651 4.00001 19.5195 4.10536 19.707 4.2929C19.8945 4.48044 19.9999 4.73479 19.9999 5.00001V8.68601L22.6069 11.293C22.7944 11.4805 22.8997 11.7348 22.8997 12C22.8997 12.2652 22.7944 12.5195 22.6069 12.707L19.9999 15.314V19C19.9999 19.2652 19.8945 19.5196 19.707 19.7071C19.5195 19.8946 19.2651 20 18.9999 20H15.3139L12.7069 22.607C12.5194 22.7945 12.265 22.8998 11.9999 22.8998C11.7347 22.8998 11.4804 22.7945 11.2929 22.607L8.68588 20H4.99988C4.73467 20 4.48031 19.8946 4.29278 19.7071C4.10524 19.5196 3.99988 19.2652 3.99988 19V15.314L1.39288 12.707C1.20541 12.5195 1.1001 12.2652 1.1001 12C1.1001 11.7348 1.20541 11.4805 1.39288 11.293L3.99988 8.68601V5.00001C3.99988 4.73479 4.10524 4.48044 4.29278 4.2929C4.48031 4.10536 4.73467 4.00001 4.99988 4.00001H8.68588ZM5.99988 6.00001V9.51501L3.51488 12L5.99988 14.485V18H9.51488L11.9999 20.485L14.4849 18H17.9999V14.485L20.4849 12L17.9999 9.51501V6.00001H14.4849L11.9999 3.51501L9.51488 6.00001H5.99988ZM11.9999 16C10.939 16 9.9216 15.5786 9.17146 14.8284C8.42131 14.0783 7.99988 13.0609 7.99988 12C7.99988 10.9391 8.42131 9.92173 9.17146 9.17158C9.9216 8.42143 10.939 8.00001 11.9999 8.00001C13.0608 8.00001 14.0782 8.42143 14.8283 9.17158C15.5785 9.92173 15.9999 10.9391 15.9999 12C15.9999 13.0609 15.5785 14.0783 14.8283 14.8284C14.0782 15.5786 13.0608 16 11.9999 16ZM11.9999 14C12.5303 14 13.039 13.7893 13.4141 13.4142C13.7892 13.0391 13.9999 12.5304 13.9999 12C13.9999 11.4696 13.7892 10.9609 13.4141 10.5858C13.039 10.2107 12.5303 10 11.9999 10C11.4695 10 10.9607 10.2107 10.5857 10.5858C10.2106 10.9609 9.99988 11.4696 9.99988 12C9.99988 12.5304 10.2106 13.0391 10.5857 13.4142C10.9607 13.7893 11.4695 14 11.9999 14Z" />
                         </g>
                         <defs>
                             <clipPath id="clip0_16_145">
@@ -55,12 +58,11 @@
                             </clipPath>
                         </defs>
                     </svg>
-                    <svg width="32" height="32" viewBox="0 0 24 24"  class=" group-hover:fill-blue-600"
+                    <svg width="32" height="32" viewBox="0 0 24 24" class=" group-hover:fill-blue-600"
                         xmlns="http://www.w3.org/2000/svg" fill="white">
                         <g clip-path="url(#clip0_753_4612)">
-                            <path 
-                                d="M12 13.172L16.95 8.22198L18.364 9.63598L12 16L5.63599 9.63598L7.04999 8.22198L12 13.172Z"
-                            />
+                            <path
+                                d="M12 13.172L16.95 8.22198L18.364 9.63598L12 16L5.63599 9.63598L7.04999 8.22198L12 13.172Z" />
                         </g>
                         <defs>
                             <clipPath id="clip0_753_4612">
@@ -69,12 +71,19 @@
                         </defs>
                     </svg>
                 </button>
-            <% } %>
+                <div class="absolute right-0  mt-11  shadow-[0px_10px_20px_5px] shadow-black/25 rounded-2xl bg-white hidden">
+                    <a
+                        class="block px-4 py-2 font-semibold text-center hover:bg-blue-600 hover:text-white rounded-t-2xl ">Dashboard</a>
+                    <button id="logoutBtn"
+                        class="self-stretch block w-full px-4 py-2 font-semibold text-center hover:bg-blue-600 hover:text-white rounded-b-2xl">Logout</button>
+                </div>
+            </div>
         </div>
+        <% } %>
 
         <!-- Tombol Mobile Menu -->
         <div class="flex items-center md:hidden">
-            <button id="menuButton"  aria-expanded="false" aria-controls="mobileMenu">
+            <button id="menuButton" aria-expanded="false" aria-controls="mobileMenu">
                 <img src="/assets/menu.svg" alt="Menu">
             </button>
         </div>
@@ -85,11 +94,12 @@
         <div class="relative group">
             <div class="flex justify-between px-4 bg-[#EDF0F1]">
                 <a href="/penelitian" class="block py-2 font-semibold">Penelitian</a>
-                <button onclick="toggleDropdown('penelitianDropdown')" >
+                <button onclick="toggleDropdown('penelitianDropdown')">
                     <img src="/assets/arrow-down.svg" alt="" class="ml-12 transition-all ">
                 </button>
             </div>
-            <%- include('dropdown-menu-mb', {menu: "penelitian", id: "penelitianDropdown", item: ['Pusat', 'PNBP', 'Mandiri']}) %>
+            <%- include('dropdown-menu-mb', {menu: "penelitian" , id: "penelitianDropdown" , item: ['Pusat', 'PNBP'
+                , 'Mandiri' ]}) %>
         </div>
         <div class="relative group">
             <div class="flex justify-between px-4 bg-[#EDF0F1]">
@@ -98,7 +108,8 @@
                     <img src="/assets/arrow-down.svg" alt="" class="ml-12 transition-all">
                 </button>
             </div>
-            <%- include('dropdown-menu-mb', {menu: "Pengabdian", id: "pengabdianDropdown", item: ['Pusat', 'PNBP', 'Mandiri']}) %>
+            <%- include('dropdown-menu-mb', {menu: "Pengabdian" , id: "pengabdianDropdown" , item: ['Pusat', 'PNBP'
+                , 'Mandiri' ]}) %>
         </div>
         <div class="relative group">
             <div class="flex justify-between px-4 bg-[#EDF0F1]">
@@ -107,23 +118,13 @@
                     <img src="/assets/arrow-down.svg" alt="" class="ml-12 transition-all">
                 </button>
             </div>
-            <%- include('dropdown-menu-mb', {menu: "publikasi", id: "publikasiDropdown", item: ['Buku', 'HAKI', 'Jurnal Pengabdian'],}) %>
+            <%- include('dropdown-menu-mb', {menu: "publikasi" , id: "publikasiDropdown" , item: ['Buku', 'HAKI'
+                , 'Jurnal Pengabdian' ],}) %>
         </div>
         <a href="/login"
             class="block px-4 py-2 font-semibold text-center text-white bg-blue-600 rounded-b-2xl hover:bg-blue-700">LOGIN</a>
     </div>
 </nav>
-
+</header>
 <!-- JavaScript untuk Toggle Menu Mobile -->
-<script>
-    document.getElementById('menuButton').addEventListener('click', function () {
-        const menu = document.getElementById('mobileMenu');
-        menu.classList.toggle('hidden');
-    });
-    function toggleDropdown(id) {
-        const dropdown = document.getElementById(id);
-        const button = dropdown.previousElementSibling.querySelector('button img');
-        dropdown.classList.toggle('hidden');
-        button.classList.toggle('-rotate-90');
-    }
-</script>
+<script src="script/navbar.js"></script>
