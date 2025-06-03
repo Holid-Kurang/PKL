@@ -14,6 +14,7 @@ Aplikasi web ini dirancang untuk menampilkan indeks kinerja penelitian, pengabdi
 
 - Node.js
 - Express.js
+- MongoDB
 - Tailwind CSS
 - HTML/CSS/JS
 
@@ -32,12 +33,24 @@ Aplikasi web ini dirancang untuk menampilkan indeks kinerja penelitian, pengabdi
    npm install
    ```
 
-3. **Jalankan server:**
+3. **Setup MongoDB:**
+   - Pastikan MongoDB sudah terinstal dan berjalan di komputer Anda, atau gunakan layanan MongoDB Atlas.
+   - Buat database baru sesuai kebutuhan proyek.
+   - Tambahkan URI koneksi MongoDB ke file `.env`, misal:
+     ```
+     MONGODB_URI=mongodb://localhost:27017/nama-database
+     ```
+     atau untuk MongoDB Atlas:
+     ```
+     MONGODB_URI=mongodb+srv://<username>:<password>@cluster-url/nama-database
+     ```
+
+4. **Jalankan server:**
    ```bash
    npm run dev
    ```
 
-4. **Akses aplikasi di browser:**
+5. **Akses aplikasi di browser:**
    ```
    http://localhost:3000
    ```
@@ -46,3 +59,5 @@ Aplikasi web ini dirancang untuk menampilkan indeks kinerja penelitian, pengabdi
 
 - Pastikan Node.js versi terbaru telah terinstal.
 - Tambahkan file `.env` jika proyek ini membutuhkan konfigurasi lingkungan.
+- Pastikan MongoDB sudah berjalan sebelum menjalankan aplikasi.
+
