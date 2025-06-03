@@ -3,6 +3,9 @@ const app = express();
 const path = require("path");
 const session = require("express-session");
 const routes = require("./routes/routes"); // Import routes
+const connectDB = require('./config/db');
+
+connectDB(); // Connect to MongoDB
 
 // Set view engine dan folder views
 app.set("view engine", "ejs");
@@ -12,7 +15,7 @@ app.use(express.static(path.join(__dirname, "public"))); // Set folder public un
 app.use(express.json()); // Middleware untuk parsing JSON
 app.use(express.urlencoded({ extended: false })); // Middleware untuk parsing x-www-form-urlencoded
 app.use(session({
-    secret: "masalah-lu-apasih-sundel?-salah-semua-yang-lu-lakuin",
+    secret: "masalin",
     resave: false,
     saveUninitialized: true,
     cookie: { 
@@ -23,5 +26,5 @@ app.use(session({
 app.use("/", routes); // Gunakan routes yang sudah dibuat
 
 // Jalankan server
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server berjalan di http://localhost:${PORT}`));

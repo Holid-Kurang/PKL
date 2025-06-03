@@ -1,8 +1,6 @@
 <div id="<%= id %>" class="hidden text-center bg-white shadow-lg">
-    <a href="/<%= menu %>/<%= item[0] %>"
-        class="block px-4 py-2 font-semibold hover:bg-blue-600 hover:text-white"><%= item[0] %></a>
-    <a href="/<%= menu %>/<%= item[1] %>"
-        class="block px-4 py-2 font-semibold hover:bg-blue-600 hover:text-white"><%= item[1] %></a>
-    <a href="/<%= menu %>/<%= item[2] %>"
-        class="block px-4 py-2 font-semibold hover:bg-blue-600 hover:text-white"><%= item[2] %></a>
+    <% for (let i = 0; i < item.length; i++) { %>
+        <a href="/<%= menu %>/<%= item[i] %>"
+            class="block px-4 py-2 font-semibold hover:bg-blue-600 hover:text-white"><%= item[i] %></a>
+    <% } %>
 </div>
