@@ -786,6 +786,10 @@ video {
   height: 30%;
 }
 
+.h-\[50vh\] {
+  height: 50vh;
+}
+
 .h-\[70vh\] {
   height: 70vh;
 }
@@ -796,10 +800,6 @@ video {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-\[50vh\] {
-  height: 50vh;
 }
 
 .max-h-\[60vh\] {
@@ -1571,6 +1571,10 @@ video {
 .before\:content-\[\\\'\\\'\]::before {
   --tw-content: \'\';
   content: var(--tw-content);
+}
+
+.hover\:cursor-pointer:hover {
+  cursor: pointer;
 }
 
 .hover\:bg-\[\#3730A3\]:hover {

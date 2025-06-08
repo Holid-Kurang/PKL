@@ -553,6 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1,
+                                callback(value) { return value.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }); }
                             },
                             grid: { display: false }
                         },
@@ -653,6 +654,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1,
+                                callback(value) { return value.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }); }
                             },
                             grid: { display: false }
                         },
@@ -952,12 +954,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks:{
+                            ticks: {
                                 stepSize: 1,
+                                callback(value) { return value.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }); }
                             },
-                            grid:{ display:false }
+                            grid: { display: false }
                         },
-                        x:{ grid:{ display:false } }
+                        x: { grid: { display: false } }
                     }
                 }
             })
@@ -1007,7 +1010,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     layout: { padding: 20 }
                 }
             })
-        },{
+        }, {
             id: 'mandiriAvgDanaPerTahun',
             init: () => new Chart(document.getElementById('mandiriAvgDanaPerTahun').getContext('2d'), {
                 type: 'bar',
@@ -1049,15 +1052,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         legend: { display: false }
                     },
                     layout: { padding: 20 },
-                    scales:{
-                        y:{
-                            beginAtZero:true,
-                            ticks:{
-                                stepSize : 1,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                callback(value) { return value.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }); }
                             },
-                            grid:{ display:false }
+                            grid: { display: false }
                         },
-                        x:{ grid:{ display:false } }
+                        x: { grid: { display: false } }
                     }
                 }
             })
