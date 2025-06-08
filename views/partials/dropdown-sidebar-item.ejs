@@ -1,0 +1,7 @@
+<div class="mx-6 mt-2 rounded submenu bg-veronica" id="<%= id %>">
+    <% items.forEach(function(item) { %>
+        <a href="<%= item.href %>" class="block py-2 text-sm text-center transition-colors rounded-lg hover:bg-white/10">
+            <%= item.text %>
+        </a>
+    <% }); %>
+</div>

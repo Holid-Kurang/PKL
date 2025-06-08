@@ -33,6 +33,8 @@ const HAKISchema = new mongoose.Schema({
         type: String,
         required: true
     }
+}, {
+    collection: 'publikasiHAKI'
 });
 
 module.exports = mongoose.model('publikasiHAKI', HAKISchema);

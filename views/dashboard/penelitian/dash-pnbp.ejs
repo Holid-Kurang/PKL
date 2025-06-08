@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="/style/main.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        /* Style untuk scrollbar agar lebih minimalis */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Efek transisi untuk submenu di sidebar */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex h-screen bg-gray-100">
+        <!-- include Sidebar -->
+        <%- include('../../partials/sidebar-dashboard.ejs') %>
+        <!-- Konten Utama -->
+        <main class="flex flex-col flex-1 overflow-hidden">
+            <!-- Header -->
+            <header class="flex items-center justify-between h-20 px-8 bg-white shadow-md">
+                <h1 class="text-2xl font-bold text-gray-800">Penelitian PNBP</h1>
+                <div class="flex items-center">
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <span
+                            class="absolute text-gray-400 -translate-y-1/2 material-icons-outlined left-3 top-1/2">search</span>
+                        <input type="text" placeholder="Search..."
+                            class="pl-10 pr-4 py-2 w-64 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4F46E5]">
+                    </div>
+                    <!-- Tombol Tambah Data -->
+                    <button onclick="openModal('addDataModal')"
+                        class="ml-4 flex items-center bg-[#4F46E5] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#4338CA] transition-colors">
+                        <span class="mr-2 material-icons-outlined">add</span>
+                        Tambah Data
+                    </button>
+                </div>
+            </header>
+
+            <!-- Tabel Data & Kontrol -->
+            <div class="flex-1 p-8 overflow-y-auto">
+                <!-- Kontrol Import/Export -->
+                <div class="flex justify-end mb-6 space-x-4">
+                    <button
+                        class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600">
+                        <span class="mr-2 material-icons-outlined">file_download</span>
+                        Export file
+                    </button>
+                    <button
+                        class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600">
+                        <span class="mr-2 material-icons-outlined">file_upload</span>
+                        Import file
+                    </button>
+                </div>
+
+                <!-- Tabel -->
+                <div class="overflow-hidden bg-white rounded-lg shadow-md">
+                    <table class="w-full text-sm text-left text-gray-600">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">No</th>
+                                <th scope="col" class="px-6 py-3">Judul</th>
+                                <th scope="col" class="px-6 py-3">Skema</th>
+                                <th scope="col" class="px-6 py-3">Prodi</th>
+                                <th scope="col" class="px-6 py-3">Ketua</th>
+                                <th scope="col" class="px-6 py-3">Biaya Disetujui</th>
+                                <th scope="col" class="px-6 py-3">Rata-rata nilai</th>
+                                <th scope="col" class="px-6 py-3">Tahun</th>
+                                <th scope="col" class="px-6 py-3 text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Contoh 1 Baris Data -->
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">1</td>
+                                <td class="px-6 py-4">ANALISIS PKM</td>
+                                <td class="px-6 py-4">PKM</td>
+                                <td class="px-6 py-4">Teknik Sipil</td>
+                                <td class="px-6 py-4">Holid</td>
+                                <td class="px-6 py-4">Rp10.000.000,00</td>
+                                <td class="px-6 py-4">657,78</td>
+                                <td class="px-6 py-4">2024</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">
+                                    <button
+                                        class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">Edit</button>
+                                <button class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">Hapus</button>
+                                    
+                                    </td>
+                            </tr>
+                            <!-- Ulangi baris <tr> ini untuk data lainnya -->
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">2</td>
+                                <td class="px-6 py-4">Penelitian Lanjutan</td>
+                                <td class="px-6 py-4">Mandiri</td>
+                                <td class="px-6 py-4">Teknik Informatika</td>
+                                <td class="px-6 py-4">Moe</td>
+                                <td class="px-6 py-4">Rp5.000.000,00</td>
+                                <td class="px-6 py-4">712,30</td>
+                                <td class="px-6 py-4">2024</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">
+                                    <button
+                                        class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">Edit</button>
+                                <button class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">Hapus</button>
+                                    
+                                    </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Tambah Data (awalnya tersembunyi) -->
+    <div id="addDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+        <div class="w-full max-w-2xl transition-all transform bg-white rounded-lg shadow-xl">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b">
+                <h3 class="text-xl font-semibold text-gray-800">Tambah Data</h3>
+                <button onclick="closeModal('addDataModal')" class="text-gray-500 hover:text-gray-800">
+                    <span class="material-icons-outlined">close</span>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6 max-h-[60vh] overflow-y-auto">
+                <form action="#" method="POST" class="space-y-4">
+                    <div>
+                        <label for="judul" class="block text-sm font-medium text-left text-gray-700">Judul</label>
+                        <input type="text" name="judul" id="judul"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="skema" class="block text-sm font-medium text-left text-gray-700">Skema</label>
+                        <input type="text" name="skema" id="skema"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="ketua" class="block text-sm font-medium text-left text-gray-700">Ketua</label>
+                        <input type="text" name="ketua" id="ketua"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="anggota1" class="block text-sm font-medium text-left text-gray-700">Anggota
+                            1</label>
+                        <input type="text" name="anggota1" id="anggota1"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="anggota2" class="block text-sm font-medium text-left text-gray-700">Anggota
+                            2</label>
+                        <input type="text" name="anggota2" id="anggota2"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="anggota3" class="block text-sm font-medium text-left text-gray-700">Anggota
+                            3</label>
+                        <input type="text" name="anggota3" id="anggota3"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <!-- Anda bisa menambahkan lebih banyak field di sini jika perlu -->
+                </form>
+            </div>
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 space-x-3 text-right bg-gray-50">
+                <button onclick="closeModal('addDataModal')" type="button"
+                    class="px-4 py-2 text-sm font-medium text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#4F46E5] hover:bg-[#4338CA] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4338CA]">
+                    Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

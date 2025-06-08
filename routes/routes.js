@@ -1,11 +1,12 @@
 const express = require("express");
 const route = express.Router();
 
-const homeRoutes = require("./home");
-const loginRoutes = require("./login");
-const pengabdianRoutes = require("./pengabdian");
-const penelitianRoutes = require("./penelitian");
-const publikasiRoutes = require("./publikasi");
+const homeRoutes = require("./homeRoute");
+const loginRoutes = require("./loginRoute");
+const pengabdianRoutes = require("./pengabdianRoute");
+const penelitianRoutes = require("./penelitianRoute");
+const publikasiRoutes = require("./publikasiRoute");
+const dashboardPenelitianPNBPRoutes = require("./dashboardRoute/penelitian/pnbp");
 
 const userRoutes = require("./users");
 const testRoutes = require("./test");
@@ -16,7 +17,9 @@ route.use("/", loginRoutes);
 route.use("/", pengabdianRoutes);
 route.use("/", penelitianRoutes);
 route.use("/", publikasiRoutes);
+route.use("/", dashboardPenelitianPNBPRoutes);
 
+// User and test routes
 route.use("/", userRoutes);
 route.use("/", testRoutes);
 

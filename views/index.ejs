@@ -28,11 +28,11 @@
                 Publikasi 5 Tahun Terakhir </h1>
             <div class="flex flex-col justify-center gap-6 md:flex-row md:gap-36">
                 <div
-                    class="w-[30%] flex flex-col border-[#232F58] border-2 rounded-[30px] h-[30%] aspect-square px-5 pb-5 animate-on-scroll slide-left-fade-in">
-                    <h1 class="pt-6 text-3xl text-center">Penelitian</h1>
-                    <canvas id="penelitianChart" class="h-full bg-red-500 "></canvas>
+                    class="w-[30%] flex flex-col shadow-xl shadow-gray-800/25  rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
+                    <canvas id="penelitianChart" class="w-full h-full "></canvas>
                 </div>
-                <p class="w-full md:w-[30%]  text-[16px] md:text-[20px] text-justify md:text-left aspect-square content-center animate-on-scroll slide-right-fade-in">
+                <p
+                    class="w-full md:w-[30%]  text-[16px] md:text-[20px] text-justify md:text-left aspect-square content-center animate-on-scroll slide-right-fade-in">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit cupiditate animi blanditiis
                     iusto? Maxime adipisci voluptatem dicta assumenda modi mollitia itaque! Sunt commodi quas laborum
                     rem dolor exercitationem saepe molestiae!
@@ -45,16 +45,14 @@
                     magnam, cupiditate consectetur id rem.
                 </p>
                 <div
-                    class="w-[30%] flex flex-col border-[#232F58] border-2 rounded-[30px] h-[30%] aspect-square px-5 pb-5 animate-on-scroll slide-right-fade-in">
-                    <h1 class="pt-6 text-3xl text-center">Pengabdian</h1>
-                    <canvas id="pengabdianChart" class="w-full h-full bg-red-500"></canvas>
+                    class="w-[30%] flex flex-col shadow-xl shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-right-fade-in">
+                    <canvas id="pengabdianChart" class="w-full h-full "></canvas>
                 </div>
             </div>
             <div class="flex flex-col justify-center gap-6 md:flex-row md:gap-36">
                 <div
-                    class="w-[30%] flex flex-col border-[#232F58] border-2 rounded-[30px] h-[30%] aspect-square px-5 pb-5 animate-on-scroll slide-left-fade-in">
-                    <h1 class="pt-6 text-3xl text-center">Publikasi</h1>
-                    <canvas id="publikasiChart" class="w-full h-full bg-red-500"></canvas>
+                    class="w-[30%] flex flex-col shadow-xl shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
+                    <canvas id="publikasiChart" class="w-full h-full "></canvas>
                 </div>
                 <p class="w-[30%]  md:text-[20px]  aspect-square content-center animate-on-scroll slide-right-fade-in">
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat veritatis architecto suscipit
@@ -63,6 +61,12 @@
                 </p>
             </div>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            window.publikasiCounts = <%- JSON.stringify(publikasiCounts) %>;
+            window.penelitianCounts = <%- JSON.stringify(penelitianCounts) %>;
+            window.pengabdianCounts = <%- JSON.stringify(pengabdianCounts) %>;
+        </script>
         <script src="/script/index.js"></script>
 </body>
 

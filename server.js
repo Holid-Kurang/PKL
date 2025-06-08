@@ -24,7 +24,14 @@ app.use(session({
     }, 
 })); // Middleware untuk session
 app.use("/", routes); // Gunakan routes yang sudah dibuat
-
+app.use((req, res, next) => {
+    // Mengatur status 404 dan merender halaman 404 kustom
+    res.status(404).render('404page', { 
+        title: 'Halaman Tidak Ditemukan',
+        url: req.originalUrl, // Mengirim URL yang coba diakses ke view
+        isLogin: req.session.isLogin || false // Mengirim status login ke view
+    });
+});
 // Jalankan server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server berjalan di http://localhost:${PORT}`));

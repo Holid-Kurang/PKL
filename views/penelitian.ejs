@@ -14,66 +14,110 @@
 <body class="text-center bg-[#EDF0F1] ">
     <%- include('partials/navbar', {isLogin}) %>
 
-        <div id="scrollable-container" class="flex p-5 space-x-4 overflow-x-auto bg-blue-400 scrollbar-none">
-            <% for (let i=0; i < 7; i++) { %>
-                <div
-                    class="flex flex-row items-center justify-center flex-none gap-4 py-5 rounded-3xl bg-slate-700 px-9">
-                    <img src="/assets/analytics.png" alt="" class="w-16 ">
-                    <div class="">
-                        <h1 class="text-2xl font-semibold text-white">Analytics</h1>
-                        <p class="text-xl">123</p>
-                    </div>
-                </div>
-                <% } %>
-        </div>
 
-        <script>
-            window.addEventListener('load', function () {
-                const container = document.getElementById('scrollable-container');
-                const totalWidth = Array.from(container.children).reduce((acc, child) => acc + child.offsetWidth, 0);
-                if (totalWidth <= window.innerWidth) {
-                    container.classList.add('justify-center');
-                } else {
-                    container.classList.add('justify-start');
-                }
-            });
-        </script>
-
-
-        <div class="flex justify-center">
-            <div class="grid w-full grid-cols-2 gap-4">
-                <!-- Kotak Besar -->
-                <div class="col-span-1 bg-gray-700 rounded-lg">
-                    <canvas id="bigCanvas" width="400" height="400"></canvas>
-                </div>
-
-                <!-- Dua Kotak Kecil di sebelah kanan -->
-                <div class="flex flex-col gap-4">
-                    <div class="h-48 bg-gray-700 rounded-lg">
-                        <canvas id="smallCanvas1" class="bg-slate-400"></canvas>
-                    </div>
-                    <div class="h-48 bg-gray-700 rounded-lg">
-                        <canvas id="smallCanvas2" class="bg-slate-400"></canvas>
-                    </div>
-                </div>
+        <h1 class="pt-6 text-4xl font-bold bg-white text-indigo">Pusat</h1>
+        <div class="grid grid-cols-2 grid-rows-3 gap-8 px-32 py-2 bg-white  h-[150vh]">
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pusatPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pusatPerProdi" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pusatDanaPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pusatDanaPerProdi" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pusatAvgDanaPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pusatAvgDanaPerProdi" class="block w-full h-full"></canvas>
             </div>
         </div>
+        
+        <h1 class="pt-6 text-4xl font-bold bg-white text-indigo">PNBP</h1>
+        <div class="grid grid-cols-2 grid-rows-4 gap-8 px-32 py-2 bg-white  h-[200vh]">
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pnbpPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pnbpPerProdi" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pnbpDanaPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pnbpDanaPerProdi" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pnbpAvgDanaPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pnbpAvgDanaPerProdi" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pnbpAvgNilaiPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pnbpAvgNilaiPerProdi" class="block w-full h-full"></canvas>
+            </div>
+        </div>
+        
+        <h1 class="pt-6 text-4xl font-bold bg-white text-indigo">Mandiri</h1>
+        <div class="grid grid-cols-2 grid-rows-3 gap-8 px-32 py-2 bg-white  h-[100vh]">
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="mandiriPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="mandiriPerProdi" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="mandiriDanaPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="mandiriDanaPerProdi" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="mandiriAvgDanaPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="mandiriAvgDanaPerProdi" class="block w-full h-full"></canvas>
+            </div>
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    window.pusatData = {
+        jumlahPerTahun: <%- JSON.stringify(pusatData.jumlahPerTahun) %>,
+        jumlahPerProdi: <%- JSON.stringify(pusatData.jumlahPerProdi) %>,
+        jumlahDanaPerTahun: <%- JSON.stringify(pusatData.jumlahDanaPerTahun) %>,
+        jumlahDanaPerProdi: <%- JSON.stringify(pusatData.jumlahDanaPerProdi) %>,
+        avgDanaPerTahun: <%- JSON.stringify(pusatData.avgDanaPerTahun) %>,
+        avgDanaPerProdi: <%- JSON.stringify(pusatData.avgDanaPerProdi) %>
+    };
 
-        <h1 class="text-3xl font-bold text-blue-500">
-            <%= title %>
-        </h1>
+    window.pnbpData = {
+        jumlahPerTahun: <%- JSON.stringify(pnbpData.jumlahPerTahun) %>,
+        jumlahPerProdi: <%- JSON.stringify(pnbpData.jumlahPerProdi) %>,
+        jumlahDanaPerTahun: <%- JSON.stringify(pnbpData.jumlahDanaPerTahun) %>,
+        jumlahDanaPerProdi: <%- JSON.stringify(pnbpData.jumlahDanaPerProdi) %>,
+        avgDanaPerTahun: <%- JSON.stringify(pnbpData.avgDanaPerTahun) %>,
+        avgDanaPerProdi: <%- JSON.stringify(pnbpData.avgDanaPerProdi) %>,
+        avgNilaiPerTahun: <%- JSON.stringify(pnbpData.avgNilaiPerTahun) %>,
+        avgNilaiPerProdi: <%- JSON.stringify(pnbpData.avgNilaiPerProdi) %>
+    };
 
-        <% if (users) { %>
-            <ul class="mt-5">
-                <% users.forEach(user=> { %>
-                    <li class="text-lg">
-                        <a class="text-blue-600 underline" href="/users/<%= user.id %>">
-                            <%= user.name %>
-                        </a>
-                    </li>
-                    <% }) %>
-            </ul>
-            <% } %>
+    window.mandiriData = {
+        jumlahPerTahun: <%- JSON.stringify(mandiriData.jumlahPerTahun) %>,
+        jumlahPerProdi: <%- JSON.stringify(mandiriData.jumlahPerProdi) %>,
+        jumlahDanaPerTahun: <%- JSON.stringify(mandiriData.jumlahDanaPerTahun) %>,
+        jumlahDanaPerProdi: <%- JSON.stringify(mandiriData.jumlahDanaPerProdi) %>,
+        avgDanaPerTahun: <%- JSON.stringify(mandiriData.avgDanaPerTahun) %>,
+        avgDanaPerProdi: <%- JSON.stringify(mandiriData.avgDanaPerProdi) %>
+    };
+    </script>
+    <script src="/script/penelitian.js"></script>
 </body>
 
 </html>

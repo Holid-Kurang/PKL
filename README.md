@@ -16,6 +16,7 @@ Aplikasi web ini dirancang untuk menampilkan indeks kinerja penelitian, pengabdi
 - Express.js
 - MongoDB
 - Tailwind CSS
+- Chart.js
 - HTML/CSS/JS
 
 ```
