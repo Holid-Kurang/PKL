@@ -146,3 +146,41 @@ exports.updateData = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+exports.exportData = async (req, res) => {
+    try {
+        const data = await pusatModel.find({});
+        const csvRows = [];
+        // Add header row
+        const headers = [
+            'TAHUN', 'SKEMA', 'NAMA', 'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
+            'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
+        ];
+        csvRows.push(headers.join(','));
+
+        // Add data rows
+        data.forEach(item => {
+            csvRows.push([
+                item.TAHUN,
+                item.SKEMA,
+                item.NAMA,
+                item.Anggota1,
+                item.Anggota2,
+                item.Anggota3,
+                item.Anggota4,
+                item.NIP,
+                item.NIDN,
+                item.PRODI,
+                item.JUDUL,
+                item.BIAYA
+            ].join(','));
+        });
+
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=penelitian_pusat.csv');
+        res.status(200).send(csvRows.join('\n'));
+    } catch (error) {
+        console.error('Error exporting penelitian pusat data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}

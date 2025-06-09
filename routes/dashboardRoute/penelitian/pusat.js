@@ -7,6 +7,7 @@ router.get("/dashboard/penelitian/pusat", isAuthenticated, pusatControl.getAllDa
 router.post("/dashboard/penelitian/pusat/create", isAuthenticated, pusatControl.createData);
 router.post("/dashboard/penelitian/pusat/update/:id", isAuthenticated, pusatControl.updateData);
 router.post("/dashboard/penelitian/pusat/delete/:id", isAuthenticated, pusatControl.deleteData);
+router.get("/dashboard/penelitian/pusat/export", isAuthenticated, pusatControl.exportData);
 
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {

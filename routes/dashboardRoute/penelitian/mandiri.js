@@ -8,6 +8,7 @@ router.get("/dashboard/penelitian/mandiri", isAuthenticated, mandiriControl.getA
 router.post("/dashboard/penelitian/mandiri/create", isAuthenticated, mandiriControl.createData);
 router.post("/dashboard/penelitian/mandiri/update/:id", isAuthenticated, mandiriControl.updateData);
 router.post("/dashboard/penelitian/mandiri/delete/:id", isAuthenticated, mandiriControl.deleteData);
+router.get("/dashboard/penelitian/mandiri/export", isAuthenticated, mandiriControl.exportData);
 
 
 // Middleware to check if user is logged in

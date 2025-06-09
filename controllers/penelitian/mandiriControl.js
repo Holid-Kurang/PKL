@@ -138,3 +138,40 @@ exports.updateData = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+exports.exportData = async (req, res) => {
+    try {
+        const data = await mandiriModel.find({});
+        const csvRows = [];
+        // Add header row
+        const headers = [
+            'Judul', 'Skema', 'Prodi', 'Ketua',
+            'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
+            'Dana', 'Tahun'
+        ];
+        csvRows.push(headers.join(','));
+
+        // Add data rows
+        data.forEach(item => {
+            csvRows.push([
+                item.Judul,
+                item.Skema,
+                item.Prodi,
+                item.Ketua,
+                item.Anggota1,
+                item.Anggota2,
+                item.Anggota3,
+                item.Anggota4,
+                item.Dana,
+                item.tahun
+            ].join(','));
+        });
+
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=penelitian_mandiri.csv');
+        res.status(200).send(csvRows.join('\n'));
+    } catch (error) {
+        console.error('Error exporting penelitian mandiri data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}

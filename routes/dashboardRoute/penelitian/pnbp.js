@@ -7,6 +7,8 @@ router.get("/dashboard/penelitian/pnbp", isAuthenticated, pnbpControl.getAllData
 router.post("/dashboard/penelitian/pnbp/create", isAuthenticated, pnbpControl.createData);
 router.post("/dashboard/penelitian/pnbp/update/:id", isAuthenticated, pnbpControl.updateData);
 router.post("/dashboard/penelitian/pnbp/delete/:id", isAuthenticated, pnbpControl.deleteData);
+router.get("/dashboard/penelitian/pnbp/export", isAuthenticated, pnbpControl.exportData);
+
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {
     if (req.session.isLogin) {

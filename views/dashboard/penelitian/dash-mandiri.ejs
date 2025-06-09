@@ -74,16 +74,21 @@
                 <div class="flex-1 p-8 overflow-y-auto">
                     <!-- Kontrol Import/Export -->
                     <div class="flex justify-end mb-6 space-x-4">
-                        <button
-                            class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600">
-                            <span class="mr-2 material-icons-outlined">file_download</span>
-                            Export file
-                        </button>
-                        <button
-                            class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600">
-                            <span class="mr-2 material-icons-outlined">file_upload</span>
-                            Import file
-                        </button>
+                        <form action="/dashboard/penelitian/mandiri/export" method="GET" class="inline">
+                            <button 
+                                type="submit"
+                                class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600">
+                                <span class="mr-2 material-icons-outlined">file_download</span>
+                                Export file
+                            </button>
+                        </form>
+                        <form action="/dashboard/penelitian/mandiri/import" method="POST" enctype="multipart/form-data" class="inline">
+                            <label class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-blue-500 rounded-lg cursor-pointer hover:bg-blue-600">
+                                <span class="mr-2 material-icons-outlined">file_upload</span>
+                                Import file
+                                <input type="file" name="importFile" accept=".xlsx,.csv" class="hidden" onchange="this.form.submit()">
+                            </label>
+                        </form>
                     </div>
                     <!-- Pagination -->
                     <% if (totalPages > 1) { %>

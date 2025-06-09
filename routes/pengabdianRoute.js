@@ -19,11 +19,11 @@ router.get("/pengabdian", async (req, res) => {
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahDanaPerTahun": [
-                            { $group: { _id: "$Tahun", total: { $sum: "$Total Dana " } } },
+                            { $group: { _id: "$Tahun", total: { $sum: "$Dana" } } },
                             { $sort: { _id: 1 } }
                         ],
                         "avgDanaPerTahun": [
-                            { $group: { _id: "$Tahun", avg: { $avg: "$Total Dana " } } },
+                            { $group: { _id: "$Tahun", avg: { $avg: "$Dana" } } },
                             { $sort: { _id: 1 } }
                         ],
                     }
@@ -42,27 +42,27 @@ router.get("/pengabdian", async (req, res) => {
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahDanaPerTahun": [
-                            { $group: { _id: "$Tahun", total: { $sum: "$Biaya Disetujui" } } },
+                            { $group: { _id: "$Tahun", total: { $sum: "$Dana" } } },
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahDanaPerProdi": [
-                            { $group: { _id: "$Prodi", total: { $sum: "$Biaya Disetujui" } } },
+                            { $group: { _id: "$Prodi", total: { $sum: "$Dana" } } },
                             { $sort: { _id: 1 } }
                         ],
                         "avgDanaPerTahun": [
-                            { $group: { _id: "$Tahun", avg: { $avg: "$Biaya Disetujui" } } },
+                            { $group: { _id: "$Tahun", avg: { $avg: "$Dana" } } },
                             { $sort: { _id: 1 } }
                         ],
                         "avgDanaPerProdi": [
-                            { $group: { _id: "$Prodi", avg: { $avg: "$Biaya Disetujui" } } },
+                            { $group: { _id: "$Prodi", avg: { $avg: "$Dana" } } },
                             { $sort: { _id: 1 } }
                         ],
                         "avgNilaiPerTahun": [
-                            { $group: { _id: "$Tahun", avg: { $avg: "$Nilai rata-rata" } } },
+                            { $group: { _id: "$Tahun", avg: { $avg: "$Nilai" } } },
                             { $sort: { _id: 1 } }
                         ],
                         "avgNilaiPerProdi": [
-                            { $group: { _id: "$Prodi", avg: { $avg: "$Nilai rata-rata" } } },
+                            { $group: { _id: "$Prodi", avg: { $avg: "$Nilai" } } },
                             { $sort: { _id: 1 } }
                         ],
                         // "jumlahPerSkema": [

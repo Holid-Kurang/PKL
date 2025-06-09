@@ -126,3 +126,41 @@ exports.updateData = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+exports.exportData = async (req, res) => {
+    try {
+        const data = await pnbpModel.find({});
+        const csvRows = [];
+        // Add header row
+        const headers = [
+            'Judul', 'SKEMA', 'Prodi', 'Ketua',
+            'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
+            'Biaya', 'Tahun', 'Nilai'
+        ];
+        csvRows.push(headers.join(','));
+
+        // Add data rows
+        data.forEach(item => {
+            csvRows.push([
+            item.Judul,
+            item.SKEMA,
+            item.Prodi,
+            item.Ketua,
+            item.Anggota1,
+            item.Anggota2,
+            item.Anggota3,
+            item.Anggota4,
+            item.Biaya,
+            item.Tahun,
+            item.Nilai
+            ].join(','));
+        });
+
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=penelitian_pnbp.csv');
+        res.status(200).send(csvRows.join('\n'));
+    } catch (error) {
+        console.error('Error exporting penelitian pnbp data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
