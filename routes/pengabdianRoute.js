@@ -89,7 +89,6 @@ router.get("/pengabdian", async (req, res) => {
                 }
             ]),
         ]);
-        console.log(pusatResults[0].jumlahDanaPerTahun);
         const isLogin = req.session.isLogin || false;
 
         // Hasil dari $facet adalah array dengan satu objek, jadi kita ambil elemen pertama [0]

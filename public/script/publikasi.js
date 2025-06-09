@@ -110,15 +110,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     labels: hakiData.jumlahPerTahun.map(item => item._id),
                     datasets: [{
                         label: 'Jumlah HAKI per Tahun', data: hakiData.jumlahPerTahun.map(item => item.jumlahHKI),
-                        backgroundColor: '#9342DA', borderColor: '#232F58', borderWidth: 2,
-                        hoverBackgroundColor: '#ff1b1c', hoverBorderColor: '#232F58', hoverBorderWidth: 5, borderRadius: 10,
+                        backgroundColor: '#232F58', borderColor: '#9342DA', borderWidth: 4,
+                        hoverBackgroundColor: '#41e2ba', hoverBorderColor: '#ff1b1c', hoverBorderWidth: 10, borderRadius: 50,
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
                     plugins: {
                         tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => 'Tahun ' + tooltipItems[0].label, label: (context) => context.parsed.y + ' HAKI' } },
-                        title: { display: true, text: 'Jumlah HAKI per Tahun', font: { size: 20, weight: 'lighter' }, color: '#232F58' }, legend: { display: false }
+                        title: { display: true, text: 'Tren HAKI per Tahun', font: { size: 20, weight: 'lighter' }, color: '#232F58' }, legend: { display: false }
                     },
                     layout: { padding: 20 },
                     scales: { y: { beginAtZero: true, ticks: { stepSize: 25 }, grid: { display: false } }, x: { grid: { display: false } } }

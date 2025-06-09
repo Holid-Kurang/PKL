@@ -1,5 +1,5 @@
 <aside class="flex flex-col flex-shrink-0 w-64 text-white bg-indigo">
-    <div class="flex items-center justify-center h-20 text-2xl font-bold ">
+    <div class="flex items-center justify-center h-20 text-2xl font-bold border-b border-white/20">
         <span class="mr-3 material-icons-outlined">dashboard</span>
         Dashboard
     </div>
@@ -16,7 +16,7 @@
                 <span class="transition-transform material-icons-outlined" id="penelitianIcon">expand_more</span>
             </button>
             <!-- include partial dropdown sidebar item -->
-            <%- include('dropdown-sidebar-item', { id: 'penelitianMenu', items: [ { href: '#', text: 'PNBP' }, { href: '#', text: 'Pusat' }, { href: '#', text: 'Mandiri' } ] }) %>
+            <%- include('dropdown-sidebar-item', { id: 'penelitianMenu', items: [ { href: '/dashboard/penelitian/pnbp', text: 'PNBP' }, { href: '/dashboard/penelitian/pusat', text: 'Pusat' }, { href: '/dashboard/penelitian/mandiri', text: 'Mandiri' } ] }) %>
         </div>
 
         <!-- Item Menu Publikasi (dengan dropdown) -->

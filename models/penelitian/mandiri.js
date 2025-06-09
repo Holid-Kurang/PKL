@@ -5,35 +5,35 @@ const MandiriSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    ketuaPelaksana: {
+    Ketua: {
         type: String,
         required: true
     },
-    anggota1: {
+    Anggota1: {
         type: String
     },
-    anggota2: {
+    Anggota2: {
         type: String
     },
-    anggota3: {
+    Anggota3: {
         type: String
     },
-    anggota4: {
+    Anggota4: {
         type: String
     },
-    skema: {
+    Skema: {
         type: String,
         required: true
     },
-    judulPenelitian: {
+    Judul: {
         type: String,
         required: true
     },
-    prodi: {
+    Prodi: {
         type: String,
         required: true
     },
-    jumlahDana: {
+    Dana: {
         type: Number,
         required: true
     }

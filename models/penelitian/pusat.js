@@ -10,9 +10,9 @@ const PenelitianPusatSchema = new mongoose.Schema({
     Anggota4: { type: String },
     NIP: { type: String },
     NIDN: { type: String },
-    Prodi: { type: String },
+    PRODI: { type: String },
     JUDUL: { type: String, required: true },
-    TotalDana: { type: Number }
+    BIAYA: { type: Number }
 }, {
     collection: 'penelitianPusat'
 });

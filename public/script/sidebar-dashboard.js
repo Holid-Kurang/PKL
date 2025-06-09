@@ -21,17 +21,4 @@ function toggleMenu(menuId) {
     }
 }
 
-// Fungsi untuk membuka modal (ganti 'addDataModal' dengan ID modal yang sesuai)
-function openModal(modalId) {
-    document.getElementById(modalId).classList.remove('hidden');
-}
 
-// Fungsi untuk menutup modal
-function closeModal(modalId) {
-    document.getElementById(modalId).classList.add('hidden');
-}
-
-// Buka menu "Penelitian" secara default saat halaman dimuat
-window.onload = function () {
-    toggleMenu('penelitianMenu');
-};

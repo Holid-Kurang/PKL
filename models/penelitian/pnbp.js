@@ -11,7 +11,7 @@ const pnbpSchema = new mongoose.Schema({
     Anggota4: { type: String },
     Biaya: { type: Number, required: true },
     Tahun: { type: Number, required: true },
-    RataRataNilai: { type: Number },
+    Nilai: { type: Number },
 }, {
     collection: 'penelitianPNBP'
 });
