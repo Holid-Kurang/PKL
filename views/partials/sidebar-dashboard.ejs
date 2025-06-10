@@ -19,20 +19,6 @@
             <%- include('dropdown-sidebar-item', { id: 'penelitianMenu', items: [ { href: '/dashboard/penelitian/pnbp', text: 'PNBP' }, { href: '/dashboard/penelitian/pusat', text: 'Pusat' }, { href: '/dashboard/penelitian/mandiri', text: 'Mandiri' } ] }) %>
         </div>
 
-        <!-- Item Menu Publikasi (dengan dropdown) -->
-        <div>
-            <button onclick="toggleMenu('publikasiMenu')"
-                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
-                <span class="flex items-center">
-                    <span class="mr-3 material-icons-outlined">groups</span>
-                    Publikasi
-                </span>
-                <span class="transition-transform material-icons-outlined" id="publikasiIcon">expand_more</span>
-            </button>
-            <!-- include partial dropdown sidebar item -->
-            <%- include('dropdown-sidebar-item', { id: 'publikasiMenu', items: [ { href: '#', text: 'Buku' }, { href: '#', text: 'HAKI' }, { href: '#', text: 'Jurnal Pengabdian' } ] }) %>
-        </div>
-
         <!-- Item Menu Pengabdian (dengan dropdown) -->
         <div>
             <button onclick="toggleMenu('pengabdianMenu')"
@@ -44,7 +30,21 @@
                 <span class="transition-transform material-icons-outlined" id="pengabdianIcon">expand_more</span>
             </button>
             <!-- include partial dropdown sidebar item -->
-            <%- include('dropdown-sidebar-item', { id: 'pengabdianMenu', items: [ { href: '#', text: 'PNBP' }, { href: '#', text: 'Pusat' } ] }) %>
+            <%- include('dropdown-sidebar-item', { id: 'pengabdianMenu', items: [ { href: '/dashboard/pengabdian/pnbp', text: 'PNBP' }, { href: '/dashboard/pengabdian/pusat', text: 'Pusat' } ] }) %>
+        </div>
+
+        <!-- Item Menu Publikasi (dengan dropdown) -->
+        <div>
+            <button onclick="toggleMenu('publikasiMenu')"
+                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
+                <span class="flex items-center">
+                    <span class="mr-3 material-icons-outlined">groups</span>
+                    Publikasi
+                </span>
+                <span class="transition-transform material-icons-outlined" id="publikasiIcon">expand_more</span>
+            </button>
+            <!-- include partial dropdown sidebar item -->
+            <%- include('dropdown-sidebar-item', { id: 'publikasiMenu', items: [ { href: '/dashboard/publikasi/buku', text: 'Buku' }, { href: '/dashboard/publikasi/haki', text: 'HAKI' }, { href: '/dashboard/publikasi/jupeng', text: 'Jurnal Pengabdian' } ] }) %>
         </div>
     </nav>
     <div class="px-4 py-6 border-t border-white/20">

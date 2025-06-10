@@ -33,16 +33,15 @@
                 </div>
                 <p
                     class="w-full md:w-[30%]  text-[16px] md:text-[20px] text-justify md:text-left aspect-square content-center animate-on-scroll slide-right-fade-in">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit cupiditate animi blanditiis
-                    iusto? Maxime adipisci voluptatem dicta assumenda modi mollitia itaque! Sunt commodi quas laborum
-                    rem dolor exercitationem saepe molestiae!
+                    Selama lima tahun terakhir, Fakultas Teknik telah menunjukkan komitmen tinggi dalam bidang penelitian. Sebagian besar dana penelitian, 
+                    yaitu 78.91%, berasal dari sumber PNBP, sementara 17.45% berasal dari dana pusat, dan 3.64% dari pendanaan mandiri. <a href="/penelitian" class="text-blue-500 hover:underline">Lihat lebih lanjut</a>
                 </p>
             </div>
             <div class="flex flex-col-reverse justify-center gap-6 md:flex-row md:gap-36">
                 <p class="w-[30%] md:text-[20px]  aspect-square content-center animate-on-scroll slide-left-fade-in">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus placeat vitae commodi debitis
-                    necessitatibus quasi. Ratione commodi aliquid omnis nostrum quos iusto, veniam repellendus culpa
-                    magnam, cupiditate consectetur id rem.
+                    Fakultas Teknik juga aktif dalam kegiatan pengabdian kepada masyarakat. Sebesar 97.02% kegiatan pengabdian dibiayai oleh PNBP, 
+                    dan 2.98% lainnya dari dana pusat. Ini menunjukkan peran serta fakultas dalam menerapkan 
+                    ilmu pengetahuan dan teknologi untuk kemajuan masyarakat secara luas. <a href="/pengabdian" class="text-blue-500 hover:underline">Lihat lebih lanjut</a>
                 </p>
                 <div
                     class="w-[30%] flex flex-col shadow-xl shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-right-fade-in">
@@ -55,12 +54,14 @@
                     <canvas id="publikasiChart" class="w-full h-full "></canvas>
                 </div>
                 <p class="w-[30%]  md:text-[20px]  aspect-square content-center animate-on-scroll slide-right-fade-in">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat veritatis architecto suscipit
-                    aspernatur accusamus nostrum cum sequi tempora, soluta similique placeat assumenda ratione
-                    reiciendis minima id! Accusamus voluptas aut omnis.
+                    Dalam aspek publikasi ilmiah, Fakultas Teknik berhasil menghasilkan karya yang beragam. Sebanyak 62.77% publikasi berupa jurnal pengabdian, 
+                    22.70% dalam bentuk HAKI (Hak Atas Kekayaan Intelektual), dan 14.54% berupa buku.  
+                    Proporsi ini menunjukkan keberagaman output akademik dan kontribusi nyata dosen serta peneliti terhadap dunia keilmuan. Lihat lebih lanjut
                 </p>
             </div>
         </div>
+    <%- include('partials/footer') %>
+    
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             window.publikasiCounts = <%- JSON.stringify(publikasiCounts) %>;

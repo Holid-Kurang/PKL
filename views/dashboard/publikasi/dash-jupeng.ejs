@@ -46,10 +46,10 @@
             <main class="flex flex-col flex-1 overflow-hidden">
                 <!-- Header -->
                 <header class="flex items-center justify-between h-20 px-8 bg-white shadow-md">
-                    <h1 class="text-2xl font-bold text-gray-800">Penelitian Mandiri</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">Publikasi Jurnal Pengabdian</h1>
                     <div class="flex items-center">
                         <!-- Search Bar -->
-                        <form action="/dashboard/penelitian/mandiri" method="GET" class="relative">
+                        <form action="/dashboard/publikasi/jupeng" method="GET" class="relative">
                             <span
                                 class="absolute text-gray-400 -translate-y-1/2 material-icons-outlined left-3 top-1/2">search</span>
 
@@ -74,7 +74,7 @@
                 <div class="flex-1 p-8 overflow-y-auto">
                     <!-- Kontrol Import/Export -->
                     <div class="flex justify-end mb-6 space-x-4">
-                        <form action="/dashboard/penelitian/mandiri/export" method="GET" class="inline">
+                        <form action="/dashboard/publikasi/jupeng/export" method="GET" class="inline">
                             <button 
                                 type="submit"
                                 class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600">
@@ -98,12 +98,12 @@
                         </span>
                         <div class="inline-flex mt-2 xs:mt-0">
                             <!-- Tombol Previous -->
-                            <a href="/dashboard/penelitian/mandiri?page=<%= currentPage - 1 %>&search=<%= searchQuery %>"
+                            <a href="/dashboard/publikasi/jupeng?page=<%= currentPage - 1 %>&search=<%= searchQuery %>"
                                class="text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-l transition-colors duration-200 <%= currentPage <= 1 ? 'pointer-events-none opacity-50' : '' %>">
                                 Prev
                             </a>
                             <!-- Tombol Next -->
-                            <a href="/dashboard/penelitian/mandiri?page=<%= currentPage + 1 %>&search=<%= searchQuery %>"
+                            <a href="/dashboard/publikasi/jupeng?page=<%= currentPage + 1 %>&search=<%= searchQuery %>"
                                class="text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-r transition-colors duration-200 <%= currentPage >= totalPages ? 'pointer-events-none opacity-50' : '' %>">
                                 Next
                             </a>
@@ -117,16 +117,18 @@
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">No</th>
-                                    <th scope="col" class="px-6 py-3">Judul</th>
-                                    <th scope="col" class="px-6 py-3">Skema</th>
-                                    <th scope="col" class="px-6 py-3">Prodi</th>
-                                    <th scope="col" class="px-6 py-3">Ketua</th>
-                                    <th scope="col" class="px-6 py-3">Anggota 1</th>
-                                    <th scope="col" class="px-6 py-3">Anggota 2</th>
-                                    <th scope="col" class="px-6 py-3">Anggota 3</th>
-                                    <th scope="col" class="px-6 py-3">Anggota 4</th>
-                                    <th scope="col" class="px-6 py-3">Dana</th>
+                                    <th scope="col" class="px-6 py-3">Judul Jurnal</th>
+                                    <th scope="col" class="px-6 py-3">URL Jurnal</th>
+                                    <th scope="col" class="px-6 py-3">File Jurnal</th>
                                     <th scope="col" class="px-6 py-3">Tahun</th>
+                                    <th scope="col" class="px-6 py-3">Bulan</th>
+                                    <th scope="col" class="px-6 py-3">Kode Pengguna</th>
+                                    <th scope="col" class="px-6 py-3">Jenis Pengguna</th>
+                                    <th scope="col" class="px-6 py-3">Nama Pengguna</th>
+                                    <th scope="col" class="px-6 py-3">Nama Prodi</th>
+                                    <th scope="col" class="px-6 py-3">Ketua Personil</th>
+                                    <th scope="col" class="px-6 py-3">Kode Ketua Personil</th>
+                                    <th scope="col" class="px-6 py-3">Jenis Ketua Personil</th>
                                     <th scope="col" class="px-6 py-3 text-center"></th>
                                 </tr>
                             </thead>
@@ -134,16 +136,50 @@
                                 <% data.forEach((item, index)=> { %>
                                     <tr class="bg-white border-b hover:bg-gray-50">
                                         <td class="px-6 py-4 font-medium text-gray-900"><%= index + 1 %></td>
-                                        <td class="px-6 py-4"><%= item.Judul %></td>
-                                        <td class="px-6 py-4"><%= item.Skema %></td>
-                                        <td class="px-6 py-4"><%= item.Prodi %></td>
-                                        <td class="px-6 py-4"><%= item.Ketua %></td>
-                                        <td class="px-6 py-4"><%= item.Anggota1 %></td>
-                                        <td class="px-6 py-4"><%= item.Anggota2 %></td>
-                                        <td class="px-6 py-4"><%= item.Anggota3 %></td>
-                                        <td class="px-6 py-4"><%= item.Anggota4 %></td>
-                                        <td class="px-6 py-4"><%= item.Dana %></td>
-                                        <td class="px-6 py-4"><%= item.tahun %></td>
+                                        <td class="px-6 py-4">
+                                            <%= item.jurnal_judul %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <% if (item.jurnal_url && item.jurnal_url !== "-") { %>
+                                                <a href="<%= item.jurnal_url %>" class="text-blue-600 underline" target="_blank"><%= item.jurnal_url %></a>
+                                            <% } else { %>
+                                                <span class="text-gray-400">-</span>
+                                            <% } %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <% if (item.jurnal_file && item.jurnal_file !== "-") { %>
+                                                <a href="<%= item.jurnal_file %>" class="text-blue-600 underline" target="_blank">Download</a>
+                                            <% } else { %>
+                                                <span class="text-gray-400">-</span>
+                                            <% } %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= item.jurnal_tahun %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= item.jurnal_bulan %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= item.pengguna_kode %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= item._pengguna_jenis %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= item._pengguna_nama %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= item._prodi_nama %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= item._personil_data_ketua %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= item._personil_data_ketua_kode %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= item._personil_data_ketua_jenis %>
+                                        </td>
                                         <td class="px-6 py-4 text-center whitespace-nowrap">
                                             <button 
                                                 onclick="openEditModal('<%= JSON.stringify(item) %>')" 
@@ -151,7 +187,7 @@
                                                 Edit
                                             </button>
                                             <button
-                                                onclick="openDeleteModal('/dashboard/penelitian/mandiri/delete/<%= item._id %>')"
+                                                onclick="openDeleteModal('/dashboard/publikasi/jupeng/delete/<%= item._id %>')"
                                                 class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
                                                 Hapus
                                             </button>
@@ -189,22 +225,54 @@
             </div>
             <!-- Modal Body -->
             <div class="p-6 max-h-[60vh] overflow-y-auto">
-                <form id="addDataForm" action="/dashboard/penelitian/mandiri/create" method="POST" class="space-y-4" onsubmit="return validateAddForm(event)">
+                <form id="addDataForm" action="/dashboard/publikasi/jupeng/create" method="POST" class="space-y-4">
                     <div>
-                        <label for="Judul" class="block text-sm font-medium text-left text-gray-700">Judul <span class="text-red-500">*</span></label>
-                        <input type="text" name="Judul" id="Judul" required
+                        <label for="jurnal_judul" class="block text-sm font-medium text-left text-gray-700">Judul Jurnal <span class="text-red-500">*</span></label>
+                        <input type="text" name="jurnal_judul" id="jurnal_judul" required
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Judul">Judul wajib diisi.</p>
+                        <p class="hidden mt-1 text-xs text-red-500" id="error-jurnal_judul">Judul Jurnal wajib diisi.</p>
                     </div>
                     <div>
-                        <label for="Skema" class="block text-sm font-medium text-left text-gray-700">Skema <span class="text-red-500">*</span></label>
-                        <input type="text" name="Skema" id="Skema" required
+                        <label for="jurnal_url" class="block text-sm font-medium text-left text-gray-700">URL Jurnal</label>
+                        <input type="text" name="jurnal_url" id="jurnal_url"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Skema">Skema wajib diisi.</p>
+                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-jurnal_url">URL tidak valid.</p>
                     </div>
                     <div>
-                        <label for="Prodi" class="block text-sm font-medium text-left text-gray-700">Prodi <span class="text-red-500">*</span></label>
-                        <select name="Prodi" id="Prodi" required
+                        <label for="jurnal_file" class="block text-sm font-medium text-left text-gray-700">File Jurnal</label>
+                        <input type="text" name="jurnal_file" id="jurnal_file"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="jurnal_tahun" class="block text-sm font-medium text-left text-gray-700">Tahun <span class="text-red-500">*</span></label>
+                        <input type="number" name="jurnal_tahun" id="jurnal_tahun" required
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                        <p class="hidden mt-1 text-xs text-red-500" id="error-jurnal_tahun">Tahun wajib diisi.</p>
+                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-jurnal_tahun">Tahun harus berupa angka.</p>
+                    </div>
+                    <div>
+                        <label for="jurnal_bulan" class="block text-sm font-medium text-left text-gray-700">Bulan</label>
+                        <input type="text" name="jurnal_bulan" id="jurnal_bulan"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="pengguna_kode" class="block text-sm font-medium text-left text-gray-700">Kode Pengguna</label>
+                        <input type="text" name="pengguna_kode" id="pengguna_kode"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="_pengguna_jenis" class="block text-sm font-medium text-left text-gray-700">Jenis Pengguna</label>
+                        <input type="text" name="_pengguna_jenis" id="_pengguna_jenis"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="_pengguna_nama" class="block text-sm font-medium text-left text-gray-700">Nama Pengguna</label>
+                        <input type="text" name="_pengguna_nama" id="_pengguna_nama"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="_prodi_nama" class="block text-sm font-medium text-left text-gray-700">Nama Prodi <span class="text-red-500">*</span></label>
+                        <select name="_prodi_nama" id="_prodi_nama" required
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
                             <option value="" selected disabled>Pilih Prodi</option>
                             <option value="S1 Arsitektur">S1 Arsitektur</option>
@@ -216,48 +284,22 @@
                             <option value="S2 Teknik Sipil">S2 Teknik Sipil</option>
                             <option value="S2 Teknologi Informasi">S2 Teknologi Informasi</option>
                         </select>
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Prodi">Prodi wajib dipilih.</p>
+                        <p class="hidden mt-1 text-xs text-red-500" id="error-_prodi_nama">Nama Prodi wajib dipilih.</p>
                     </div>
                     <div>
-                        <label for="Ketua" class="block text-sm font-medium text-left text-gray-700">Ketua <span class="text-red-500">*</span></label>
-                        <input type="text" name="Ketua" id="Ketua" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Ketua">Ketua wajib diisi.</p>
-                    </div>
-                    <div>
-                        <label for="Anggota1" class="block text-sm font-medium text-left text-gray-700">Anggota 1 <span class="text-red-500">*</span></label>
-                        <input type="text" name="Anggota1" id="Anggota1" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Anggota1">Anggota 1 wajib diisi.</p>
-                    </div>
-                    <div>
-                        <label for="Anggota2" class="block text-sm font-medium text-left text-gray-700">Anggota 2</label>
-                        <input type="text" name="Anggota2" id="Anggota2"
+                        <label for="_personil_data_ketua" class="block text-sm font-medium text-left text-gray-700">Ketua Personil</label>
+                        <input type="text" name="_personil_data_ketua" id="_personil_data_ketua"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
                     </div>
                     <div>
-                        <label for="Anggota3" class="block text-sm font-medium text-left text-gray-700">Anggota 3</label>
-                        <input type="text" name="Anggota3" id="Anggota3"
+                        <label for="_personil_data_ketua_kode" class="block text-sm font-medium text-left text-gray-700">Kode Ketua Personil</label>
+                        <input type="text" name="_personil_data_ketua_kode" id="_personil_data_ketua_kode"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
                     </div>
                     <div>
-                        <label for="Anggota4" class="block text-sm font-medium text-left text-gray-700">Anggota 4</label>
-                        <input type="text" name="Anggota4" id="Anggota4"
+                        <label for="_personil_data_ketua_jenis" class="block text-sm font-medium text-left text-gray-700">Jenis Ketua Personil</label>
+                        <input type="text" name="_personil_data_ketua_jenis" id="_personil_data_ketua_jenis"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="Dana" class="block text-sm font-medium text-left text-gray-700">Dana <span class="text-red-500">*</span></label>
-                        <input type="number" name="Dana" id="Dana" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Dana">Dana wajib diisi.</p>
-                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-Dana">Dana harus berupa angka.</p>
-                    </div>
-                    <div>
-                        <label for="tahun" class="block text-sm font-medium text-left text-gray-700">Tahun <span class="text-red-500">*</span></label>
-                        <input type="number" name="tahun" id="tahun" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-tahun">Tahun wajib diisi.</p>
-                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-tahun">Tahun harus berupa angka.</p>
                     </div>
                 </form>
             </div>
@@ -289,20 +331,52 @@
             <div class="p-6 max-h-[60vh] overflow-y-auto">
                 <form id="editDataForm" method="POST" class="space-y-4">
                     <div>
-                        <label for="edit_Judul" class="block text-sm font-medium text-left text-gray-700">Judul <span class="text-red-500">*</span></label>
-                        <input type="text" name="Judul" id="edit_Judul" required
+                        <label for="edit_jurnal_judul" class="block text-sm font-medium text-left text-gray-700">Judul Jurnal <span class="text-red-500">*</span></label>
+                        <input type="text" name="jurnal_judul" id="edit_jurnal_judul" required
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit_Judul">Judul wajib diisi.</p>
+                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit_jurnal_judul">Judul Jurnal wajib diisi.</p>
                     </div>
                     <div>
-                        <label for="edit_Skema" class="block text-sm font-medium text-left text-gray-700">Skema <span class="text-red-500">*</span></label>
-                        <input type="text" name="Skema" id="edit_Skema" required
+                        <label for="edit_jurnal_url" class="block text-sm font-medium text-left text-gray-700">URL Jurnal</label>
+                        <input type="text" name="jurnal_url" id="edit_jurnal_url"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit_Skema">Skema wajib diisi.</p>
+                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-edit_jurnal_url">URL tidak valid.</p>
                     </div>
                     <div>
-                        <label for="edit_Prodi" class="block text-sm font-medium text-left text-gray-700">Prodi <span class="text-red-500">*</span></label>
-                        <select name="Prodi" id="edit_Prodi" required
+                        <label for="edit_jurnal_file" class="block text-sm font-medium text-left text-gray-700">File Jurnal</label>
+                        <input type="text" name="jurnal_file" id="edit_jurnal_file"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="edit_jurnal_tahun" class="block text-sm font-medium text-left text-gray-700">Tahun <span class="text-red-500">*</span></label>
+                        <input type="number" name="jurnal_tahun" id="edit_jurnal_tahun" required
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit_jurnal_tahun">Tahun wajib diisi.</p>
+                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-edit_jurnal_tahun">Tahun harus berupa angka.</p>
+                    </div>
+                    <div>
+                        <label for="edit_jurnal_bulan" class="block text-sm font-medium text-left text-gray-700">Bulan</label>
+                        <input type="text" name="jurnal_bulan" id="edit_jurnal_bulan"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="edit_pengguna_kode" class="block text-sm font-medium text-left text-gray-700">Kode Pengguna</label>
+                        <input type="text" name="pengguna_kode" id="edit_pengguna_kode"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="edit__pengguna_jenis" class="block text-sm font-medium text-left text-gray-700">Jenis Pengguna</label>
+                        <input type="text" name="_pengguna_jenis" id="edit__pengguna_jenis"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="edit__pengguna_nama" class="block text-sm font-medium text-left text-gray-700">Nama Pengguna</label>
+                        <input type="text" name="_pengguna_nama" id="edit__pengguna_nama"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                    </div>
+                    <div>
+                        <label for="edit__prodi_nama" class="block text-sm font-medium text-left text-gray-700">Nama Prodi <span class="text-red-500">*</span></label>
+                        <select name="_prodi_nama" id="edit__prodi_nama" required
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
                             <option value="" selected disabled>Pilih Prodi</option>
                             <option value="S1 Arsitektur">S1 Arsitektur</option>
@@ -314,48 +388,22 @@
                             <option value="S2 Teknik Sipil">S2 Teknik Sipil</option>
                             <option value="S2 Teknologi Informasi">S2 Teknologi Informasi</option>
                         </select>
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit_Prodi">Prodi wajib dipilih.</p>
+                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit__prodi_nama">Nama Prodi wajib dipilih.</p>
                     </div>
                     <div>
-                        <label for="edit_Ketua" class="block text-sm font-medium text-left text-gray-700">Ketua <span class="text-red-500">*</span></label>
-                        <input type="text" name="Ketua" id="edit_Ketua" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit_Ketua">Ketua wajib diisi.</p>
-                    </div>
-                    <div>
-                        <label for="edit_Anggota1" class="block text-sm font-medium text-left text-gray-700">Anggota 1 <span class="text-red-500">*</span></label>
-                        <input type="text" name="Anggota1" id="edit_Anggota1" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit_Anggota1">Anggota 1 wajib diisi.</p>
-                    </div>
-                    <div>
-                        <label for="edit_Anggota2" class="block text-sm font-medium text-left text-gray-700">Anggota 2</label>
-                        <input type="text" name="Anggota2" id="edit_Anggota2"
+                        <label for="edit__personil_data_ketua" class="block text-sm font-medium text-left text-gray-700">Ketua Personil</label>
+                        <input type="text" name="_personil_data_ketua" id="edit__personil_data_ketua"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
                     </div>
                     <div>
-                        <label for="edit_Anggota3" class="block text-sm font-medium text-left text-gray-700">Anggota 3</label>
-                        <input type="text" name="Anggota3" id="edit_Anggota3"
+                        <label for="edit__personil_data_ketua_kode" class="block text-sm font-medium text-left text-gray-700">Kode Ketua Personil</label>
+                        <input type="text" name="_personil_data_ketua_kode" id="edit__personil_data_ketua_kode"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
                     </div>
                     <div>
-                        <label for="edit_Anggota4" class="block text-sm font-medium text-left text-gray-700">Anggota 4</label>
-                        <input type="text" name="Anggota4" id="edit_Anggota4"
+                        <label for="edit__personil_data_ketua_jenis" class="block text-sm font-medium text-left text-gray-700">Jenis Ketua Personil</label>
+                        <input type="text" name="_personil_data_ketua_jenis" id="edit__personil_data_ketua_jenis"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_Dana" class="block text-sm font-medium text-left text-gray-700">Dana <span class="text-red-500">*</span></label>
-                        <input type="number" name="Dana" id="edit_Dana" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit_Dana">Dana wajib diisi.</p>
-                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-edit_Dana">Dana harus berupa angka.</p>
-                    </div>
-                    <div>
-                        <label for="edit_tahun" class="block text-sm font-medium text-left text-gray-700">Tahun <span class="text-red-500">*</span></label>
-                        <input type="number" name="tahun" id="edit_tahun" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-edit_tahun">Tahun wajib diisi.</p>
-                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-edit_tahun">Tahun harus berupa angka.</p>
                     </div>
                 </form>
             </div>
@@ -399,7 +447,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Modal Import File -->
     <div id="importDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
         <div class="w-full max-w-lg transition-all transform bg-white rounded-lg shadow-xl">
@@ -411,7 +459,7 @@
                 </button>
             </div>
             <!-- Modal Body -->
-            <form id="importForm" action="/dashboard/penelitian/mandiri/import" method="POST" enctype="multipart/form-data">
+            <form id="importForm" action="/dashboard/publikasi/jupeng/import" method="POST" enctype="multipart/form-data">
                 <div class="p-6">
                     <p class="mb-4 text-sm text-gray-600">Pilih file dengan format .csv atau .xlsx untuk diimpor. Pastikan kolom di dalam file sesuai dengan template.</p>
                     <!-- Drop Zone -->
@@ -440,7 +488,7 @@
         </div>
     </div>
 
-    <script src="/script/penelitian/dash-mandiri.js"></script>
+    <script src="/script/publikasi/dash-jupeng.js"></script>
 </body>
 
 </html>

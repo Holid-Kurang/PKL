@@ -8,32 +8,6 @@ function closeModal(modalId) {
     document.getElementById(modalId).classList.add('hidden');
 }
 
-// Fungsi BARU untuk membuka dan mengisi modal edit
-function openEditModal(itemString) {
-    // Parse string JSON yang dikirim dari tombol
-    const item = JSON.parse(itemString);
-
-    // Pilih form dan atur actionnya ke route update yang benar
-    const form = document.getElementById('editDataForm');
-    form.action = `/dashboard/penelitian/pnbp/update/${item._id}`;
-
-    // Isi setiap field dalam form edit dengan data dari item
-    document.getElementById('edit_Judul').value = item.Judul || '';
-    document.getElementById('edit_SKEMA').value = item.SKEMA || '';
-    document.getElementById('edit_Prodi').value = item.Prodi || '';
-    document.getElementById('edit_Ketua').value = item.Ketua || '';
-    document.getElementById('edit_Anggota1').value = item.Anggota1 || '';
-    document.getElementById('edit_Anggota2').value = item.Anggota2 || '';
-    document.getElementById('edit_Anggota3').value = item.Anggota3 || '';
-    document.getElementById('edit_Anggota4').value = item.Anggota4 || '';
-    document.getElementById('edit_Biaya').value = item.Biaya || '';
-    document.getElementById('edit_Tahun').value = item.Tahun || '';
-    document.getElementById('edit_Nilai').value = item.Nilai || '';
-
-    // Tampilkan modal edit
-    openModal('editDataModal');
-}
-
 function openDeleteModal(action) {
     const deleteForm = document.getElementById('deleteForm');
     deleteForm.action = action;
@@ -42,10 +16,43 @@ function openDeleteModal(action) {
     openModal('deleteDataModal');
 }
 
+
+// Fungsi BARU untuk membuka dan mengisi modal edit
+function openEditModal(itemString) {
+    // Parse string JSON yang dikirim dari tombol
+    const item = JSON.parse(itemString);
+    console.log(item);
+    // Pilih form dan atur actionnya ke route update yang benar
+    const form = document.getElementById('editDataForm');
+    form.action = `/dashboard/publikasi/haki/update/${item._id}`;
+
+    // Isi setiap field dalam form edit dengan data dari item
+    document.getElementById('edit_hki_judul').value = item.hki_judul || '';
+    document.getElementById('edit_hki_jenis').value = item.hki_jenis || '';
+    document.getElementById('edit_hki_bulan').value = item.hki_bulan || '';
+    document.getElementById('edit_hki_tahun').value = item.hki_tahun || '';
+    document.getElementById('edit_pengguna_kode').value = item.pengguna_kode || '';
+    document.getElementById('edit__pengguna_nama').value = item._pengguna_nama || '';
+    document.getElementById('edit__prodi_nama').value = item._prodi_nama || '';
+
+    // Untuk file, tampilkan link jika ada file lama
+    const fileLinkDiv = document.getElementById('edit_hki_file');
+    if (item.hki_file) {
+        fileLinkDiv.innerHTML = `<a href="${item.hki_file}" target="_blank" class="text-blue-600 underline">Lihat file saat ini</a>`;
+    } else {
+        fileLinkDiv.innerHTML = '';
+    }
+    // Reset input file (tidak bisa set value karena alasan keamanan)
+    document.getElementById('edit_hki_file').value = '';
+
+    // Tampilkan modal edit
+    openModal('editDataModal');
+}
+
 // Tipe data warning
 document.addEventListener('DOMContentLoaded', function () {
     // Biaya dan Tahun harus angka
-    ['Biaya', 'Tahun'].forEach(function (field) {
+    ['hki_tahun',].forEach(function (field) {
         const input = document.getElementById(field);
         const typeError = document.getElementById('type-error-' + field);
         if (input && typeError) {
@@ -58,43 +65,18 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
-    // Nilai harus angka (jika memang harus angka, jika tidak hapus bagian ini)
-    const nilaiInput = document.getElementById('Nilai');
-    const nilaiTypeError = document.getElementById('type-error-Nilai');
-    if (nilaiInput && nilaiTypeError) {
-        nilaiInput.addEventListener('input', function () {
-            if (nilaiInput.value && isNaN(Number(nilaiInput.value))) {
-                nilaiTypeError.classList.remove('hidden');
-            } else {
-                nilaiTypeError.classList.add('hidden');
-            }
-        });
-    }
-
-    // Pindahkan validasi tombol Simpan ke event submit form
-    const addDataForm = document.getElementById('addDataForm');
-    if (addDataForm) {
-        addDataForm.addEventListener('submit', function (event) {
-            // Nilai harus angka
-            const nilaiInput = document.getElementById('Nilai');
-            const nilaiTypeError = document.getElementById('type-error-Nilai');
-            if (nilaiInput && (nilaiInput.value === '' || isNaN(Number(nilaiInput.value)))) {
-                if (nilaiTypeError) nilaiTypeError.classList.remove('hidden');
-                event.preventDefault();
-                return false;
-            }
-            if (!validateForm(event)) {
-                event.preventDefault();
-                return false;
-            }
-        });
-    }
 });
 
 function validateForm(event) {
     let valid = true;
     const requiredFields = [
-        'Judul', 'SKEMA', 'Prodi', 'Ketua', 'Anggota1', 'Biaya', 'Tahun', 'Nilai'
+        'hki_judul',
+        'hki_jenis',
+        'hki_bulan',
+        'hki_tahun',
+        'pengguna_kode',
+        '_pengguna_nama',
+        '_prodi_nama'
     ];
     requiredFields.forEach(function (field) {
         const input = document.getElementById(field);

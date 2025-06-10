@@ -184,3 +184,56 @@ exports.exportData = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
+
+exports.importData = async (req, res) => {
+    try {
+        const file = req.file;
+        if (!file) {
+            return res.status(400).send('No file uploaded');
+        }
+        const csv = require('csv-parser');
+        const streamifier = require('streamifier');
+
+        const results = [];
+
+        streamifier.createReadStream(file.buffer)
+            .pipe(csv())
+            .on('data', (data) => results.push(data))
+            .on('end', async () => {
+                try {
+                    // Mapping kolom sesuai dengan model pusat
+                    const dataToInsert = results.map(item => ({
+                        TAHUN: parseInt(item.TAHUN) || 0,
+                        SKEMA: item.SKEMA || '-',
+                        NAMA: item.NAMA || '-',
+                        Anggota1: item.Anggota1 || '-',
+                        Anggota2: item.Anggota2 || '-',
+                        Anggota3: item.Anggota3 || '-',
+                        Anggota4: item.Anggota4 || '-',
+                        NIP: item.NIP || '-',
+                        NIDN: item.NIDN || '-',
+                        PRODI: item.PRODI || '-',
+                        JUDUL: item.JUDUL || '-',
+                        BIAYA: parseFloat(item.BIAYA) || 0
+                    }));
+
+                    if (dataToInsert.length > 0) {
+                        await pusatModel.insertMany(dataToInsert);
+                    }
+
+                    res.redirect('/dashboard/penelitian/pusat');
+                } catch (err) {
+                    console.error('Error saving imported data:', err);
+                    res.status(500).send('Error saving imported data. Pastikan kolom di file CSV sesuai dengan format yang dibutuhkan.');
+                }
+            })
+            .on('error', (err) => {
+                console.error('Error reading CSV stream:', err);
+                res.status(500).send('Error reading CSV file');
+            });
+
+    } catch (error) {
+        console.error('Error importing penelitian pusat data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};

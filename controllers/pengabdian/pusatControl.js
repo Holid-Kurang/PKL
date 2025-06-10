@@ -1,4 +1,4 @@
-const pnbpModel = require('../../models/penelitian/pnbp');
+const pusatModel = require('../../models/pengabdian/pusat');
 
 // Read dan Search
 exports.getAllData = async (req, res) => {
@@ -19,8 +19,7 @@ exports.getAllData = async (req, res) => {
             filter = {
                 $or: [
                     { Judul: regex },
-                    { Ketua: regex },
-                    { Prodi: regex }, // Pastikan nama field di model adalah 'PRODI'
+                    { Nama: regex },
                     { SKEMA: regex }
                 ]
             };
@@ -28,25 +27,25 @@ exports.getAllData = async (req, res) => {
 
         // --- Mengambil Data dari Database ---
         // 1. Menghitung total dokumen yang cocok dengan filter untuk pagination
-        const totalData = await pnbpModel.countDocuments(filter);
+        const totalData = await pusatModel.countDocuments(filter);
         const totalPages = Math.ceil(totalData / limit) || 1; // Pastikan totalPages minimal 1
         // 2. Mengambil data untuk halaman saat ini dengan limit dan skip
-        const data = await pnbpModel.find(filter)
+        const data = await pusatModel.find(filter)
             .sort({ TAHUN: -1 }) // Mengurutkan berdasarkan tahun terbaru
             .skip(skip)
             .limit(limit);
         // --- Merender Halaman ---
-        res.render('dashboard/penelitian/dash-pnbp', {
+        res.render('dashboard/pengabdian/dash-pusat', {
             data,
             searchQuery,
-            title: 'Penelitian PNBP',
+            title: 'Pengabdian Pusat',
             currentPage: page,
             totalPages,
             limit // Kirim limit ke view agar bisa digunakan di link pagination
         });
 
     } catch (error) {
-        console.error('Error fetching penelitian pnbp data:', error);
+        console.error('Error fetching pengabdian pusat data:', error);
         res.status(500).send('Internal Server Error');
     }
 };
@@ -55,29 +54,41 @@ exports.createData = async (req, res) => {
     try {
         // Replace empty fields with '-'
         const {
-            Judul = '-', SKEMA = '-', Prodi = '-', Ketua = '-',
-            Anggota1 = '-', Anggota2 = '-', Anggota3 = '-', Anggota4 = '-',
-            Biaya = 0, Tahun = 0, Nilai = 0
+            Judul = '-',
+            SKEMA = '-',
+            Nama = '-',
+            Anggota1 = '-',
+            Anggota2 = '-',
+            Anggota3 = '-',
+            Anggota4 = '-',
+            Dana = 0,
+            Tahun = 0,
+            NomorKontrakLPPM = '-',
+            NIP = '-',
+            JumlahAnggota = 0,
+            JumlahMshTerlibat = 0
         } = req.body;
 
-        const newData = new pnbpModel({
+        const newData = new pusatModel({
             Judul: Judul || '-',
             SKEMA: SKEMA || '-',
-            Prodi: Prodi || '-',
-            Ketua: Ketua || '-',
+            Nama: Nama || '-',
             Anggota1: Anggota1 || '-',
             Anggota2: Anggota2 || '-',
             Anggota3: Anggota3 || '-',
             Anggota4: Anggota4 || '-',
-            Biaya: Biaya || 0,
+            Dana: Dana || 0,
             Tahun: Tahun || 0,
-            Nilai: Nilai || 0
+            NomorKontrakLPPM: NomorKontrakLPPM || '-',
+            NIP: NIP || '-',
+            JumlahAnggota: JumlahAnggota || 0,
+            JumlahMshTerlibat: JumlahMshTerlibat || 0
         });
 
         await newData.save();
-        res.redirect('/dashboard/penelitian/pnbp');
+        res.redirect('/dashboard/pengabdian/pusat');
     } catch (error) {
-        console.error('Error creating penelitian pnbp data:', error);
+        console.error('Error creating pengabdian pusat data:', error);
         res.status(500).send('Internal Server Error');
     }
 };
@@ -85,13 +96,13 @@ exports.createData = async (req, res) => {
 exports.deleteData = async (req, res) => {
     try {
         const id = req.params.id;
-        const deletedItem = await pnbpModel.findByIdAndDelete(id);
+        const deletedItem = await pusatModel.findByIdAndDelete(id);
         if (!deletedItem) {
             return res.status(404).send('Data not found');
         }
-        res.redirect('/dashboard/penelitian/pnbp');
+        res.redirect('/dashboard/pengabdian/pusat');
     } catch (error) {
-        console.error('Error deleting penelitian pnbp data:', error);
+        console.error('Error deleting pengabdian pusat data:', error);
         res.status(500).send('Internal Server Error');
     }
 };
@@ -100,42 +111,53 @@ exports.updateData = async (req, res) => {
     try {
         const id = req.params.id;
         const {
-            Judul, SKEMA, Prodi, Ketua,
-            Anggota1, Anggota2, Anggota3, Anggota4,
-            Biaya, Tahun, Nilai
+            Judul = '-',
+            SKEMA = '-',
+            Nama = '-',
+            Anggota1 = '-',
+            Anggota2 = '-',
+            Anggota3 = '-',
+            Anggota4 = '-',
+            Dana = 0,
+            Tahun = 0,
+            NomorKontrakLPPM = '-',
+            NIP = '-',
+            JumlahAnggota = 0,
+            JumlahMshTerlibat = 0
         } = req.body;
 
         const updatedData = {
             Judul: Judul || '-',
             SKEMA: SKEMA || '-',
-            Prodi: Prodi || '-',
-            Ketua: Ketua || '-',
+            Nama: Nama || '-',
             Anggota1: Anggota1 || '-',
             Anggota2: Anggota2 || '-',
             Anggota3: Anggota3 || '-',
             Anggota4: Anggota4 || '-',
-            Biaya: Biaya || 0,
+            Dana: Dana || 0,
             Tahun: Tahun || 0,
-            Nilai: Nilai || 0
+            NomorKontrakLPPM: NomorKontrakLPPM || '-',
+            NIP: NIP || '-',
+            JumlahAnggota: JumlahAnggota || 0,
+            JumlahMshTerlibat: JumlahMshTerlibat || 0
         };
 
-        await pnbpModel.findByIdAndUpdate(id, updatedData);
-        res.redirect('/dashboard/penelitian/pnbp');
+        await pusatModel.findByIdAndUpdate(id, updatedData);
+        res.redirect('/dashboard/pengabdian/pusat');
     } catch (error) {
-        console.error('Error updating penelitian pnbp data:', error);
+        console.error('Error updating pengabdian pusat data:', error);
         res.status(500).send('Internal Server Error');
     }
 };
 
 exports.exportData = async (req, res) => {
     try {
-        const data = await pnbpModel.find({});
+        const data = await pusatModel.find({});
         const csvRows = [];
         // Add header row
         const headers = [
-            'Judul', 'SKEMA', 'Prodi', 'Ketua',
-            'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
-            'Biaya', 'Tahun', 'Nilai'
+            'Judul', 'SKEMA', 'Nama', 'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
+            'Dana', 'Tahun', 'NomorKontrakLPPM', 'NIP', 'JumlahAnggota', 'JumlahMshTerlibat'
         ];
         csvRows.push(headers.join(','));
 
@@ -144,23 +166,25 @@ exports.exportData = async (req, res) => {
             csvRows.push([
             item.Judul,
             item.SKEMA,
-            item.Prodi,
-            item.Ketua,
+            item.Nama,
             item.Anggota1,
             item.Anggota2,
             item.Anggota3,
             item.Anggota4,
-            item.Biaya,
+            item.Dana,
             item.Tahun,
-            item.Nilai
+            item.NomorKontrakLPPM,
+            item.NIP,
+            item.JumlahAnggota,
+            item.JumlahMshTerlibat
             ].join(','));
         });
 
         res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=penelitian_pnbp.csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=pengabdian_pusat.csv');
         res.status(200).send(csvRows.join('\n'));
     } catch (error) {
-        console.error('Error exporting penelitian pnbp data:', error);
+        console.error('Error exporting pengabdian pusat data:', error);
         res.status(500).send('Internal Server Error');
     }
 }
@@ -172,39 +196,39 @@ exports.importData = async (req, res) => {
             return res.status(400).send('No file uploaded');
         }
         const csv = require('csv-parser');
-        const streamifier = require('streamifier'); // Impor streamifier
+        const streamifier = require('streamifier');
 
         const results = [];
 
-        // Buat stream dari buffer file di memori
         streamifier.createReadStream(file.buffer)
             .pipe(csv())
             .on('data', (data) => results.push(data))
             .on('end', async () => {
                 try {
-                    // Gunakan insertMany untuk efisiensi, bukan loop
                     const dataToInsert = results.map(item => ({
                         Judul: item.Judul || '-',
                         SKEMA: item.SKEMA || '-',
-                        Prodi: item.Prodi || '-',
-                        Ketua: item.Ketua || '-',
+                        Nama: item.Nama || '-',
                         Anggota1: item.Anggota1 || '-',
                         Anggota2: item.Anggota2 || '-',
                         Anggota3: item.Anggota3 || '-',
                         Anggota4: item.Anggota4 || '-',
-                        Biaya: parseFloat(item.Biaya) || 0,
+                        Dana: parseFloat(item.Dana) || 0,
                         Tahun: parseInt(item.Tahun) || 0,
-                        Nilai: parseFloat(item.Nilai) || 0
+                        NomorKontrakLPPM: item.NomorKontrakLPPM || '-',
+                        NIP: item.NIP || '-',
+                        JumlahAnggota: parseInt(item.JumlahAnggota) || 0,
+                        JumlahMshTerlibat: parseInt(item.JumlahMshTerlibat) || 0
                     }));
 
                     if (dataToInsert.length > 0) {
-                        await pnbpModel.insertMany(dataToInsert);
+                        await pusatModel.insertMany(dataToInsert);
                     }
-                    
-                    res.redirect('/dashboard/penelitian/pnbp');
+
+                    res.redirect('/dashboard/pengabdian/pusat');
                 } catch (err) {
                     console.error('Error saving imported data:', err);
-                    res.status(500).send('Error saving imported data. Pastikan kolom di file CSV/Excel sesuai dengan format yang dibutuhkan.');
+                    res.status(500).send('Error saving imported data. Pastikan kolom di file CSV sesuai dengan format yang dibutuhkan.');
                 }
             })
             .on('error', (err) => {
@@ -213,7 +237,7 @@ exports.importData = async (req, res) => {
             });
 
     } catch (error) {
-        console.error('Error importing penelitian pnbp data:', error);
+        console.error('Error importing pengabdian pusat data:', error);
         res.status(500).send('Internal Server Error');
     }
 };
