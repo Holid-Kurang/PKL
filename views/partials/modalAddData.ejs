@@ -1,0 +1,69 @@
+<!-- Modal Tambah Data (awalnya tersembunyi) -->
+<div id="addDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="w-full max-w-2xl transition-all transform bg-white rounded-lg shadow-xl">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b">
+            <h3 class="text-xl font-semibold text-gray-800">Tambah Data</h3>
+            <button onclick="closeModal('addDataModal')" class="text-gray-500 hover:text-gray-800">
+                <span class="material-icons-outlined">close</span>
+            </button>
+        </div>
+        <!-- Modal Body -->
+        <div class="p-6 max-h-[60vh] overflow-y-auto">
+            <form id="addDataForm" action="<%= action %>" method="POST" class="space-y-4">
+                <%# Loop untuk membuat setiap elemen form secara dinamis %>
+                <% formFields.forEach(field => { %>
+                    <div>
+                        <label for="<%= field.name %>" class="block text-sm font-medium text-left text-gray-700">
+                            <%= field.label %>
+                            <% if (field.required) { %>
+                                <span class="text-red-500">*</span>
+                            <% } %>
+                        </label>
+
+                        <%# Kondisi untuk tipe input 'select' %>
+                        <% if (field.type === 'select') { %>
+                            <select 
+                                name="<%= field.name %>" 
+                                id="<%= field.name %>"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]"
+                                <% if (field.required) { %>required<% } %>>
+                                <option value="" selected disabled>Pilih <%= field.label %></option>
+                                <% field.options.forEach(option => { %>
+                                    <option value="<%= option %>" <%= (field.value === option) ? 'selected' : '' %>>
+                                        <%= option %>
+                                    </option>
+                                <% }); %>
+                            </select>
+                        <%# Kondisi untuk tipe input lain (text, number, email, dll) %>
+                        <% } else { %>
+                            <input 
+                                type="<%= field.type %>" 
+                                name="<%= field.name %>" 
+                                id="<%= field.name %>"
+                                value="<%= field.value || '' %>"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]"
+                                <% if (field.required) { %>required<% } %>>
+                        <% } %>
+
+                        <p class="hidden mt-1 text-xs text-red-500" id="error-<%= field.name %>"><%= field.label %> wajib diisi.</p>
+                        <% if (field.type === 'number') { %>
+                            <p class="hidden mt-1 text-xs text-red-500" id="type-error-<%= field.name %>"><%= field.label %> harus berupa angka.</p>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </form>
+        </div>
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 space-x-3 text-right bg-gray-50">
+            <button onclick="closeModal('addDataModal')" type="button"
+                class="px-4 py-2 text-sm font-medium text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
+                Batal
+            </button>
+            <button type="submit" form="addDataForm"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#4F46E5] hover:bg-[#4338CA] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4338CA]">
+                Simpan
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,8 @@
+// Buka menu "Penelitian" secara default saat halaman dimuat
+window.onload = function () {
+    toggleMenu('penelitianMenu');
+};
+
 // Fungsi untuk membuka modal (ganti 'addDataModal' dengan ID modal yang sesuai)
 function openModal(modalId) {
     document.getElementById(modalId).classList.remove('hidden');

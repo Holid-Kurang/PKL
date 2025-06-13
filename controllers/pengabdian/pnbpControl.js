@@ -57,7 +57,7 @@ exports.createData = async (req, res) => {
         const {
             Judul = '-', SKEMA = '-', Ketua = '-',
             Anggota1 = '-', Anggota2 = '-', Anggota3 = '-', Anggota4 = '-',
-            NilaiRataRata = 0, BiayaDisetujui = 0, Prodi = '-', Tahun = 0
+            Nilai = 0, Dana = 0, Prodi = '-', Tahun = 0
         } = req.body;
 
         const newData = new pnbpModel({
@@ -68,8 +68,8 @@ exports.createData = async (req, res) => {
             Anggota2: Anggota2 || '-',
             Anggota3: Anggota3 || '-',
             Anggota4: Anggota4 || '-',
-            NilaiRataRata: NilaiRataRata || 0,
-            BiayaDisetujui: BiayaDisetujui || 0,
+            Nilai: Nilai || 0,
+            Dana: Dana || 0,
             Prodi: Prodi || '-',
             Tahun: Tahun || 0
         });
@@ -89,7 +89,13 @@ exports.deleteData = async (req, res) => {
         if (!deletedItem) {
             return res.status(404).send('Data not found');
         }
-        res.redirect('/dashboard/pengabdian/pnbp');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/pengabdian/pnbp';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting pengabdian pnbp data:', error);
         res.status(500).send('Internal Server Error');
@@ -102,7 +108,7 @@ exports.updateData = async (req, res) => {
         const {
             Judul, SKEMA, Ketua,
             Anggota1, Anggota2, Anggota3, Anggota4,
-            NilaiRataRata, BiayaDisetujui, Prodi, Tahun
+            Nilai, Dana, Prodi, Tahun
         } = req.body;
 
         const updatedData = {
@@ -113,14 +119,20 @@ exports.updateData = async (req, res) => {
             Anggota2: Anggota2 || '-',
             Anggota3: Anggota3 || '-',
             Anggota4: Anggota4 || '-',
-            NilaiRataRata: NilaiRataRata || 0,
-            BiayaDisetujui: BiayaDisetujui || 0,
+            Nilai: Nilai || 0,
+            Dana: Dana || 0,
             Prodi: Prodi || '-',
             Tahun: Tahun || 0
         };
 
         await pnbpModel.findByIdAndUpdate(id, updatedData);
-        res.redirect('/dashboard/pengabdian/pnbp');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/pengabdian/pnbp';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating pengabdian pnbp data:', error);
         res.status(500).send('Internal Server Error');
@@ -130,18 +142,14 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await pnbpModel.find({});
-        const csvRows = [];
-        // Add header row
-        const headers = [
+        // Prepare data for worksheet
+        const worksheetData = [
+            [
             'Judul', 'SKEMA', 'Prodi', 'Ketua',
             'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
-            'BiayaDisetujui', 'Tahun', 'NilaiRataRata'
-        ];
-        csvRows.push(headers.join(','));
-
-        // Add data rows
-        data.forEach(item => {
-            csvRows.push([
+            'Dana', 'Tahun', 'Nilai'
+            ],
+            ...data.map(item => [
             item.Judul,
             item.SKEMA,
             item.Prodi,
@@ -150,15 +158,23 @@ exports.exportData = async (req, res) => {
             item.Anggota2,
             item.Anggota3,
             item.Anggota4,
-            item.BiayaDisetujui,
+            item.Dana,
             item.Tahun,
-            item.NilaiRataRata
-            ].join(','));
-        });
+            item.Nilai
+            ])
+        ];
+        const XLSX = require('xlsx');
+        // Create worksheet and workbook
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'PengabdianPNBP');
 
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=pengabdian_pnbp.csv');
-        res.status(200).send(csvRows.join('\n'));
+        // Write workbook to XLSX buffer
+        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=pengabdian_pnbp.xlsx');
+        res.status(200).send(xlsxBuffer);
     } catch (error) {
         console.error('Error exporting pengabdian pnbp data:', error);
         res.status(500).send('Internal Server Error');
@@ -190,9 +206,9 @@ exports.importData = async (req, res) => {
                         Anggota2: item.Anggota2 || '-',
                         Anggota3: item.Anggota3 || '-',
                         Anggota4: item.Anggota4 || '-',
-                        BiayaDisetujui: parseFloat(item.BiayaDisetujui) || 0,
+                        Dana: parseFloat(item.Dana) || 0,
                         Tahun: parseInt(item.Tahun) || 0,
-                        NilaiRataRata: parseFloat(item.NilaiRataRata) || 0
+                        Nilai: parseFloat(item.Nilai) || 0
                     }));
 
                     if (dataToInsert.length > 0) {

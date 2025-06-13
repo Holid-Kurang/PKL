@@ -20,5 +20,3 @@ function toggleMenu(menuId) {
         icon.style.transform = 'rotate(180deg)';
     }
 }
-
-

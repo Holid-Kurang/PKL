@@ -65,7 +65,6 @@ exports.createData = async (req, res) => {
             _pengguna_nama = '-',
             _prodi_nama = '-'
         } = req.body;
-        console.log(req.body);
         const newData = new bukuModel({
             buku_judul: buku_judul || '-',
             buku_isbn: buku_isbn || '-',
@@ -93,7 +92,13 @@ exports.deleteData = async (req, res) => {
         if (!deletedItem) {
             return res.status(404).send('Data not found');
         }
-        res.redirect('/dashboard/publikasi/buku');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/publikasi/buku';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting publikasi buku data:', error);
         res.status(500).send('Internal Server Error');
@@ -115,7 +120,6 @@ exports.updateData = async (req, res) => {
             _pengguna_nama = '-',
             _prodi_nama = '-'
         } = req.body;
-        console.log(req.body);
         const updatedData = {
             buku_judul: buku_judul || '-',
             buku_isbn: buku_isbn || '-',
@@ -129,7 +133,13 @@ exports.updateData = async (req, res) => {
             _prodi_nama: _prodi_nama || '-'
         };
         await bukuModel.findByIdAndUpdate(id, updatedData);
-        res.redirect('/dashboard/publikasi/buku');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/publikasi/buku';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating publikasi buku data:', error);
         res.status(500).send('Internal Server Error');
@@ -139,16 +149,12 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await bukuModel.find({});
-        const csvRows = [];
-        // Add header row
-        const headers = [
+        // Prepare data for worksheet
+        const worksheetData = [
+            [
             'Judul', 'ISBN', 'Jumlah Halaman', 'Penerbit', 'File', 'Tahun', 'Pengguna Kode', 'Jenis Pengguna', 'Nama Pengguna', 'Nama Prodi'
-        ];
-        csvRows.push(headers.join(','));
-
-        // Add data rows
-        data.forEach(item => {
-            csvRows.push([
+            ],
+            ...data.map(item => [
             item.buku_judul || '-',
             item.buku_isbn || '-',
             item.buku_jumlah_halaman || 0,
@@ -159,12 +165,20 @@ exports.exportData = async (req, res) => {
             item._pengguna_jenis || '-',
             item._pengguna_nama || '-',
             item._prodi_nama || '-'
-            ].join(','));
-        });
+            ])
+        ];
+        const XLSX = require('xlsx');
+        // Create worksheet and workbook
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'PublikasiBuku');
 
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=publikasi_buku.csv');
-        res.status(200).send(csvRows.join('\n'));
+        // Write workbook to XLSX buffer
+        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=publikasi_buku.xlsx');
+        res.status(200).send(xlsxBuffer);
     } catch (error) {
         console.error('Error exporting publikasi buku data:', error);
         res.status(500).send('Internal Server Error');
@@ -179,7 +193,6 @@ exports.importData = async (req, res) => {
         }
         const csv = require('csv-parser');
         const streamifier = require('streamifier');
-
         const results = [];
 
         streamifier.createReadStream(file.buffer)

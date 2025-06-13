@@ -8,8 +8,8 @@ const pnbpSchema = new mongoose.Schema({
     Anggota2: { type: String },
     Anggota3: { type: String },
     Anggota4: { type: String },
-    NilaiRataRata: { type: Number },
-    BiayaDisetujui: { type: Number },
+    Nilai: { type: Number },
+    Dana: { type: Number },
     Prodi: { type: String },
     Tahun: { type: Number }
 }, { collection: 'pengabdianPNBP' });

@@ -1,0 +1,44 @@
+<!-- Modal Import File -->
+<div id="importDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="w-full max-w-lg transition-all transform bg-white rounded-lg shadow-xl">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b">
+            <h3 class="text-xl font-semibold text-gray-800">Import Data dari File</h3>
+            <button onclick="closeModal('importDataModal')" class="text-gray-500 hover:text-gray-800">
+                <span class="material-icons-outlined">close</span>
+            </button>
+        </div>
+        <!-- Modal Body -->
+        <form id="importForm" action="<%= action %>" method="POST" enctype="multipart/form-data">
+            <div class="p-6">
+                <p class="mb-4 text-sm text-gray-600">Pilih file dengan format .csv atau .xlsx untuk diimpor. Pastikan
+                    kolom di dalam file sesuai dengan template.</p>
+                <!-- Drop Zone -->
+                <label id="dropZone" for="fileInput"
+                    class="flex flex-col items-center justify-center w-full h-48 transition-colors border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <span class="text-5xl text-gray-400 material-icons-outlined">cloud_upload</span>
+                        <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Klik untuk memilih</span> atau
+                            seret file ke sini</p>
+                        <p class="text-xs text-gray-500">CSV atau XLSX</p>
+                    </div>
+                    <input id="fileInput" name="file" type="file" class="hidden"
+                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                </label>
+                <!-- File Name Display -->
+                <div id="fileNameDisplay" class="mt-4 text-sm text-gray-700"></div>
+            </div>
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 space-x-3 text-right bg-gray-50">
+                <button onclick="closeModal('importDataModal')" type="button"
+                    class="px-4 py-2 text-sm font-medium text-gray-800 bg-gray-200 border border-gray-300 rounded-md hover:bg-gray-300">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#4F46E5] hover:bg-[#4338CA] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4338CA]">
+                    Import
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

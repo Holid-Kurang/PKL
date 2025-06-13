@@ -91,7 +91,13 @@ exports.deleteData = async (req, res) => {
         if (!deletedItem) {
             return res.status(404).send('Data not found');
         }
-        res.redirect('/dashboard/publikasi/haki');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/publikasi/haki';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting publikasi haki data:', error);
         res.status(500).send('Internal Server Error');
@@ -124,7 +130,13 @@ exports.updateData = async (req, res) => {
         };
 
         await hakiModel.findByIdAndUpdate(id, updatedData);
-        res.redirect('/dashboard/publikasi/haki');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/publikasi/haki';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating publikasi haki data:', error);
         res.status(500).send('Internal Server Error');
@@ -134,16 +146,12 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await hakiModel.find({});
-        const csvRows = [];
-        // Add header row
-        const headers = [
+        // Prepare data for worksheet
+        const worksheetData = [
+            [
             'Judul', 'Jenis', 'File', 'Bulan', 'Tahun', 'Pengguna Kode', 'Nama Pengguna', 'Nama Prodi'
-        ];
-        csvRows.push(headers.join(','));
-
-        // Add data rows
-        data.forEach(item => {
-            csvRows.push([
+            ],
+            ...data.map(item => [
             item.hki_judul || '-',
             item.hki_jenis || '-',
             item.hki_file || '-',
@@ -152,12 +160,20 @@ exports.exportData = async (req, res) => {
             item.pengguna_kode || '-',
             item._pengguna_nama || '-',
             item._prodi_nama || '-'
-            ].join(','));
-        });
+            ])
+        ];
+        const XLSX = require('xlsx');
+        // Create worksheet and workbook
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'PublikasiHAKI');
 
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=publikasi_haki.csv');
-        res.status(200).send(csvRows.join('\n'));
+        // Write workbook to XLSX buffer
+        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=publikasi_haki.xlsx');
+        res.status(200).send(xlsxBuffer);
     } catch (error) {
         console.error('Error exporting publikasi haki data:', error);
         res.status(500).send('Internal Server Error');

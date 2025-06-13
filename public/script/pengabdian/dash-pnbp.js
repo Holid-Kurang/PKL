@@ -1,3 +1,8 @@
+// Buka menu "pengabdian" secara default saat halaman dimuat
+window.onload = function () {
+    toggleMenu('pengabdianMenu');
+};
+
 // Fungsi untuk membuka modal (ganti 'addDataModal' dengan ID modal yang sesuai)
 function openModal(modalId) {
     document.getElementById(modalId).classList.remove('hidden');
@@ -25,8 +30,8 @@ function openEditModal(itemString) {
     document.getElementById('edit_Anggota2').value = item.Anggota2 || '';
     document.getElementById('edit_Anggota3').value = item.Anggota3 || '';
     document.getElementById('edit_Anggota4').value = item.Anggota4 || '';
-    document.getElementById('edit_NilaiRataRata').value = item.NilaiRataRata || '';
-    document.getElementById('edit_BiayaDisetujui').value = item.BiayaDisetujui || '';
+    document.getElementById('edit_Nilai').value = item.Nilai || '';
+    document.getElementById('edit_Dana').value = item.Dana || '';
     document.getElementById('edit_Prodi').value = item.Prodi || '';
     document.getElementById('edit_Tahun').value = item.Tahun || '';
 
@@ -45,7 +50,7 @@ function openDeleteModal(action) {
 // Tipe data warning
 document.addEventListener('DOMContentLoaded', function () {
     // Biaya dan Tahun harus angka
-    ['BiayaDisetujui', 'Tahun'].forEach(function (field) {
+    ['Dana', 'Tahun'].forEach(function (field) {
         const input = document.getElementById(field);
         const typeError = document.getElementById('type-error-' + field);
         if (input && typeError) {
@@ -60,8 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Nilai harus angka (jika memang harus angka, jika tidak hapus bagian ini)
-    const nilaiInput = document.getElementById('NilaiRataRata');
-    const nilaiTypeError = document.getElementById('type-error-NilaiRataRata');
+    const nilaiInput = document.getElementById('Nilai');
+    const nilaiTypeError = document.getElementById('type-error-Nilai');
     if (nilaiInput && nilaiTypeError) {
         nilaiInput.addEventListener('input', function () {
             if (nilaiInput.value && isNaN(Number(nilaiInput.value))) {
@@ -77,8 +82,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (addDataForm) {
         addDataForm.addEventListener('submit', function (event) {
             // Nilai harus angka
-            const nilaiInput = document.getElementById('NilaiRataRata');
-            const nilaiTypeError = document.getElementById('type-error-NilaiRataRata');
+            const nilaiInput = document.getElementById('Nilai');
+            const nilaiTypeError = document.getElementById('type-error-Nilai');
             if (nilaiInput && (nilaiInput.value === '' || isNaN(Number(nilaiInput.value)))) {
                 if (nilaiTypeError) nilaiTypeError.classList.remove('hidden');
                 event.preventDefault();
@@ -102,14 +107,14 @@ function validateForm(event) {
         'Anggota1',
         'Prodi',
         'Tahun',
-        'NilaiRataRata',
+        'Nilai',
         'edit_Judul',
         'edit_SKEMA',
         'edit_Ketua',
         'edit_Anggota1',
         'edit_Prodi',
         'edit_Tahun',
-        'edit_NilaiRataRata',
+        'edit_Nilai',
     ];
     requiredFields.forEach(function (field) {
         const input = document.getElementById(field);

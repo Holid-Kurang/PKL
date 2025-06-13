@@ -95,7 +95,13 @@ exports.deleteData = async (req, res) => {
         if (!deletedItem) {
             return res.status(404).send('Data not found');
         }
-        res.redirect('/dashboard/penelitian/mandiri');
+        // get the current search query url from the request then redirect to the same page after update
+        const currentUrl = req.headers.referer || '/dashboard/penelitian/mandiri';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting penelitian mandiri data:', error);
         res.status(500).send('Internal Server Error');
@@ -132,7 +138,13 @@ exports.updateData = async (req, res) => {
         };
 
         await mandiriModel.findByIdAndUpdate(id, updatedData);
-        res.redirect('/dashboard/penelitian/mandiri');
+        // get the current search query url from the request then redirect to the same page after update
+        const currentUrl = req.headers.referer || '/dashboard/penelitian/mandiri';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating penelitian mandiri data:', error);
         res.status(500).send('Internal Server Error');
@@ -142,34 +154,38 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await mandiriModel.find({});
-        const csvRows = [];
-        // Add header row
-        const headers = [
+        // Prepare data for worksheet
+        const worksheetData = [
+            [
             'Judul', 'Skema', 'Prodi', 'Ketua',
             'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
             'Dana', 'Tahun'
+            ],
+            ...data.map(item => [
+            item.Judul,
+            item.Skema,
+            item.Prodi,
+            item.Ketua,
+            item.Anggota1,
+            item.Anggota2,
+            item.Anggota3,
+            item.Anggota4,
+            item.Dana,
+            item.tahun
+            ])
         ];
-        csvRows.push(headers.join(','));
+        const XLSX = require('xlsx');
+        // Create worksheet and workbook
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'PenelitianMandiri');
 
-        // Add data rows
-        data.forEach(item => {
-            csvRows.push([
-                item.Judul,
-                item.Skema,
-                item.Prodi,
-                item.Ketua,
-                item.Anggota1,
-                item.Anggota2,
-                item.Anggota3,
-                item.Anggota4,
-                item.Dana,
-                item.tahun
-            ].join(','));
-        });
+        // Write workbook to XLSX buffer
+        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=penelitian_mandiri.csv');
-        res.status(200).send(csvRows.join('\n'));
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=penelitian_mandiri.xlsx');
+        res.status(200).send(xlsxBuffer);
     } catch (error) {
         console.error('Error exporting penelitian mandiri data:', error);
         res.status(500).send('Internal Server Error');

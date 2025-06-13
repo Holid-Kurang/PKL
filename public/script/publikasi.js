@@ -105,13 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             id: 'hakiPerTahun',
             init: () => new Chart(document.getElementById('hakiPerTahun').getContext('2d'), {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: hakiData.jumlahPerTahun.map(item => item._id),
                     datasets: [{
                         label: 'Jumlah HAKI per Tahun', data: hakiData.jumlahPerTahun.map(item => item.jumlahHKI),
-                        backgroundColor: '#232F58', borderColor: '#9342DA', borderWidth: 4,
-                        hoverBackgroundColor: '#41e2ba', hoverBorderColor: '#ff1b1c', hoverBorderWidth: 10, borderRadius: 50,
+                        backgroundColor: '#9342DA', borderColor: '#232F58', borderWidth: 1,
+                        hoverBackgroundColor: '#ff1b1c', hoverBorderColor: '#232F58', hoverBorderWidth: 2, borderRadius: 5,
                     }]
                 },
                 options: {
@@ -191,12 +191,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             } else {
-                 // Opsional: Jika ingin menghancurkan chart saat keluar layar untuk hemat memori
-                 const canvasId = entry.target.id;
-                 if (chartInstances[canvasId]) {
-                     chartInstances[canvasId].destroy();
-                     delete chartInstances[canvasId];
-                 }
+                // Opsional: Jika ingin menghancurkan chart saat keluar layar untuk hemat memori
+                const canvasId = entry.target.id;
+                if (chartInstances[canvasId]) {
+                    chartInstances[canvasId].destroy();
+                    delete chartInstances[canvasId];
+                }
             }
         });
     }, {

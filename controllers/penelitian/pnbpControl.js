@@ -89,7 +89,13 @@ exports.deleteData = async (req, res) => {
         if (!deletedItem) {
             return res.status(404).send('Data not found');
         }
-        res.redirect('/dashboard/penelitian/pnbp');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/penelitian/pnbp';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting penelitian pnbp data:', error);
         res.status(500).send('Internal Server Error');
@@ -120,7 +126,13 @@ exports.updateData = async (req, res) => {
         };
 
         await pnbpModel.findByIdAndUpdate(id, updatedData);
-        res.redirect('/dashboard/penelitian/pnbp');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/penelitian/pnbp';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating penelitian pnbp data:', error);
         res.status(500).send('Internal Server Error');
@@ -130,18 +142,14 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await pnbpModel.find({});
-        const csvRows = [];
-        // Add header row
-        const headers = [
+        // Prepare data for worksheet
+        const worksheetData = [
+            [
             'Judul', 'SKEMA', 'Prodi', 'Ketua',
             'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
             'Biaya', 'Tahun', 'Nilai'
-        ];
-        csvRows.push(headers.join(','));
-
-        // Add data rows
-        data.forEach(item => {
-            csvRows.push([
+            ],
+            ...data.map(item => [
             item.Judul,
             item.SKEMA,
             item.Prodi,
@@ -153,12 +161,20 @@ exports.exportData = async (req, res) => {
             item.Biaya,
             item.Tahun,
             item.Nilai
-            ].join(','));
-        });
+            ])
+        ];
+        const XLSX = require('xlsx');
+        // Create worksheet and workbook
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'PenelitianPNBP');
 
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=penelitian_pnbp.csv');
-        res.status(200).send(csvRows.join('\n'));
+        // Write workbook to XLSX buffer
+        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=penelitian_pnbp.xlsx');
+        res.status(200).send(xlsxBuffer);
     } catch (error) {
         console.error('Error exporting penelitian pnbp data:', error);
         res.status(500).send('Internal Server Error');
@@ -173,7 +189,6 @@ exports.importData = async (req, res) => {
         }
         const csv = require('csv-parser');
         const streamifier = require('streamifier'); // Impor streamifier
-
         const results = [];
 
         // Buat stream dari buffer file di memori

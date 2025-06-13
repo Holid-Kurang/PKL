@@ -98,7 +98,13 @@ exports.deleteData = async (req, res) => {
         if (!deletedItem) {
             return res.status(404).send('Data not found');
         }
-        res.redirect('/dashboard/publikasi/jupeng');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/publikasi/jupeng';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting publikasi jurnal pengabdian data:', error);
         res.status(500).send('Internal Server Error');
@@ -139,7 +145,13 @@ exports.updateData = async (req, res) => {
         };
 
         await jupengModel.findByIdAndUpdate(id, updatedData);
-        res.redirect('/dashboard/publikasi/jupeng');
+        // get the current search query url from the request then redirect to the same page after update 
+        const currentUrl = req.headers.referer || '/dashboard/publikasi/jupeng';
+        // If the current URL contains a search query, append it to the redirect
+        const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
+        // Redirect to the same page with the search query
+        console.log(currentUrl + searchQuery);
+        res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating publikasi jurnal pengabdian data:', error);
         res.status(500).send('Internal Server Error');
@@ -149,17 +161,13 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await jupengModel.find({});
-        const csvRows = [];
-        // Add header row
-        const headers = [
+        // Prepare data for worksheet
+        const worksheetData = [
+            [
             'Judul', 'URL', 'File', 'Tahun', 'Bulan', 'Pengguna Kode', 'Jenis Pengguna', 'Nama Pengguna', 'Nama Prodi',
             'Personil Ketua', 'Kode Ketua', 'Jenis Ketua'
-        ];
-        csvRows.push(headers.join(','));
-
-        // Add data rows
-        data.forEach(item => {
-            csvRows.push([
+            ],
+            ...data.map(item => [
             item.jurnal_judul || '-',
             item.jurnal_url || '-',
             item.jurnal_file || '-',
@@ -172,12 +180,20 @@ exports.exportData = async (req, res) => {
             item._personil_data_ketua || '-',
             item._personil_data_ketua_kode || '-',
             item._personil_data_ketua_jenis || '-'
-            ].join(','));
-        });
+            ])
+        ];
+        const XLSX = require('xlsx');
+        // Create worksheet and workbook
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'JurnalPengabdian');
 
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=publikasi_jupeng.csv');
-        res.status(200).send(csvRows.join('\n'));
+        // Write workbook to XLSX buffer
+        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=publikasi_jupeng.xlsx');
+        res.status(200).send(xlsxBuffer);
     } catch (error) {
         console.error('Error exporting publikasi jurnal pengabdian data:', error);
         res.status(500).send('Internal Server Error');

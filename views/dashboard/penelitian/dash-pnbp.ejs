@@ -203,279 +203,65 @@
     </div>
 
     <!-- Modal Tambah Data (awalnya tersembunyi) -->
-    <div id="addDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-        <div class="w-full max-w-2xl transition-all transform bg-white rounded-lg shadow-xl">
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between px-6 py-4 border-b">
-                <h3 class="text-xl font-semibold text-gray-800">Tambah Data</h3>
-                <button onclick="closeModal('addDataModal')" class="text-gray-500 hover:text-gray-800">
-                    <span class="material-icons-outlined">close</span>
-                </button>
-            </div>
-            <!-- Modal Body -->
-            <div class="p-6 max-h-[60vh] overflow-y-auto">
-                <form id="addDataForm" action="/dashboard/penelitian/pnbp/create" method="POST" class="space-y-4"
-                    onsubmit="return validateForm(event)">
-                    <div>
-                        <label for="Judul" class="block text-sm font-medium text-left text-gray-700">Judul <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" name="Judul" id="Judul" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Judul">Judul wajib diisi.</p>
-                    </div>
-                    <div>
-                        <label for="SKEMA" class="block text-sm font-medium text-left text-gray-700">Skema <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" name="SKEMA" id="SKEMA" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-SKEMA">Skema wajib diisi.</p>
-                    </div>
-                    <div>
-                        <label for="Prodi" class="block text-sm font-medium text-left text-gray-700">Prodi <span
-                                class="text-red-500">*</span></label>
-                        <select name="Prodi" id="Prodi" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                            <option value="" selected disabled>Pilih Prodi</option>
-                            <option value="S1 Arsitektur">S1 Arsitektur</option>
-                            <option value="S1 Teknik Elektro">S1 Teknik Elektro</option>
-                            <option value="S1 Teknik Industri">S1 Teknik Industri</option>
-                            <option value="S1 Teknik Informatika">S1 Teknik Informatika</option>
-                            <option value="S1 Teknik Mesin">S1 Teknik Mesin</option>
-                            <option value="S1 Teknik Sipil">S1 Teknik Sipil</option>
-                            <option value="S2 Teknik Sipil">S2 Teknik Sipil</option>
-                            <option value="S2 Teknologi Informasi">S2 Teknologi Informasi</option>
-                        </select>
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Prodi">Prodi wajib dipilih.</p>
-                    </div>
-                    <div>
-                        <label for="Ketua" class="block text-sm font-medium text-left text-gray-700">Ketua <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" name="Ketua" id="Ketua" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Ketua">Ketua wajib diisi.</p>
-                    </div>
-                    <div>
-                        <label for="Anggota1" class="block text-sm font-medium text-left text-gray-700">Anggota 1 <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" name="Anggota1" id="Anggota1" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Anggota1">Anggota 1 wajib diisi.</p>
-                    </div>
-                    <div>
-                        <label for="Anggota2" class="block text-sm font-medium text-left text-gray-700">Anggota
-                            2</label>
-                        <input type="text" name="Anggota2" id="Anggota2"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="Anggota3" class="block text-sm font-medium text-left text-gray-700">Anggota
-                            3</label>
-                        <input type="text" name="Anggota3" id="Anggota3"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="Anggota4" class="block text-sm font-medium text-left text-gray-700">Anggota
-                            4</label>
-                        <input type="text" name="Anggota4" id="Anggota4"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="Biaya" class="block text-sm font-medium text-left text-gray-700">Dana <span
-                                class="text-red-500">*</span></label>
-                        <input type="number" name="Biaya" id="Biaya" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Biaya">Dana wajib diisi.</p>
-                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-Biaya">Dana harus berupa angka.</p>
-                    </div>
-                    <div>
-                        <label for="Tahun" class="block text-sm font-medium text-left text-gray-700">Tahun <span
-                                class="text-red-500">*</span></label>
-                        <input type="number" name="Tahun" id="Tahun" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Tahun">Tahun wajib diisi.</p>
-                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-Tahun">Tahun harus berupa angka.</p>
-                    </div>
-                    <div>
-                        <label for="Nilai" class="block text-sm font-medium text-left text-gray-700">Nilai <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" name="Nilai" id="Nilai" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                        <p class="hidden mt-1 text-xs text-red-500" id="error-Nilai">Nilai wajib diisi.</p>
-                        <p class="hidden mt-1 text-xs text-red-500" id="type-error-Nilai">Nilai harus berupa angka.</p>
-                    </div>
-                </form>
-            </div>
-            <!-- Modal Footer -->
-            <div class="px-6 py-4 space-x-3 text-right bg-gray-50">
-                <button onclick="closeModal('addDataModal')" type="button"
-                    class="px-4 py-2 text-sm font-medium text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
-                    Batal
-                </button>
-                <button type="submit" form="addDataForm"
-                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#4F46E5] hover:bg-[#4338CA] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4338CA]">
-                    Simpan
-                </button>
-            </div>
-        </div>
-    </div>
+    <%- include('../../partials/modalAddData.ejs', {
+        action: '/dashboard/penelitian/pnbp/create',
+        formFields: [
+            { name: 'Judul', label: 'Judul', type: 'text', required: true },
+            { name: 'SKEMA', label: 'Skema', type: 'text', required: true },
+            { 
+                name: 'Prodi', 
+                label: 'Prodi', 
+                type: 'select', 
+                required: true,
+                options: [
+                    'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
+                    'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
+                    'S2 Teknik Sipil', 'S2 Teknologi Informasi'
+                ] 
+            },
+            { name: 'Ketua', label: 'Ketua', type: 'text', required: true },
+            { name: 'Anggota1', label: 'Anggota 1', type: 'text', required: true },
+            { name: 'Anggota2', label: 'Anggota 2', type: 'text', required: false },
+            { name: 'Anggota3', label: 'Anggota 3', type: 'text', required: false },
+            { name: 'Anggota4', label: 'Anggota 4', type: 'text', required: false },
+            { name: 'Biaya', label: 'Dana', type: 'number', required: true },
+            { name: 'Tahun', label: 'Tahun', type: 'number', required: true },
+            { name: 'Nilai', label: 'Nilai', type: 'text', required: true }
+        ]
+    }) %>
     
     <!-- MODAL EDIT DATA (BARU)             -->
-    <div id="editDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-        <div class="w-full max-w-2xl transition-all transform bg-white rounded-lg shadow-xl">
-            <div class="flex items-center justify-between px-6 py-4 border-b">
-                <h3 class="text-xl font-semibold text-gray-800">Edit Data Penelitian PNBP</h3>
-                <button onclick="closeModal('editDataModal')" class="text-gray-500 hover:text-gray-800"><span class="material-icons-outlined">close</span></button>
-            </div>
-            
-            <!-- Form Action akan diatur oleh JavaScript -->
-            <form id="editDataForm" method="POST">
-                <div class="p-6 max-h-[60vh] overflow-y-auto space-y-4">
-                    <div>
-                        <label for="edit_Judul" class="block text-sm font-medium text-left text-gray-700">Judul <span class="text-red-500">*</span></label>
-                        <input type="text" name="Judul" id="edit_Judul" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_SKEMA" class="block text-sm font-medium text-left text-gray-700">Skema <span class="text-red-500">*</span></label>
-                        <input type="text" name="SKEMA" id="edit_SKEMA" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_Prodi" class="block text-sm font-medium text-left text-gray-700">Prodi <span class="text-red-500">*</span></label>
-                        <select name="Prodi" id="edit_Prodi" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                            <option value="" disabled>Pilih Prodi</option>
-                            <option value="S1 Arsitektur">S1 Arsitektur</option>
-                            <option value="S1 Teknik Elektro">S1 Teknik Elektro</option>
-                            <option value="S1 Teknik Industri">S1 Teknik Industri</option>
-                            <option value="S1 Teknik Informatika">S1 Teknik Informatika</option>
-                            <option value="S1 Teknik Mesin">S1 Teknik Mesin</option>
-                            <option value="S1 Teknik Sipil">S1 Teknik Sipil</option>
-                            <option value="S2 Teknik Sipil">S2 Teknik Sipil</option>
-                            <option value="S2 Teknologi Informasi">S2 Teknologi Informasi</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="edit_Ketua" class="block text-sm font-medium text-left text-gray-700">Ketua <span class="text-red-500">*</span></label>
-                        <input type="text" name="Ketua" id="edit_Ketua" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_Anggota1" class="block text-sm font-medium text-left text-gray-700">Anggota 1 <span class="text-red-500">*</span></label>
-                        <input type="text" name="Anggota1" id="edit_Anggota1" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_Anggota2" class="block text-sm font-medium text-left text-gray-700">Anggota 2</label>
-                        <input type="text" name="Anggota2" id="edit_Anggota2"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_Anggota3" class="block text-sm font-medium text-left text-gray-700">Anggota 3</label>
-                        <input type="text" name="Anggota3" id="edit_Anggota3"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_Anggota4" class="block text-sm font-medium text-left text-gray-700">Anggota 4</label>
-                        <input type="text" name="Anggota4" id="edit_Anggota4"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_Biaya" class="block text-sm font-medium text-left text-gray-700">Dana <span class="text-red-500">*</span></label>
-                        <input type="number" name="Biaya" id="edit_Biaya" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_Tahun" class="block text-sm font-medium text-left text-gray-700">Tahun <span class="text-red-500">*</span></label>
-                        <input type="number" name="Tahun" id="edit_Tahun" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                    <div>
-                        <label for="edit_Nilai" class="block text-sm font-medium text-left text-gray-700">Nilai <span class="text-red-500">*</span></label>
-                        <input type="text" name="Nilai" id="edit_Nilai" required
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
-                    </div>
-                </div>
-                <div class="px-6 py-4 space-x-3 text-right bg-gray-50">
-                    <button onclick="closeModal('editDataModal')" type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#4F46E5] hover:bg-[#4338CA] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4338CA]">
-                        Simpan Perubahan
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <%- include('../../partials/modalEditData.ejs', {
+        action: '/dashboard/penelitian/pnbp/create',
+        formFields: [
+            { name: 'Judul', label: 'Judul', type: 'text', required: true },
+            { name: 'SKEMA', label: 'Skema', type: 'text', required: true },
+            { 
+                name: 'Prodi', 
+                label: 'Prodi', 
+                type: 'select', 
+                required: true,
+                options: [
+                    'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
+                    'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
+                    'S2 Teknik Sipil', 'S2 Teknologi Informasi'
+                ] 
+            },
+            { name: 'Ketua', label: 'Ketua', type: 'text', required: true },
+            { name: 'Anggota1', label: 'Anggota 1', type: 'text', required: true },
+            { name: 'Anggota2', label: 'Anggota 2', type: 'text', required: false },
+            { name: 'Anggota3', label: 'Anggota 3', type: 'text', required: false },
+            { name: 'Anggota4', label: 'Anggota 4', type: 'text', required: false },
+            { name: 'Biaya', label: 'Dana', type: 'number', required: true },
+            { name: 'Tahun', label: 'Tahun', type: 'number', required: true },
+            { name: 'Nilai', label: 'Nilai', type: 'text', required: true }
+        ]
+    }) %>
 
-    <!-- Modal Konfirmasi Hapus -->
-    <div id="deleteDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-        <div class="w-full max-w-md transition-all transform bg-white rounded-lg shadow-xl">
-            <!-- Modal Content -->
-            <div class="p-6 text-center">
-                <span class="mx-auto text-6xl text-red-500 material-icons-outlined">warning_amber</span>
-                <h3 class="mt-4 text-2xl font-semibold text-gray-800">Konfirmasi Penghapusan</h3>
-                <p class="mt-2 text-gray-500">
-                    Apakah Anda yakin ingin menghapus data? <br>
-                    Proses ini tidak dapat dibatalkan.
-                </p>
-            </div>
-            <!-- Modal Footer -->
-            <div class="flex justify-center px-6 py-4 space-x-4 rounded-b-lg bg-gray-50">
-                <button onclick="closeModal('deleteDataModal')" type="button"
-                    class="px-4 py-2 text-sm font-medium text-gray-800 transition-colors bg-gray-200 border border-gray-300 rounded-md hover:bg-gray-300">
-                    Batal
-                </button>
-                <form id="deleteForm" method="POST">
-                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-red hover:bg-red-700">
-                        Ya, Hapus
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Import File -->
-    <div id="importDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-        <div class="w-full max-w-lg transition-all transform bg-white rounded-lg shadow-xl">
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between px-6 py-4 border-b">
-                <h3 class="text-xl font-semibold text-gray-800">Import Data dari File</h3>
-                <button onclick="closeModal('importDataModal')" class="text-gray-500 hover:text-gray-800">
-                    <span class="material-icons-outlined">close</span>
-                </button>
-            </div>
-            <!-- Modal Body -->
-            <form id="importForm" action="/dashboard/penelitian/pnbp/import" method="POST" enctype="multipart/form-data">
-                <div class="p-6">
-                    <p class="mb-4 text-sm text-gray-600">Pilih file dengan format .csv atau .xlsx untuk diimpor. Pastikan kolom di dalam file sesuai dengan template.</p>
-                    <!-- Drop Zone -->
-                    <label id="dropZone" for="fileInput" class="flex flex-col items-center justify-center w-full h-48 transition-colors border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                            <span class="text-5xl text-gray-400 material-icons-outlined">cloud_upload</span>
-                            <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Klik untuk memilih</span> atau seret file ke sini</p>
-                            <p class="text-xs text-gray-500">CSV atau XLSX</p>
-                        </div>
-                        <input id="fileInput" name="file" type="file" class="hidden" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-                    </label>
-                    <!-- File Name Display -->
-                    <div id="fileNameDisplay" class="mt-4 text-sm text-gray-700"></div>
-                </div>
-                <!-- Modal Footer -->
-                <div class="px-6 py-4 space-x-3 text-right rounded-b-lg bg-gray-50">
-                    <button onclick="closeModal('importDataModal')" type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-800 bg-gray-200 border border-gray-300 rounded-md hover:bg-gray-300">
-                        Batal
-                    </button>
-                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#4F46E5] hover:bg-[#4338CA] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4338CA]">
-                        Import
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <%- include('../../partials/modalDeleteData.ejs') %>
+    <%- include('../../partials/modalImportData.ejs', { 
+        action: '/dashboard/penelitian/pnbp/import' 
+    }) %>
 
     <script src="/script/penelitian/dash-pnbp.js"></script>
 </body>
