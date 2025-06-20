@@ -38,14 +38,13 @@
                 </a>
             </div>
             <div class="relative py-8 group">
-                <div class="relative text-xl font-semibold text-white hover:text-veronica hover:cursor-default">
+                <div class="relative flex items-center text-xl font-semibold text-white hover:text-veronica hover:cursor-default">
                     Program Studi
-                    <span
-                        class="absolute left-0 w-0 h-1 transition-all bg-veronica -bottom-2 group-hover:w-full"></span>
-                    <!-- <span class="text-sm rotate-90 material-symbols-outlined">
-                        chevron_right
-                    </span> -->
-                    </div>
+                    <svg class="ml-2 group-hover:fill-veronica" width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 15.5c-.28 0-.53-.11-.71-.29l-5-5 1.42-1.42L12 12.79l4.29-4.3 1.42 1.42-5 5c-.18.18-.43.29-.71.29z"/>
+                    </svg>
+                    <span class="absolute left-0 w-0 h-1 transition-all bg-veronica -bottom-2 group-hover:w-full"></span>
+                </div>
                 <%- include('dropdown', {
                     menu: "prodi", 
                     item: ['Arsitektur', 'Teknik Elektro', 'Teknik Industri', 'Teknik Informatika', 'Teknik Mesin', 'Teknik Sipil', 'S2 Teknik Sipil', 'S2 Teknologi Informasi'], 

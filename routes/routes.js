@@ -18,7 +18,8 @@ const dashboardPengabdianPusatRoutes = require("./dashboardRoute/pengabdian/pusa
 const dashboardPublikasiBukuRoutes = require("./dashboardRoute/publikasi/buku");
 const dashboardPublikasiJupengRoutes = require("./dashboardRoute/publikasi/jupeng");
 const dashboardPublikasiHAKIRoutes = require("./dashboardRoute/publikasi/haki");
-
+// dashboard for download template
+const dashboardDownloadTemplateRoutes = require("./dashboardRoute/downloadTemplateRoute");
 
 // Gunakan route yang sudah dibuat
 route.use("/", homeRoutes);
@@ -34,6 +35,6 @@ route.use("/", dashboardPengabdianPusatRoutes);
 route.use("/", dashboardPublikasiBukuRoutes);
 route.use("/", dashboardPublikasiJupengRoutes);
 route.use("/", dashboardPublikasiHAKIRoutes);
-
+route.use("/", dashboardDownloadTemplateRoutes);
 
 module.exports = route;

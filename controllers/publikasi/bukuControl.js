@@ -189,48 +189,52 @@ exports.importData = async (req, res) => {
     try {
         const file = req.file;
         if (!file) {
-            return res.status(400).send('No file uploaded');
+            return res.send("<script>alert('No file uploaded'); window.location.href='/dashboard/publikasi/buku';</script>");
         }
-        const csv = require('csv-parser');
-        const streamifier = require('streamifier');
-        const results = [];
+        const XLSX = require('xlsx');
 
-        streamifier.createReadStream(file.buffer)
-            .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', async () => {
-                try {
-                    // Mapping kolom sesuai dengan model bukuModel
-                    const dataToInsert = results.map(item => ({
-                        buku_judul: item.buku_judul || '-',
-                        buku_isbn: item.buku_isbn || '-',
-                        buku_jumlah_halaman: parseInt(item.buku_jumlah_halaman) || 0,
-                        buku_penerbit: item.buku_penerbit || '-',
-                        buku_file: item.buku_file || '-',
-                        buku_tahun: parseInt(item.buku_tahun) || 0,
-                        pengguna_kode: item.pengguna_kode || '-',
-                        _pengguna_jenis: item._pengguna_jenis || '-',
-                        _pengguna_nama: item._pengguna_nama || '-',
-                        _prodi_nama: item._prodi_nama || '-'
-                    }));
+        // Baca buffer file xlsx
+        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
 
-                    if (dataToInsert.length > 0) {
-                        await bukuModel.insertMany(dataToInsert);
-                    }
+        // Ambil header kolom dari file
+        const headers = XLSX.utils.sheet_to_json(worksheet, { header: 1 })[0] || [];
+        const expectedHeaders = [
+            'buku_judul', 'buku_isbn', 'buku_jumlah_halaman', 'buku_penerbit', 'buku_file', 
+            'buku_tahun', 'pengguna_kode', '_pengguna_jenis', '_pengguna_nama', '_prodi_nama'
+        ];
 
-                    res.redirect('/dashboard/publikasi/buku');
-                } catch (err) {
-                    console.error('Error saving imported data:', err);
-                    res.status(500).send('Error saving imported data. Pastikan kolom di file CSV sesuai dengan format yang dibutuhkan.');
-                }
-            })
-            .on('error', (err) => {
-                console.error('Error reading CSV stream:', err);
-                res.status(500).send('Error reading CSV file');
-            });
+        // Cek apakah header sesuai urutan dan nama
+        const isHeaderValid = expectedHeaders.every((h, i) => h === headers[i]);
+        if (!isHeaderValid) {
+            return res.send("<script>alert('Format kolom tidak sesuai. Kolom harus: " + expectedHeaders.join(', ') + "'); window.location.href='/dashboard/publikasi/buku';</script>");
+        }
 
+        // Konversi worksheet ke array of objects
+        const data = XLSX.utils.sheet_to_json(worksheet, { defval: '-' });
+
+        // Map data ke format yang sesuai dengan model
+        const dataToInsert = data.map(item => ({
+            buku_judul: item['buku_judul'] || '-',
+            buku_isbn: item['buku_isbn'] || '-',
+            buku_jumlah_halaman: parseInt(item['buku_jumlah_halaman']) || 0,
+            buku_penerbit: item['buku_penerbit'] || '-',
+            buku_file: item['buku_file'] || '-',
+            buku_tahun: parseInt(item['buku_tahun']) || 0,
+            pengguna_kode: item['pengguna_kode'] || '-',
+            _pengguna_jenis: item['_pengguna_jenis'] || '-',
+            _pengguna_nama: item['_pengguna_nama'] || '-',
+            _prodi_nama: item['_prodi_nama'] || '-'
+        }));
+
+        if (dataToInsert.length > 0) {
+            await bukuModel.insertMany(dataToInsert);
+        }
+
+        res.redirect('/dashboard/publikasi/buku');
     } catch (error) {
         console.error('Error importing publikasi buku data:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send('Internal Server Error. Pastikan file XLSX sesuai format.');
     }
 };

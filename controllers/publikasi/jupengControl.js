@@ -199,56 +199,59 @@ exports.exportData = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
-
 exports.importData = async (req, res) => {
     try {
         const file = req.file;
         if (!file) {
-            return res.status(400).send('No file uploaded');
+            return res.send("<script>alert('No file uploaded'); window.location.href='/dashboard/publikasi/jupeng';</script>");
         }
-        const csv = require('csv-parser');
-        const streamifier = require('streamifier');
+        const XLSX = require('xlsx');
 
-        const results = [];
+        // Baca buffer file xlsx
+        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
 
-        streamifier.createReadStream(file.buffer)
-            .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', async () => {
-                try {
-                    // Mapping kolom sesuai dengan model jupengModel
-                    const dataToInsert = results.map(item => ({
-                        jurnal_judul: item.jurnal_judul || '-',
-                        jurnal_url: item.jurnal_url || '-',
-                        jurnal_file: item.jurnal_file || '-',
-                        jurnal_tahun: parseInt(item.jurnal_tahun) || 0,
-                        jurnal_bulan: item.jurnal_bulan || '-',
-                        pengguna_kode: item.pengguna_kode || '-',
-                        _pengguna_jenis: item._pengguna_jenis || '-',
-                        _pengguna_nama: item._pengguna_nama || '-',
-                        _prodi_nama: item._prodi_nama || '-',
-                        _personil_data_ketua: item._personil_data_ketua || '-',
-                        _personil_data_ketua_kode: item._personil_data_ketua_kode || '-',
-                        _personil_data_ketua_jenis: item._personil_data_ketua_jenis || '-'
-                    }));
+        // Ambil header kolom dari file
+        const headers = XLSX.utils.sheet_to_json(worksheet, { header: 1 })[0] || [];
+        const expectedHeaders = [
+            'jurnal_judul', 'jurnal_url', 'jurnal_file', 'jurnal_tahun', 'jurnal_bulan',
+            'pengguna_kode', '_pengguna_jenis', '_pengguna_nama', '_prodi_nama',
+            '_personil_data_ketua', '_personil_data_ketua_kode', '_personil_data_ketua_jenis'
+        ];
 
-                    if (dataToInsert.length > 0) {
-                        await jupengModel.insertMany(dataToInsert);
-                    }
+        // Cek apakah header sesuai urutan dan nama
+        const isHeaderValid = expectedHeaders.every((h, i) => h === headers[i]);
+        if (!isHeaderValid) {
+            return res.send("<script>alert('Format kolom tidak sesuai. Kolom harus: " + expectedHeaders.join(', ') + "'); window.location.href='/dashboard/publikasi/jupeng';</script>");
+        }
 
-                    res.redirect('/dashboard/publikasi/jupeng');
-                } catch (err) {
-                    console.error('Error saving imported data:', err);
-                    res.status(500).send('Error saving imported data. Pastikan kolom di file CSV sesuai dengan format yang dibutuhkan.');
-                }
-            })
-            .on('error', (err) => {
-                console.error('Error reading CSV stream:', err);
-                res.status(500).send('Error reading CSV file');
-            });
+        // Konversi worksheet ke array of objects
+        const data = XLSX.utils.sheet_to_json(worksheet, { defval: '-' });
 
+        // Map data ke format yang sesuai dengan model
+        const dataToInsert = data.map(item => ({
+            jurnal_judul: item['jurnal_judul'] || '-',
+            jurnal_url: item['jurnal_url'] || '-',
+            jurnal_file: item['jurnal_file'] || '-',
+            jurnal_tahun: parseInt(item['jurnal_tahun']) || 0,
+            jurnal_bulan: item['jurnal_bulan'] || '-',
+            pengguna_kode: item['pengguna_kode'] || '-',
+            _pengguna_jenis: item['_pengguna_jenis'] || '-',
+            _pengguna_nama: item['_pengguna_nama'] || '-',
+            _prodi_nama: item['_prodi_nama'] || '-',
+            _personil_data_ketua: item['_personil_data_ketua'] || '-',
+            _personil_data_ketua_kode: item['_personil_data_ketua_kode'] || '-',
+            _personil_data_ketua_jenis: item['_personil_data_ketua_jenis'] || '-'
+        }));
+
+        if (dataToInsert.length > 0) {
+            await jupengModel.insertMany(dataToInsert);
+        }
+
+        res.redirect('/dashboard/publikasi/jupeng');
     } catch (error) {
         console.error('Error importing publikasi jurnal pengabdian data:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send('Internal Server Error. Pastikan file XLSX sesuai format.');
     }
 };

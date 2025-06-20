@@ -11,7 +11,14 @@
         <!-- Modal Body -->
         <form id="importForm" action="<%= action %>" method="POST" enctype="multipart/form-data">
             <div class="p-6">
-                <p class="mb-4 text-sm text-gray-600">Pilih file dengan format .csv atau .xlsx untuk diimpor. Pastikan
+                <!-- file template download -->
+                <div class="mb-4">
+                    <a href="<%= templateUrl %>" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <span class="mr-2 material-icons-outlined">download</span>
+                        Download Template
+                    </a>
+                </div>
+                <p class="mb-4 text-sm text-gray-600">Pilih file dengan format .xlsx untuk diimpor. Pastikan
                     kolom di dalam file sesuai dengan template.</p>
                 <!-- Drop Zone -->
                 <label id="dropZone" for="fileInput"
@@ -20,13 +27,14 @@
                         <span class="text-5xl text-gray-400 material-icons-outlined">cloud_upload</span>
                         <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Klik untuk memilih</span> atau
                             seret file ke sini</p>
-                        <p class="text-xs text-gray-500">CSV atau XLSX</p>
+                        <p class="text-xs text-gray-500">XLSX</p>
                     </div>
                     <input id="fileInput" name="file" type="file" class="hidden"
-                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                        accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                 </label>
-                <!-- File Name Display -->
+                <!-- File Name Display & Warning -->
                 <div id="fileNameDisplay" class="mt-4 text-sm text-gray-700"></div>
+                <div id="fileWarning" class="mt-2 text-sm text-red-600"></div>
             </div>
             <!-- Modal Footer -->
             <div class="px-6 py-4 space-x-3 text-right bg-gray-50">
@@ -42,3 +50,57 @@
         </form>
     </div>
 </div>
+
+<script>
+    // --- LOGIKA UNTUK MODAL IMPORT FILE ---
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const fileWarning = document.getElementById('fileWarning');
+
+    // Mencegah perilaku default browser
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Menambahkan highlight saat file diseret di atas drop zone
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.add('bg-gray-200'), false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.remove('bg-gray-200'), false);
+    });
+
+    // Menangani file yang dijatuhkan (drop)
+    dropZone.addEventListener('drop', handleDrop, false);
+    function handleDrop(e) {
+        let dt = e.dataTransfer;
+        let files = dt.files;
+        handleFiles(files);
+    }
+
+    // Menangani file yang dipilih melalui tombol
+    fileInput.addEventListener('change', function () {
+        handleFiles(this.files);
+    });
+
+    function handleFiles(files) {
+        fileWarning.textContent = '';
+        fileNameDisplay.textContent = '';
+        if (files.length > 0) {
+            const file = files[0];
+            if (!file.name.toLowerCase().endsWith('.xlsx')) {
+                fileWarning.textContent = 'Hanya file dengan format .xlsx yang diperbolehkan.';
+                fileInput.value = '';
+            } else {
+                fileNameDisplay.textContent = `File terpilih: ${file.name}`;
+            }
+        }
+    }
+</script>

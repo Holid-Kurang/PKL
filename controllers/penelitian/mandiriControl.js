@@ -159,7 +159,7 @@ exports.exportData = async (req, res) => {
             [
             'Judul', 'Skema', 'Prodi', 'Ketua',
             'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
-            'Dana', 'Tahun'
+            'Dana', 'tahun'
             ],
             ...data.map(item => [
             item.Judul,
@@ -198,47 +198,53 @@ exports.importData = async (req, res) => {
         if (!file) {
             return res.status(400).send('No file uploaded');
         }
-        const csv = require('csv-parser');
-        const streamifier = require('streamifier');
+        const XLSX = require('xlsx');
 
-        const results = [];
+        // Read buffer as workbook
+        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
 
-        streamifier.createReadStream(file.buffer)
-            .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', async () => {
-                try {
-                    // Mapping sesuai field mandiriModel
-                    const dataToInsert = results.map(item => ({
-                        Judul: item.Judul || '-',
-                        Skema: item.Skema || '-',
-                        Prodi: item.Prodi || '-',
-                        Ketua: item.Ketua || '-',
-                        Anggota1: item.Anggota1 || '-',
-                        Anggota2: item.Anggota2 || '-',
-                        Anggota3: item.Anggota3 || '-',
-                        Anggota4: item.Anggota4 || '-',
-                        Dana: parseFloat(item.Dana) || 0,
-                        tahun: parseInt(item.tahun) || 0
-                    }));
+        // Convert worksheet to JSON
+        const results = XLSX.utils.sheet_to_json(worksheet, { defval: '-' });
 
-                    if (dataToInsert.length > 0) {
-                        await mandiriModel.insertMany(dataToInsert);
-                    }
+        // Kolom yang wajib ada
+        const requiredColumns = [
+            'Judul', 'Skema', 'Prodi', 'Ketua',
+            'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
+            'Dana', 'tahun'
+        ];
 
-                    res.redirect('/dashboard/penelitian/mandiri');
-                } catch (err) {
-                    console.error('Error saving imported data:', err);
-                    res.status(500).send('Error saving imported data. Pastikan kolom di file CSV sesuai dengan format yang dibutuhkan.');
-                }
-            })
-            .on('error', (err) => {
-                console.error('Error reading CSV stream:', err);
-                res.status(500).send('Error reading CSV file');
-            });
+        // Cek apakah semua kolom yang dibutuhkan ada di file
+        const fileColumns = Object.keys(results[0] || {});
+        const missingColumns = requiredColumns.filter(col => !fileColumns.includes(col));
+        if (missingColumns.length > 0) {
+            return res.status(400).send(
+                `Kolom berikut wajib ada di file: ${missingColumns.join(', ')}`
+            );
+        }
 
+        // Mapping sesuai field mandiriModel
+        const dataToInsert = results.map(item => ({
+            Judul: item.Judul || '-',
+            Skema: item.Skema || '-',
+            Prodi: item.Prodi || '-',
+            Ketua: item.Ketua || '-',
+            Anggota1: item.Anggota1 || '-',
+            Anggota2: item.Anggota2 || '-',
+            Anggota3: item.Anggota3 || '-',
+            Anggota4: item.Anggota4 || '-',
+            Dana: parseFloat(item.Dana) || 0,
+            tahun: parseInt(item.tahun) || 0
+        }));
+
+        if (dataToInsert.length > 0) {
+            await mandiriModel.insertMany(dataToInsert);
+        }
+
+        res.redirect('/dashboard/penelitian/mandiri');
     } catch (error) {
         console.error('Error importing penelitian mandiri data:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send('Internal Server Error. Pastikan kolom di file XLSX sesuai dengan format yang dibutuhkan.');
     }
 };
