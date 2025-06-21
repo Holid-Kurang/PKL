@@ -167,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         },
         // PNBP
-        // PNBP
         {
             id: 'pnbpPerTahun',
             init: () => new Chart(document.getElementById('pnbpPerTahun').getContext('2d'), {

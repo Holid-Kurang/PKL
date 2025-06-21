@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="/style/main.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body class="text-center bg-[#EDF0F1] ">
+    <%- include('partials/navbar', {isLogin}) %>
+
+    <h1 class="sticky pt-6 text-4xl font-bold bg-white top-16 text-indigo"><%= prodi %></h1>
+    
+    <h2 class="text-3xl font-bold bg-white text-indigo">Penelitian Pusat</h2>
+    <div class="grid grid-cols-3 grid-rows-1 gap-8 px-32 py-2 bg-white  h-[50vh]">
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pusatPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pusatDanaPerTahun" class="block w-full h-full"></canvas>
+            </div>
+            <div class="shadow-xl rounded-xl shadow-gray-800/25">
+                <canvas id="pusatAvgDanaPerTahun" class="block w-full h-full"></canvas>
+            </div>
+        </div>
+    
+    <h2 class="text-3xl font-bold bg-white text-indigo">Penelitian PNBP</h2>
+    <div class="grid grid-cols-2 grid-rows-2 gap-8 px-32 py-2 bg-white  h-[100vh]">
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="pnbpPerTahun" class="block w-full h-full"></canvas>
+        </div>
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="pnbpDanaPerTahun" class="block w-full h-full"></canvas>
+        </div>
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="pnbpAvgDanaPerTahun" class="block w-full h-full"></canvas>
+        </div>
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="pnbpAvgNilaiPerTahun" class="block w-full h-full"></canvas>
+        </div>
+    </div>
+    
+    <h2 class="text-3xl font-bold bg-white text-indigo">Penelitian Mandiri</h2>
+    <div class="grid grid-cols-3 grid-rows-1 gap-8 px-32 py-2 bg-white  h-[50vh]">
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="mandiriPerTahun" class="block w-full h-full"></canvas>
+        </div>
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="mandiriDanaPerTahun" class="block w-full h-full"></canvas>
+        </div>
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="mandiriAvgDanaPerTahun" class="block w-full h-full"></canvas>
+        </div>
+    </div>
+
+    <h2 class="text-3xl font-bold bg-white text-indigo">Pengabdian PNBP</h2>
+    <div class="grid grid-cols-2 grid-rows-2 gap-8 px-32 py-2 bg-white  h-[100vh]">
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="pengabdianPNBPPerTahun" class="block w-full h-full"></canvas>
+        </div>
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="pengabdianPNBPDanaPerTahun" class="block w-full h-full"></canvas>
+        </div>
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="pengabdianPNBPAvgDanaPerTahun" class="block w-full h-full"></canvas>
+        </div>
+        <div class="shadow-xl rounded-xl shadow-gray-800/25">
+            <canvas id="pengabdianPNBPAvgNilaiPerTahun" class="block w-full h-full"></canvas>
+        </div>
+    </div>
+    
+    <h2 class="text-3xl font-bold bg-white text-indigo">Publikasi Buku</h2>
+    <div class="grid grid-cols-1 grid-rows-1 gap-8 px-32 py-2 bg-white  h-[50vh]">
+        <div class="shadow-xl rounded-3xl shadow-gray-800/25">
+            <canvas id="bukuPerTahun" class="block w-full h-full"></canvas>
+        </div>
+    </div>
+    <h2 class="text-3xl font-bold bg-white text-indigo">Publikasi HAKI</h2>
+    <div class="grid grid-cols-2 grid-rows-1 gap-8 px-32 py-2 bg-white  h-[50vh]">
+        <div class="shadow-xl rounded-3xl shadow-gray-800/25">
+            <canvas id="hakiPerJenis" class="block w-full h-full"></canvas>
+        </div>
+        <div class="shadow-xl rounded-3xl shadow-gray-800/25">
+            <canvas id="hakiPerTahun" class="block w-full h-full"></canvas>
+        </div>
+    </div>
+    <h2 class="text-3xl font-bold bg-white text-indigo">Publikasi Jurnal Pengabdian</h2>
+    <div class="grid grid-cols-1 grid-rows-1 gap-8 px-32 py-2 bg-white  h-[50vh]">
+        <div class="shadow-xl rounded-3xl shadow-gray-800/25 ">
+            <canvas id="jupengPerTahun" class="block w-full h-full"></canvas>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.penelitian = {
+            pusat: {
+                jumlahPerTahun: <%- JSON.stringify(penelitianPusat.jumlahPerTahun) %>,
+                jumlahDanaPerTahun: <%- JSON.stringify(penelitianPusat.jumlahDanaPerTahun) %>,
+                avgDanaPerTahun: <%- JSON.stringify(penelitianPusat.avgDanaPerTahun) %>,
+            },
+            pnbp: {
+                jumlahPerTahun: <%- JSON.stringify(penelitianPNBP.jumlahPerTahun) %>,
+                jumlahDanaPerTahun: <%- JSON.stringify(penelitianPNBP.jumlahDanaPerTahun) %>,
+                avgDanaPerTahun: <%- JSON.stringify(penelitianPNBP.avgDanaPerTahun) %>,
+                avgNilaiPerTahun: <%- JSON.stringify(penelitianPNBP.avgNilaiPerTahun) %>,
+            },
+            mandiri: {
+                jumlahPerTahun: <%- JSON.stringify(penelitianMandiri.jumlahPerTahun) %>,
+                jumlahDanaPerTahun: <%- JSON.stringify(penelitianMandiri.jumlahDanaPerTahun) %>,
+                avgDanaPerTahun: <%- JSON.stringify(penelitianMandiri.avgDanaPerTahun) %>,
+            }
+        };
+
+        window.pengabdian = {
+            pnbp: {
+                jumlahPerTahun: <%- JSON.stringify(pengabdianPNBP.jumlahPerTahun) %>,
+                jumlahDanaPerTahun: <%- JSON.stringify(pengabdianPNBP.jumlahDanaPerTahun) %>,
+                avgDanaPerTahun: <%- JSON.stringify(pengabdianPNBP.avgDanaPerTahun) %>,
+                avgNilaiPerTahun: <%- JSON.stringify(pengabdianPNBP.avgNilaiPerTahun) %>,
+            },
+        };
+
+        window.publikasi = {
+            jupeng: {
+                jumlahPerTahun: <%- JSON.stringify(publikasiJupeng.jumlahPerTahun) %>,
+            },
+            haki: {
+                jumlahPerTahun: <%- JSON.stringify(publikasiHaki.jumlahPerTahun) %>,
+                jumlahPerJenis: <%- JSON.stringify(publikasiHaki.jumlahPerJenis) %>,
+            },
+            buku: {
+                jumlahPerTahun: <%- JSON.stringify(publikasiBuku.jumlahPerTahun) %>,
+            },
+        };
+    </script>
+    <script src="/script/prodi.js"></script>
+</body>
+</html>
