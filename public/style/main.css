@@ -652,24 +652,12 @@ video {
   top: 50%;
 }
 
-.top-5 {
-  top: 1.25rem;
-}
-
 .top-16 {
   top: 4rem;
 }
 
-.top-1 {
-  top: 0.25rem;
-}
-
-.top-2 {
-  top: 0.5rem;
-}
-
-.top-20 {
-  top: 5rem;
+.top-5 {
+  top: 1.25rem;
 }
 
 .z-50 {
@@ -1394,6 +1382,11 @@ video {
   line-height: 2rem;
 }
 
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
 .text-4xl {
   font-size: 2.25rem;
   line-height: 2.5rem;
@@ -1453,11 +1446,6 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
 }
 
 .font-bold {
