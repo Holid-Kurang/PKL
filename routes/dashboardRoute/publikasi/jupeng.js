@@ -10,8 +10,8 @@ const upload = multer({ storage: storage });
 // Halaman utama
 router.get("/dashboard/publikasi/jupeng", isAuthenticated, jupengControl.getAllData);
 router.post("/dashboard/publikasi/jupeng/create", isAuthenticated, jupengControl.createData);
-router.post("/dashboard/publikasi/jupeng/update/:id", isAuthenticated, jupengControl.updateData);
-router.post("/dashboard/publikasi/jupeng/delete/:id", isAuthenticated, jupengControl.deleteData);
+router.put("/dashboard/publikasi/jupeng/update/:id", isAuthenticated, jupengControl.updateData);
+router.delete("/dashboard/publikasi/jupeng/delete/:id", isAuthenticated, jupengControl.deleteData);
 router.get("/dashboard/publikasi/jupeng/export", isAuthenticated, jupengControl.exportData);
 router.post("/dashboard/publikasi/jupeng/import", isAuthenticated, upload.single("file"), jupengControl.importData);
 

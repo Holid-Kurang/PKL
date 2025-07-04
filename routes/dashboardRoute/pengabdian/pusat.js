@@ -9,8 +9,8 @@ const upload = multer({ storage: storage});
 // Halaman utama
 router.get("/dashboard/pengabdian/pusat", isAuthenticated, pusatControl.getAllData);
 router.post("/dashboard/pengabdian/pusat/create", isAuthenticated, pusatControl.createData);
-router.post("/dashboard/pengabdian/pusat/update/:id", isAuthenticated, pusatControl.updateData);
-router.post("/dashboard/pengabdian/pusat/delete/:id", isAuthenticated, pusatControl.deleteData);
+router.put("/dashboard/pengabdian/pusat/update/:id", isAuthenticated, pusatControl.updateData);
+router.delete("/dashboard/pengabdian/pusat/delete/:id", isAuthenticated, pusatControl.deleteData);
 router.get("/dashboard/pengabdian/pusat/export", isAuthenticated, pusatControl.exportData);
 router.post("/dashboard/pengabdian/pusat/import", isAuthenticated, upload.single("file"), pusatControl.importData);
 

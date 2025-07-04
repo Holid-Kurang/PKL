@@ -10,8 +10,8 @@ const upload = multer({ storage: storage });
 // Halaman utama
 router.get("/dashboard/penelitian/pnbp", isAuthenticated, pnbpControl.getAllData);
 router.post("/dashboard/penelitian/pnbp/create", isAuthenticated, pnbpControl.createData);
-router.post("/dashboard/penelitian/pnbp/update/:id", isAuthenticated, pnbpControl.updateData);
-router.post("/dashboard/penelitian/pnbp/delete/:id", isAuthenticated, pnbpControl.deleteData);
+router.put("/dashboard/penelitian/pnbp/update/:id", isAuthenticated, pnbpControl.updateData);
+router.delete("/dashboard/penelitian/pnbp/delete/:id", isAuthenticated, pnbpControl.deleteData);
 router.get("/dashboard/penelitian/pnbp/export", isAuthenticated, pnbpControl.exportData);
 router.post("/dashboard/penelitian/pnbp/import", isAuthenticated, upload.single("file"), pnbpControl.importData);
 

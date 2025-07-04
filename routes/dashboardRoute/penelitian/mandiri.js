@@ -10,8 +10,8 @@ const upload = multer({ storage: storage });
 // Halaman utama
 router.get("/dashboard/penelitian/mandiri", isAuthenticated, mandiriControl.getAllData);
 router.post("/dashboard/penelitian/mandiri/create", isAuthenticated, mandiriControl.createData);
-router.post("/dashboard/penelitian/mandiri/update/:id", isAuthenticated, mandiriControl.updateData);
-router.post("/dashboard/penelitian/mandiri/delete/:id", isAuthenticated, mandiriControl.deleteData);
+router.put("/dashboard/penelitian/mandiri/update/:id", isAuthenticated, mandiriControl.updateData);
+router.delete("/dashboard/penelitian/mandiri/delete/:id", isAuthenticated, mandiriControl.deleteData);
 router.get("/dashboard/penelitian/mandiri/export", isAuthenticated, mandiriControl.exportData);
 router.post("/dashboard/penelitian/mandiri/import", isAuthenticated, upload.single("file"), mandiriControl.importData);
 

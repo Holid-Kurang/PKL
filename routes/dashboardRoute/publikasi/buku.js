@@ -10,8 +10,8 @@ const upload = multer({ storage: storage });
 // Halaman utama
 router.get("/dashboard/publikasi/buku", isAuthenticated, bukuControl.getAllData);
 router.post("/dashboard/publikasi/buku/create", isAuthenticated, bukuControl.createData);
-router.post("/dashboard/publikasi/buku/update/:id", isAuthenticated, bukuControl.updateData);
-router.post("/dashboard/publikasi/buku/delete/:id", isAuthenticated, bukuControl.deleteData);
+router.put("/dashboard/publikasi/buku/update/:id", isAuthenticated, bukuControl.updateData);
+router.delete("/dashboard/publikasi/buku/delete/:id", isAuthenticated, bukuControl.deleteData);
 router.get("/dashboard/publikasi/buku/export", isAuthenticated, bukuControl.exportData);
 router.post("/dashboard/publikasi/buku/import", isAuthenticated, upload.single("file"), bukuControl.importData);
 
