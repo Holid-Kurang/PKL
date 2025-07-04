@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
-
+const multer = require("multer");
 const jupengControl = require("../../../controllers/publikasi/jupengControl");
+
+// Konfigurasi Multer untuk menyimpan file di memori sementara
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Halaman utama
 router.get("/dashboard/publikasi/jupeng", isAuthenticated, jupengControl.getAllData);
@@ -9,7 +13,7 @@ router.post("/dashboard/publikasi/jupeng/create", isAuthenticated, jupengControl
 router.post("/dashboard/publikasi/jupeng/update/:id", isAuthenticated, jupengControl.updateData);
 router.post("/dashboard/publikasi/jupeng/delete/:id", isAuthenticated, jupengControl.deleteData);
 router.get("/dashboard/publikasi/jupeng/export", isAuthenticated, jupengControl.exportData);
-
+router.post("/dashboard/publikasi/jupeng/import", isAuthenticated, upload.single("file"), jupengControl.importData);
 
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {

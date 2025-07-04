@@ -100,7 +100,6 @@ exports.deleteData = async (req, res) => {
         // If the current URL contains a search query, append it to the redirect
         const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
         // Redirect to the same page with the search query
-        console.log(currentUrl + searchQuery);
         res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting penelitian mandiri data:', error);
@@ -143,7 +142,6 @@ exports.updateData = async (req, res) => {
         // If the current URL contains a search query, append it to the redirect
         const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
         // Redirect to the same page with the search query
-        console.log(currentUrl + searchQuery);
         res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating penelitian mandiri data:', error);

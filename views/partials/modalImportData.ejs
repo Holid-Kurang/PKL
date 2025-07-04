@@ -82,7 +82,10 @@
     function handleDrop(e) {
         let dt = e.dataTransfer;
         let files = dt.files;
-        handleFiles(files);
+        if (files.length > 0) {
+            fileInput.files = files; // Set file input agar form bisa submit file
+            handleFiles(files);
+        }
     }
 
     // Menangani file yang dipilih melalui tombol
