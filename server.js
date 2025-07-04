@@ -4,8 +4,9 @@ const path = require("path");
 const session = require("express-session");
 const routes = require("./routes/routes");
 const rateLimit = require('express-rate-limit');
-const methodOverride = require('method-override'); 
+const methodOverride = require('method-override');
 const connectDB = require('./config/db');
+require('dotenv').config();
 
 connectDB(); // Connect to MongoDB
 
