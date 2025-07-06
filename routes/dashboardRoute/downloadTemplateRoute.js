@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const router = express.Router();
 
+const isLogin = require("../../middlewares/isLogin");
+
 const templateFiles = {
     1: "template_penelitian_mandiri.xlsx",
     2: "template_penelitian_pnbp.xlsx",
@@ -13,7 +15,7 @@ const templateFiles = {
     8: "template_publikasi_jupeng.xlsx"
 };
 
-router.get("/dashboard/download/:id", isAuthenticated, (req, res) => {
+router.get("/dashboard/download/:id", isLogin, (req, res) => {
     const templateId = req.params.id;
     const fileName = templateFiles[templateId];
     if (!fileName) {
@@ -22,13 +24,5 @@ router.get("/dashboard/download/:id", isAuthenticated, (req, res) => {
     const filePath = path.join(__dirname, "../../public/template", fileName);
     res.download(filePath);
 });
-
-// Middleware to check if user is logged in
-function isAuthenticated(req, res, next) {
-    if (req.session.isLogin) {
-        return next();
-    }
-    res.send(`<script>alert('Unauthorized: Please log in first'); window.location.href = '/login';</script>`);
-}
 
 module.exports = router;

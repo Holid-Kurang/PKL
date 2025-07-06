@@ -165,40 +165,50 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await pusatModel.find({});
-        // Prepare data for worksheet
-        const worksheetData = [
-            [
-            'Judul', 'SKEMA', 'Nama', 'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
-            'Dana', 'Tahun', 'NomorKontrakLPPM', 'NIP', 'JumlahAnggota', 'JumlahMshTerlibat'
-            ],
-            ...data.map(item => [
-            item.Judul,
-            item.SKEMA,
-            item.Nama,
-            item.Anggota1,
-            item.Anggota2,
-            item.Anggota3,
-            item.Anggota4,
-            item.Dana,
-            item.Tahun,
-            item.NomorKontrakLPPM,
-            item.NIP,
-            item.JumlahAnggota,
-            item.JumlahMshTerlibat
-            ])
-        ];
-        const XLSX = require('xlsx');
-        // Create worksheet and workbook
-        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'PengabdianPusat');
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('PengabdianPusat');
 
-        // Write workbook to XLSX buffer
-        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+        // Define columns
+        worksheet.columns = [
+            { header: 'Judul', key: 'Judul', width: 30 },
+            { header: 'SKEMA', key: 'SKEMA', width: 20 },
+            { header: 'Nama', key: 'Nama', width: 25 },
+            { header: 'Anggota1', key: 'Anggota1', width: 20 },
+            { header: 'Anggota2', key: 'Anggota2', width: 20 },
+            { header: 'Anggota3', key: 'Anggota3', width: 20 },
+            { header: 'Anggota4', key: 'Anggota4', width: 20 },
+            { header: 'Dana', key: 'Dana', width: 15 },
+            { header: 'Tahun', key: 'Tahun', width: 10 },
+            { header: 'NomorKontrakLPPM', key: 'NomorKontrakLPPM', width: 25 },
+            { header: 'NIP', key: 'NIP', width: 20 },
+            { header: 'JumlahAnggota', key: 'JumlahAnggota', width: 15 },
+            { header: 'JumlahMshTerlibat', key: 'JumlahMshTerlibat', width: 18 }
+        ];
+
+        // Add rows
+        data.forEach(item => {
+            worksheet.addRow({
+                Judul: item.Judul,
+                SKEMA: item.SKEMA,
+                Nama: item.Nama,
+                Anggota1: item.Anggota1,
+                Anggota2: item.Anggota2,
+                Anggota3: item.Anggota3,
+                Anggota4: item.Anggota4,
+                Dana: item.Dana,
+                Tahun: item.Tahun,
+                NomorKontrakLPPM: item.NomorKontrakLPPM,
+                NIP: item.NIP,
+                JumlahAnggota: item.JumlahAnggota,
+                JumlahMshTerlibat: item.JumlahMshTerlibat
+            });
+        });
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=pengabdian_pusat.xlsx');
-        res.status(200).send(xlsxBuffer);
+        await workbook.xlsx.write(res);
+        res.end();
     } catch (error) {
         console.error('Error exporting pengabdian pusat data:', error);
         res.status(500).send('Internal Server Error');
@@ -212,19 +222,17 @@ exports.importData = async (req, res) => {
         if (!file) {
             return res.send("<script>alert('No file uploaded'); window.location.href='/dashboard/pengabdian/pusat';</script>");
         }
-        const XLSX = require('xlsx');
-
-        // Baca buffer file xlsx
-        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(file.buffer);
+        const worksheet = workbook.worksheets[0];
 
         // Ambil header kolom dari file
-        const headers = XLSX.utils.sheet_to_json(worksheet, { header: 1 })[0] || [];
         const expectedHeaders = [
             'Judul', 'SKEMA', 'Nama', 'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
             'Dana', 'Tahun', 'NomorKontrakLPPM', 'NIP', 'JumlahAnggota', 'JumlahMshTerlibat'
         ];
+        const headers = worksheet.getRow(1).values.slice(1); // slice(1) to skip first empty cell
 
         // Cek apakah header sesuai urutan dan nama
         const isHeaderValid = expectedHeaders.every((h, i) => h === headers[i]);
@@ -232,25 +240,31 @@ exports.importData = async (req, res) => {
             return res.send("<script>alert('Format kolom tidak sesuai. Kolom harus: " + expectedHeaders.join(', ') + "'); window.location.href='/dashboard/pengabdian/pusat';</script>");
         }
 
-        // Konversi worksheet ke array of objects
-        const data = XLSX.utils.sheet_to_json(worksheet, { defval: '-' });
+        // Baca data dari baris ke-2 sampai akhir
+        const dataToInsert = [];
+        worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+            if (rowNumber === 1) return; // skip header
+            const [
+                Judul, SKEMA, Nama, Anggota1, Anggota2, Anggota3, Anggota4,
+                Dana, Tahun, NomorKontrakLPPM, NIP, JumlahAnggota, JumlahMshTerlibat
+            ] = row.values.slice(1); // slice(1) to skip first empty cell
 
-        // Map data ke format yang sesuai dengan model
-        const dataToInsert = data.map(item => ({
-            Judul: item.Judul || '-',
-            SKEMA: item.SKEMA || '-',
-            Nama: item.Nama || '-',
-            Anggota1: item.Anggota1 || '-',
-            Anggota2: item.Anggota2 || '-',
-            Anggota3: item.Anggota3 || '-',
-            Anggota4: item.Anggota4 || '-',
-            Dana: parseFloat(item.Dana) || 0,
-            Tahun: parseInt(item.Tahun) || 0,
-            NomorKontrakLPPM: item.NomorKontrakLPPM || '-',
-            NIP: item.NIP || '-',
-            JumlahAnggota: parseInt(item.JumlahAnggota) || 0,
-            JumlahMshTerlibat: parseInt(item.JumlahMshTerlibat) || 0
-        }));
+            dataToInsert.push({
+                Judul: Judul || '-',
+                SKEMA: SKEMA || '-',
+                Nama: Nama || '-',
+                Anggota1: Anggota1 || '-',
+                Anggota2: Anggota2 || '-',
+                Anggota3: Anggota3 || '-',
+                Anggota4: Anggota4 || '-',
+                Dana: parseFloat(Dana) || 0,
+                Tahun: parseInt(Tahun) || 0,
+                NomorKontrakLPPM: NomorKontrakLPPM || '-',
+                NIP: NIP || '-',
+                JumlahAnggota: parseInt(JumlahAnggota) || 0,
+                JumlahMshTerlibat: parseInt(JumlahMshTerlibat) || 0
+            });
+        });
 
         if (dataToInsert.length > 0) {
             await pusatModel.insertMany(dataToInsert);

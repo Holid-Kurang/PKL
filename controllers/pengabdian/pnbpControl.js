@@ -142,44 +142,51 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await pnbpModel.find({});
-        // Prepare data for worksheet
-        const worksheetData = [
-            [
-            'Judul', 'SKEMA', 'Prodi', 'Ketua',
-            'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
-            'Dana', 'Tahun', 'Nilai'
-            ],
-            ...data.map(item => [
-            item.Judul,
-            item.SKEMA,
-            item.Prodi,
-            item.Ketua,
-            item.Anggota1,
-            item.Anggota2,
-            item.Anggota3,
-            item.Anggota4,
-            item.Dana,
-            item.Tahun,
-            item.Nilai
-            ])
-        ];
-        const XLSX = require('xlsx');
-        // Create worksheet and workbook
-        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'PengabdianPNBP');
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('PengabdianPNBP');
 
-        // Write workbook to XLSX buffer
-        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+        // Define columns
+        worksheet.columns = [
+            { header: 'Judul', key: 'Judul', width: 30 },
+            { header: 'SKEMA', key: 'SKEMA', width: 20 },
+            { header: 'Prodi', key: 'Prodi', width: 20 },
+            { header: 'Ketua', key: 'Ketua', width: 25 },
+            { header: 'Anggota1', key: 'Anggota1', width: 25 },
+            { header: 'Anggota2', key: 'Anggota2', width: 25 },
+            { header: 'Anggota3', key: 'Anggota3', width: 25 },
+            { header: 'Anggota4', key: 'Anggota4', width: 25 },
+            { header: 'Dana', key: 'Dana', width: 15 },
+            { header: 'Tahun', key: 'Tahun', width: 10 },
+            { header: 'Nilai', key: 'Nilai', width: 10 }
+        ];
+
+        // Add rows
+        data.forEach(item => {
+            worksheet.addRow({
+                Judul: item.Judul,
+                SKEMA: item.SKEMA,
+                Prodi: item.Prodi,
+                Ketua: item.Ketua,
+                Anggota1: item.Anggota1,
+                Anggota2: item.Anggota2,
+                Anggota3: item.Anggota3,
+                Anggota4: item.Anggota4,
+                Dana: item.Dana,
+                Tahun: item.Tahun,
+                Nilai: item.Nilai
+            });
+        });
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=pengabdian_pnbp.xlsx');
-        res.status(200).send(xlsxBuffer);
+        await workbook.xlsx.write(res);
+        res.end();
     } catch (error) {
         console.error('Error exporting pengabdian pnbp data:', error);
         res.status(500).send('Internal Server Error');
     }
-}
+};
 
 exports.importData = async (req, res) => {
     try {
@@ -188,15 +195,18 @@ exports.importData = async (req, res) => {
         if (!file) {
             return res.send("<script>alert('No file uploaded'); window.location.href='/dashboard/pengabdian/pnbp';</script>");
         }
-        const XLSX = require('xlsx');
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(file.buffer);
 
-        // Baca buffer file xlsx
-        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
+        const worksheet = workbook.worksheets[0];
+        if (!worksheet) {
+            return res.send("<script>alert('Worksheet tidak ditemukan'); window.location.href='/dashboard/pengabdian/pnbp';</script>");
+        }
 
-        // Ambil header kolom dari file
-        const headers = XLSX.utils.sheet_to_json(worksheet, { header: 1 })[0] || [];
+        // Ambil header kolom dari baris pertama
+        const headerRow = worksheet.getRow(1);
+        const headers = headerRow.values.slice(1); // values[0] is null
         const expectedHeaders = [
             'Judul', 'SKEMA', 'Prodi', 'Ketua',
             'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
@@ -209,23 +219,30 @@ exports.importData = async (req, res) => {
             return res.send("<script>alert('Format kolom tidak sesuai. Kolom harus: " + expectedHeaders.join(', ') + "'); window.location.href='/dashboard/pengabdian/pnbp';</script>");
         }
 
-        // Konversi worksheet ke array of objects
-        const data = XLSX.utils.sheet_to_json(worksheet, { defval: '-' });
+        // Baca data mulai dari baris kedua
+        const dataToInsert = [];
+        worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+            if (rowNumber === 1) return; // skip header
+            const [
+                Judul, SKEMA, Prodi, Ketua,
+                Anggota1, Anggota2, Anggota3, Anggota4,
+                Dana, Tahun, Nilai
+            ] = row.values.slice(1); // values[0] is null
 
-        // Map data ke format yang sesuai dengan model
-        const dataToInsert = data.map(item => ({
-            Judul: item.Judul || '-',
-            SKEMA: item.SKEMA || '-',
-            Prodi: item.Prodi || '-',
-            Ketua: item.Ketua || '-',
-            Anggota1: item.Anggota1 || '-',
-            Anggota2: item.Anggota2 || '-',
-            Anggota3: item.Anggota3 || '-',
-            Anggota4: item.Anggota4 || '-',
-            Dana: parseFloat(item.Dana) || 0,
-            Tahun: parseInt(item.Tahun) || 0,
-            Nilai: parseFloat(item.Nilai) || 0
-        }));
+            dataToInsert.push({
+                Judul: Judul || '-',
+                SKEMA: SKEMA || '-',
+                Prodi: Prodi || '-',
+                Ketua: Ketua || '-',
+                Anggota1: Anggota1 || '-',
+                Anggota2: Anggota2 || '-',
+                Anggota3: Anggota3 || '-',
+                Anggota4: Anggota4 || '-',
+                Dana: parseFloat(Dana) || 0,
+                Tahun: parseInt(Tahun) || 0,
+                Nilai: parseFloat(Nilai) || 0
+            });
+        });
 
         if (dataToInsert.length > 0) {
             await pnbpModel.insertMany(dataToInsert);

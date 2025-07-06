@@ -2,25 +2,18 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const bukuControl = require("../../../controllers/publikasi/bukuControl");
+const isLogin = require("../../../middlewares/isLogin");
 
 // Konfigurasi Multer untuk menyimpan file di memori sementara
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Halaman utama
-router.get("/dashboard/publikasi/buku", isAuthenticated, bukuControl.getAllData);
-router.post("/dashboard/publikasi/buku/create", isAuthenticated, bukuControl.createData);
-router.put("/dashboard/publikasi/buku/update/:id", isAuthenticated, bukuControl.updateData);
-router.delete("/dashboard/publikasi/buku/delete/:id", isAuthenticated, bukuControl.deleteData);
-router.get("/dashboard/publikasi/buku/export", isAuthenticated, bukuControl.exportData);
-router.post("/dashboard/publikasi/buku/import", isAuthenticated, upload.single("file"), bukuControl.importData);
-
-// Middleware to check if user is logged in
-function isAuthenticated(req, res, next) {
-    if (req.session.isLogin) {
-        return next();
-    }
-    res.send(`<script>alert('Unauthorized: Please log in first'); window.location.href = '/login';</script>`);
-}
+router.get("/dashboard/publikasi/buku", isLogin, bukuControl.getAllData);
+router.post("/dashboard/publikasi/buku/create", isLogin, bukuControl.createData);
+router.put("/dashboard/publikasi/buku/update/:id", isLogin, bukuControl.updateData);
+router.delete("/dashboard/publikasi/buku/delete/:id", isLogin, bukuControl.deleteData);
+router.get("/dashboard/publikasi/buku/export", isLogin, bukuControl.exportData);
+router.post("/dashboard/publikasi/buku/import", isLogin, upload.single("file"), bukuControl.importData);
 
 module.exports = router;

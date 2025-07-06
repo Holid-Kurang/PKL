@@ -152,38 +152,47 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await mandiriModel.find({});
-        // Prepare data for worksheet
-        const worksheetData = [
-            [
-            'Judul', 'Skema', 'Prodi', 'Ketua',
-            'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
-            'Dana', 'tahun'
-            ],
-            ...data.map(item => [
-            item.Judul,
-            item.Skema,
-            item.Prodi,
-            item.Ketua,
-            item.Anggota1,
-            item.Anggota2,
-            item.Anggota3,
-            item.Anggota4,
-            item.Dana,
-            item.tahun
-            ])
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('PenelitianMandiri');
+
+        // Define columns
+        worksheet.columns = [
+            { header: 'Judul', key: 'Judul', width: 30 },
+            { header: 'Skema', key: 'Skema', width: 20 },
+            { header: 'Prodi', key: 'Prodi', width: 20 },
+            { header: 'Ketua', key: 'Ketua', width: 20 },
+            { header: 'Anggota1', key: 'Anggota1', width: 20 },
+            { header: 'Anggota2', key: 'Anggota2', width: 20 },
+            { header: 'Anggota3', key: 'Anggota3', width: 20 },
+            { header: 'Anggota4', key: 'Anggota4', width: 20 },
+            { header: 'Dana', key: 'Dana', width: 15 },
+            { header: 'tahun', key: 'tahun', width: 10 }
         ];
-        const XLSX = require('xlsx');
-        // Create worksheet and workbook
-        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'PenelitianMandiri');
 
-        // Write workbook to XLSX buffer
-        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+        // Add rows
+        data.forEach(item => {
+            worksheet.addRow({
+                Judul: item.Judul,
+                Skema: item.Skema,
+                Prodi: item.Prodi,
+                Ketua: item.Ketua,
+                Anggota1: item.Anggota1,
+                Anggota2: item.Anggota2,
+                Anggota3: item.Anggota3,
+                Anggota4: item.Anggota4,
+                Dana: item.Dana,
+                tahun: item.tahun
+            });
+        });
 
+        // Set response headers
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=penelitian_mandiri.xlsx');
-        res.status(200).send(xlsxBuffer);
+
+        // Write to response
+        await workbook.xlsx.write(res);
+        res.end();
     } catch (error) {
         console.error('Error exporting penelitian mandiri data:', error);
         res.status(500).send('Internal Server Error');
@@ -196,15 +205,10 @@ exports.importData = async (req, res) => {
         if (!file) {
             return res.status(400).send('No file uploaded');
         }
-        const XLSX = require('xlsx');
-
-        // Read buffer as workbook
-        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-
-        // Convert worksheet to JSON
-        const results = XLSX.utils.sheet_to_json(worksheet, { defval: '-' });
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(file.buffer);
+        const worksheet = workbook.worksheets[0];
 
         // Kolom yang wajib ada
         const requiredColumns = [
@@ -213,8 +217,9 @@ exports.importData = async (req, res) => {
             'Dana', 'tahun'
         ];
 
-        // Cek apakah semua kolom yang dibutuhkan ada di file
-        const fileColumns = Object.keys(results[0] || {});
+        // Ambil header dari baris pertama
+        const headerRow = worksheet.getRow(1);
+        const fileColumns = headerRow.values.slice(1); // values[0] is null
         const missingColumns = requiredColumns.filter(col => !fileColumns.includes(col));
         if (missingColumns.length > 0) {
             return res.status(400).send(
@@ -222,19 +227,27 @@ exports.importData = async (req, res) => {
             );
         }
 
-        // Mapping sesuai field mandiriModel
-        const dataToInsert = results.map(item => ({
-            Judul: item.Judul || '-',
-            Skema: item.Skema || '-',
-            Prodi: item.Prodi || '-',
-            Ketua: item.Ketua || '-',
-            Anggota1: item.Anggota1 || '-',
-            Anggota2: item.Anggota2 || '-',
-            Anggota3: item.Anggota3 || '-',
-            Anggota4: item.Anggota4 || '-',
-            Dana: parseFloat(item.Dana) || 0,
-            tahun: parseInt(item.tahun) || 0
-        }));
+        // Mapping data dari worksheet ke array of objects
+        const dataToInsert = [];
+        worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber === 1) return; // skip header
+            const rowData = {};
+            fileColumns.forEach((col, idx) => {
+                rowData[col] = row.getCell(idx + 1).value || '-';
+            });
+            dataToInsert.push({
+                Judul: rowData.Judul || '-',
+                Skema: rowData.Skema || '-',
+                Prodi: rowData.Prodi || '-',
+                Ketua: rowData.Ketua || '-',
+                Anggota1: rowData.Anggota1 || '-',
+                Anggota2: rowData.Anggota2 || '-',
+                Anggota3: rowData.Anggota3 || '-',
+                Anggota4: rowData.Anggota4 || '-',
+                Dana: parseFloat(rowData.Dana) || 0,
+                tahun: parseInt(rowData.tahun) || 0
+            });
+        });
 
         if (dataToInsert.length > 0) {
             await mandiriModel.insertMany(dataToInsert);

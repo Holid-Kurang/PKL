@@ -162,12 +162,12 @@
                                         </td>
                                         <td class="px-6 py-4 text-center whitespace-nowrap">
                                             <button 
-                                                onclick="openEditModal('<%= JSON.stringify(item) %>')" 
+                                                onclick="openEditModal('<%= JSON.stringify(item) %>?_method=PUT')" 
                                                 class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">
                                                 Edit
                                             </button>
                                             <button
-                                                onclick="openDeleteModal('/dashboard/publikasi/haki/delete/<%= item._id %>')"
+                                                onclick="openDeleteModal('/dashboard/publikasi/haki/delete/<%= item._id %>?_method=DELETE')"
                                                 class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
                                                 Hapus
                                             </button>

@@ -146,39 +146,41 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await hakiModel.find({});
-        // Prepare data for worksheet
-        const worksheetData = [
-            [
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('PublikasiHAKI');
+
+        // Add header row
+        worksheet.addRow([
             'Judul', 'Jenis', 'File', 'Bulan', 'Tahun', 'Pengguna Kode', 'Nama Pengguna', 'Nama Prodi'
-            ],
-            ...data.map(item => [
-            item.hki_judul || '-',
-            item.hki_jenis || '-',
-            item.hki_file || '-',
-            item.hki_bulan || '-',
-            item.hki_tahun || 0,
-            item.pengguna_kode || '-',
-            item._pengguna_nama || '-',
-            item._prodi_nama || '-'
-            ])
-        ];
-        const XLSX = require('xlsx');
-        // Create worksheet and workbook
-        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'PublikasiHAKI');
+        ]);
 
-        // Write workbook to XLSX buffer
-        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+        // Add data rows
+        data.forEach(item => {
+            worksheet.addRow([
+                item.hki_judul || '-',
+                item.hki_jenis || '-',
+                item.hki_file || '-',
+                item.hki_bulan || '-',
+                item.hki_tahun || 0,
+                item.pengguna_kode || '-',
+                item._pengguna_nama || '-',
+                item._prodi_nama || '-'
+            ]);
+        });
 
+        // Set response headers
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=publikasi_haki.xlsx');
-        res.status(200).send(xlsxBuffer);
+
+        // Write to buffer and send
+        await workbook.xlsx.write(res);
+        res.end();
     } catch (error) {
         console.error('Error exporting publikasi haki data:', error);
         res.status(500).send('Internal Server Error');
     }
-}
+};
 
 exports.importData = async (req, res) => {
     try {
@@ -186,15 +188,19 @@ exports.importData = async (req, res) => {
         if (!file) {
             return res.send("<script>alert('No file uploaded'); window.location.href='/dashboard/publikasi/haki';</script>");
         }
-        const XLSX = require('xlsx');
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(file.buffer);
 
-        // Baca buffer file xlsx
-        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
+        const worksheet = workbook.worksheets[0];
+        if (!worksheet) {
+            return res.send("<script>alert('Worksheet tidak ditemukan'); window.location.href='/dashboard/publikasi/haki';</script>");
+        }
 
-        // Ambil header kolom dari file
-        const headers = XLSX.utils.sheet_to_json(worksheet, { header: 1 })[0] || [];
+        // Ambil header kolom dari baris pertama
+        const headerRow = worksheet.getRow(1);
+        const headers = headerRow.values.slice(1); // values[0] is null
+
         const expectedHeaders = [
             'hki_judul', 'hki_jenis', 'hki_file', 'hki_bulan', 'hki_tahun',
             'pengguna_kode', '_pengguna_nama', '_prodi_nama'
@@ -206,20 +212,18 @@ exports.importData = async (req, res) => {
             return res.send("<script>alert('Format kolom tidak sesuai. Kolom harus: " + expectedHeaders.join(', ') + "'); window.location.href='/dashboard/publikasi/haki';</script>");
         }
 
-        // Konversi worksheet ke array of objects
-        const data = XLSX.utils.sheet_to_json(worksheet, { defval: '-' });
-
-        // Map data ke format yang sesuai dengan model
-        const dataToInsert = data.map(item => ({
-            hki_judul: item['hki_judul'] || '-',
-            hki_jenis: item['hki_jenis'] || '-',
-            hki_file: item['hki_file'] || '-',
-            hki_bulan: item['hki_bulan'] || '-',
-            hki_tahun: parseInt(item['hki_tahun']) || 0,
-            pengguna_kode: item['pengguna_kode'] || '-',
-            _pengguna_nama: item['_pengguna_nama'] || '-',
-            _prodi_nama: item['_prodi_nama'] || '-'
-        }));
+        // Ambil data mulai dari baris kedua
+        const dataToInsert = [];
+        worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+            if (rowNumber === 1) return; // skip header
+            const rowValues = row.values.slice(1); // values[0] is null
+            const item = {};
+            expectedHeaders.forEach((header, idx) => {
+                item[header] = rowValues[idx] !== undefined ? rowValues[idx] : '-';
+            });
+            item.hki_tahun = parseInt(item.hki_tahun) || 0;
+            dataToInsert.push(item);
+        });
 
         if (dataToInsert.length > 0) {
             await hakiModel.insertMany(dataToInsert);

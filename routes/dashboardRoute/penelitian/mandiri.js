@@ -2,26 +2,18 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const mandiriControl = require("../../../controllers/penelitian/mandiriControl");
+const isLogin = require("../../../middlewares/isLogin");
 
 // Konfigurasi Multer untuk menyimpan file di memori sementara
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Halaman utama
-router.get("/dashboard/penelitian/mandiri", isAuthenticated, mandiriControl.getAllData);
-router.post("/dashboard/penelitian/mandiri/create", isAuthenticated, mandiriControl.createData);
-router.put("/dashboard/penelitian/mandiri/update/:id", isAuthenticated, mandiriControl.updateData);
-router.delete("/dashboard/penelitian/mandiri/delete/:id", isAuthenticated, mandiriControl.deleteData);
-router.get("/dashboard/penelitian/mandiri/export", isAuthenticated, mandiriControl.exportData);
-router.post("/dashboard/penelitian/mandiri/import", isAuthenticated, upload.single("file"), mandiriControl.importData);
-
-
-// Middleware to check if user is logged in
-function isAuthenticated(req, res, next) {
-    if (req.session.isLogin) {
-        return next();
-    }
-    res.send(`<script>alert('Unauthorized: Please log in first'); window.location.href = '/login';</script>`);
-}
+router.get("/dashboard/penelitian/mandiri", isLogin, mandiriControl.getAllData);
+router.post("/dashboard/penelitian/mandiri/create", isLogin, mandiriControl.createData);
+router.put("/dashboard/penelitian/mandiri/update/:id", isLogin, mandiriControl.updateData);
+router.delete("/dashboard/penelitian/mandiri/delete/:id", isLogin, mandiriControl.deleteData);
+router.get("/dashboard/penelitian/mandiri/export", isLogin, mandiriControl.exportData);
+router.post("/dashboard/penelitian/mandiri/import", isLogin, upload.single("file"), mandiriControl.importData);
 
 module.exports = router;

@@ -149,36 +149,38 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await bukuModel.find({});
-        // Prepare data for worksheet
-        const worksheetData = [
-            [
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('PublikasiBuku');
+
+        // Add header row
+        worksheet.addRow([
             'Judul', 'ISBN', 'Jumlah Halaman', 'Penerbit', 'File', 'Tahun', 'Pengguna Kode', 'Jenis Pengguna', 'Nama Pengguna', 'Nama Prodi'
-            ],
-            ...data.map(item => [
-            item.buku_judul || '-',
-            item.buku_isbn || '-',
-            item.buku_jumlah_halaman || 0,
-            item.buku_penerbit || '-',
-            item.buku_file || '-',
-            item.buku_tahun || 0,
-            item.pengguna_kode || '-',
-            item._pengguna_jenis || '-',
-            item._pengguna_nama || '-',
-            item._prodi_nama || '-'
-            ])
-        ];
-        const XLSX = require('xlsx');
-        // Create worksheet and workbook
-        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'PublikasiBuku');
+        ]);
 
-        // Write workbook to XLSX buffer
-        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+        // Add data rows
+        data.forEach(item => {
+            worksheet.addRow([
+                item.buku_judul || '-',
+                item.buku_isbn || '-',
+                item.buku_jumlah_halaman || 0,
+                item.buku_penerbit || '-',
+                item.buku_file || '-',
+                item.buku_tahun || 0,
+                item.pengguna_kode || '-',
+                item._pengguna_jenis || '-',
+                item._pengguna_nama || '-',
+                item._prodi_nama || '-'
+            ]);
+        });
 
+        // Set response headers
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=publikasi_buku.xlsx');
-        res.status(200).send(xlsxBuffer);
+
+        // Write to response
+        await workbook.xlsx.write(res);
+        res.end();
     } catch (error) {
         console.error('Error exporting publikasi buku data:', error);
         res.status(500).send('Internal Server Error');
@@ -191,15 +193,15 @@ exports.importData = async (req, res) => {
         if (!file) {
             return res.send("<script>alert('No file uploaded'); window.location.href='/dashboard/publikasi/buku';</script>");
         }
-        const XLSX = require('xlsx');
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(file.buffer);
+        const worksheet = workbook.worksheets[0];
 
-        // Baca buffer file xlsx
-        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
+        // Ambil header kolom dari baris pertama
+        const headerRow = worksheet.getRow(1);
+        const headers = headerRow.values.slice(1); // values[0] is null
 
-        // Ambil header kolom dari file
-        const headers = XLSX.utils.sheet_to_json(worksheet, { header: 1 })[0] || [];
         const expectedHeaders = [
             'buku_judul', 'buku_isbn', 'buku_jumlah_halaman', 'buku_penerbit', 'buku_file', 
             'buku_tahun', 'pengguna_kode', '_pengguna_jenis', '_pengguna_nama', '_prodi_nama'
@@ -211,22 +213,28 @@ exports.importData = async (req, res) => {
             return res.send("<script>alert('Format kolom tidak sesuai. Kolom harus: " + expectedHeaders.join(', ') + "'); window.location.href='/dashboard/publikasi/buku';</script>");
         }
 
-        // Konversi worksheet ke array of objects
-        const data = XLSX.utils.sheet_to_json(worksheet, { defval: '-' });
+        // Baca data mulai dari baris kedua
+        const dataToInsert = [];
+        worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+            if (rowNumber === 1) return; // skip header
+            const [
+                buku_judul, buku_isbn, buku_jumlah_halaman, buku_penerbit, buku_file,
+                buku_tahun, pengguna_kode, _pengguna_jenis, _pengguna_nama, _prodi_nama
+            ] = row.values.slice(1); // values[0] is null
 
-        // Map data ke format yang sesuai dengan model
-        const dataToInsert = data.map(item => ({
-            buku_judul: item['buku_judul'] || '-',
-            buku_isbn: item['buku_isbn'] || '-',
-            buku_jumlah_halaman: parseInt(item['buku_jumlah_halaman']) || 0,
-            buku_penerbit: item['buku_penerbit'] || '-',
-            buku_file: item['buku_file'] || '-',
-            buku_tahun: parseInt(item['buku_tahun']) || 0,
-            pengguna_kode: item['pengguna_kode'] || '-',
-            _pengguna_jenis: item['_pengguna_jenis'] || '-',
-            _pengguna_nama: item['_pengguna_nama'] || '-',
-            _prodi_nama: item['_prodi_nama'] || '-'
-        }));
+            dataToInsert.push({
+                buku_judul: buku_judul || '-',
+                buku_isbn: buku_isbn || '-',
+                buku_jumlah_halaman: parseInt(buku_jumlah_halaman) || 0,
+                buku_penerbit: buku_penerbit || '-',
+                buku_file: buku_file || '-',
+                buku_tahun: parseInt(buku_tahun) || 0,
+                pengguna_kode: pengguna_kode || '-',
+                _pengguna_jenis: _pengguna_jenis || '-',
+                _pengguna_nama: _pengguna_nama || '-',
+                _prodi_nama: _prodi_nama || '-'
+            });
+        });
 
         if (dataToInsert.length > 0) {
             await bukuModel.insertMany(dataToInsert);

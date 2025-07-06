@@ -162,44 +162,47 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await pusatModel.find({});
-        // Prepare data for worksheet
-        const worksheetData = [
-            [
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('PenelitianPusat');
+
+        // Define header row
+        const headers = [
             'TAHUN', 'SKEMA', 'NAMA', 'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
             'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
-            ],
-            ...data.map(item => [
-            item.TAHUN,
-            item.SKEMA,
-            item.NAMA,
-            item.Anggota1,
-            item.Anggota2,
-            item.Anggota3,
-            item.Anggota4,
-            item.NIP,
-            item.NIDN,
-            item.PRODI,
-            item.JUDUL,
-            item.BIAYA
-            ])
         ];
-        const XLSX = require('xlsx');
-        // Create worksheet and workbook
-        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'PenelitianPusat');
+        worksheet.addRow(headers);
 
-        // Write workbook to XLSX buffer
-        const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+        // Add data rows
+        data.forEach(item => {
+            worksheet.addRow([
+                item.TAHUN,
+                item.SKEMA,
+                item.NAMA,
+                item.Anggota1,
+                item.Anggota2,
+                item.Anggota3,
+                item.Anggota4,
+                item.NIP,
+                item.NIDN,
+                item.PRODI,
+                item.JUDUL,
+                item.BIAYA
+            ]);
+        });
 
+        // Set response headers
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=penelitian_pusat.xlsx');
-        res.status(200).send(xlsxBuffer);
+
+        // Write workbook to response
+        await workbook.xlsx.write(res);
+        res.end();
     } catch (error) {
         console.error('Error exporting penelitian pusat data:', error);
         res.status(500).send('Internal Server Error');
     }
-}
+};
 
 exports.importData = async (req, res) => {
     try {
@@ -208,19 +211,22 @@ exports.importData = async (req, res) => {
         if (!file) {
             return res.send("<script>alert('No file uploaded'); window.location.href='/dashboard/penelitian/pusat';</script>");
         }
-        const XLSX = require('xlsx');
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(file.buffer);
 
-        // Baca buffer file xlsx
-        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
+        const worksheet = workbook.worksheets[0];
+        if (!worksheet) {
+            return res.send("<script>alert('Worksheet tidak ditemukan'); window.location.href='/dashboard/penelitian/pusat';</script>");
+        }
 
-        // Ambil header kolom dari file
-        const headers = XLSX.utils.sheet_to_json(worksheet, { header: 1 })[0] || [];
+        // Ambil header kolom dari baris pertama
         const expectedHeaders = [
             'TAHUN', 'SKEMA', 'NAMA', 'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
             'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
         ];
+        const headers = [];
+        worksheet.getRow(1).eachCell(cell => headers.push(cell.value));
 
         // Cek apakah header sesuai urutan dan nama
         const isHeaderValid = expectedHeaders.every((h, i) => h === headers[i]);
@@ -228,24 +234,30 @@ exports.importData = async (req, res) => {
             return res.send("<script>alert('Format kolom tidak sesuai. Kolom harus: " + expectedHeaders.join(', ') + "'); window.location.href='/dashboard/penelitian/pusat';</script>");
         }
 
-        // Konversi worksheet ke array of objects
-        const data = XLSX.utils.sheet_to_json(worksheet, { defval: '-' });
+        // Baca data mulai dari baris ke-2
+        const dataToInsert = [];
+        worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber === 1) return; // skip header
+            const [
+                TAHUN, SKEMA, NAMA, Anggota1, Anggota2, Anggota3, Anggota4,
+                NIP, NIDN, PRODI, JUDUL, BIAYA
+            ] = row.values.slice(1); // slice(1) karena row.values[0] undefined
 
-        // Map data ke format yang sesuai dengan model
-        const dataToInsert = data.map(item => ({
-            TAHUN: parseInt(item.TAHUN) || 0,
-            SKEMA: item.SKEMA || '-',
-            NAMA: item.NAMA || '-',
-            Anggota1: item.Anggota1 || '-',
-            Anggota2: item.Anggota2 || '-',
-            Anggota3: item.Anggota3 || '-',
-            Anggota4: item.Anggota4 || '-',
-            NIP: item.NIP || '-',
-            NIDN: item.NIDN || '-',
-            PRODI: item.PRODI || '-',
-            JUDUL: item.JUDUL || '-',
-            BIAYA: parseFloat(item.BIAYA) || 0
-        }));
+            dataToInsert.push({
+                TAHUN: parseInt(TAHUN) || 0,
+                SKEMA: SKEMA || '-',
+                NAMA: NAMA || '-',
+                Anggota1: Anggota1 || '-',
+                Anggota2: Anggota2 || '-',
+                Anggota3: Anggota3 || '-',
+                Anggota4: Anggota4 || '-',
+                NIP: NIP || '-',
+                NIDN: NIDN || '-',
+                PRODI: PRODI || '-',
+                JUDUL: JUDUL || '-',
+                BIAYA: parseFloat(BIAYA) || 0
+            });
+        });
 
         if (dataToInsert.length > 0) {
             await pusatModel.insertMany(dataToInsert);

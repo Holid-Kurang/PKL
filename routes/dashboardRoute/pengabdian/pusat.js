@@ -2,24 +2,17 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const pusatControl = require("../../../controllers/pengabdian/pusatControl");
+const isLogin = require("../../../middlewares/isLogin");
 
 // Konfigurasi Multer untuk menyimpan file di memori sementara
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage});
 // Halaman utama
-router.get("/dashboard/pengabdian/pusat", isAuthenticated, pusatControl.getAllData);
-router.post("/dashboard/pengabdian/pusat/create", isAuthenticated, pusatControl.createData);
-router.put("/dashboard/pengabdian/pusat/update/:id", isAuthenticated, pusatControl.updateData);
-router.delete("/dashboard/pengabdian/pusat/delete/:id", isAuthenticated, pusatControl.deleteData);
-router.get("/dashboard/pengabdian/pusat/export", isAuthenticated, pusatControl.exportData);
-router.post("/dashboard/pengabdian/pusat/import", isAuthenticated, upload.single("file"), pusatControl.importData);
-
-// Middleware to check if user is logged in
-function isAuthenticated(req, res, next) {
-    if (req.session.isLogin) {
-        return next();
-    }
-    res.send(`<script>alert('Unauthorized: Please log in first'); window.location.href = '/login';</script>`);
-}
+router.get("/dashboard/pengabdian/pusat", isLogin, pusatControl.getAllData);
+router.post("/dashboard/pengabdian/pusat/create", isLogin, pusatControl.createData);
+router.put("/dashboard/pengabdian/pusat/update/:id", isLogin, pusatControl.updateData);
+router.delete("/dashboard/pengabdian/pusat/delete/:id", isLogin, pusatControl.deleteData);
+router.get("/dashboard/pengabdian/pusat/export", isLogin, pusatControl.exportData);
+router.post("/dashboard/pengabdian/pusat/import", isLogin, upload.single("file"), pusatControl.importData);
 
 module.exports = router;

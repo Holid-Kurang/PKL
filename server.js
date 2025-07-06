@@ -5,6 +5,7 @@ const session = require("express-session");
 const routes = require("./routes/routes");
 const rateLimit = require('express-rate-limit');
 const methodOverride = require('method-override');
+const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 require('dotenv').config();
 
@@ -17,6 +18,7 @@ app.use(express.static(path.join(__dirname, "public"))); // Set folder public un
 app.use(express.json()); // Middleware untuk parsing JSON
 app.use(express.urlencoded({ extended: false })); // Middleware untuk parsing x-www-form-urlencoded
 app.use(methodOverride('_method'));
+app.use(mongoSanitize());
 app.use(rateLimit({
     windowMs: 15 * 60 * 1000, // 15 menit
     max: 100, // Batasi setiap IP hingga 100 permintaan per 15 menit
