@@ -32,7 +32,6 @@ exports.getAllData = async (req, res) => {
         const totalPages = Math.ceil(totalData / limit) || 1; // Pastikan totalPages minimal 1
         // 2. Mengambil data untuk halaman saat ini dengan limit dan skip
         const data = await mandiriModel.find(filter)
-            .sort({ tahun: -1 }) // Mengurutkan berdasarkan tahun terbaru
             .skip(skip)
             .limit(limit);
         // --- Merender Halaman ---

@@ -113,64 +113,66 @@
 
                     <!-- Tabel -->
                     <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-                        <table class="w-full text-sm text-left text-gray-600 whitespace-nowrap">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">No</th>
-                                    <th scope="col" class="px-6 py-3">Judul</th>
-                                    <th scope="col" class="px-6 py-3">Skema</th>
-                                    <th scope="col" class="px-6 py-3">Prodi</th>
-                                    <th scope="col" class="px-6 py-3">Ketua</th>
-                                    <th scope="col" class="px-6 py-3">Anggota 1</th>
-                                    <th scope="col" class="px-6 py-3">Anggota 2</th>
-                                    <th scope="col" class="px-6 py-3">Anggota 3</th>
-                                    <th scope="col" class="px-6 py-3">Anggota 4</th>
-                                    <th scope="col" class="px-6 py-3">Dana</th>
-                                    <th scope="col" class="px-6 py-3">Tahun</th>
-                                    <th scope="col" class="px-6 py-3 text-center"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% data.forEach((item, index)=> { %>
-                                    <tr class="bg-white border-b hover:bg-gray-50">
-                                        <td class="px-6 py-4 font-medium text-gray-900"><%= index + 1 %></td>
-                                        <td class="px-6 py-4"><%= item.Judul %></td>
-                                        <td class="px-6 py-4"><%= item.Skema %></td>
-                                        <td class="px-6 py-4"><%= item.Prodi %></td>
-                                        <td class="px-6 py-4"><%= item.Ketua %></td>
-                                        <td class="px-6 py-4"><%= item.Anggota1 %></td>
-                                        <td class="px-6 py-4"><%= item.Anggota2 %></td>
-                                        <td class="px-6 py-4"><%= item.Anggota3 %></td>
-                                        <td class="px-6 py-4"><%= item.Anggota4 %></td>
-                                        <td class="px-6 py-4"><%= item.Dana %></td>
-                                        <td class="px-6 py-4"><%= item.tahun %></td>
-                                        <td class="px-6 py-4 text-center whitespace-nowrap">
-                                            <button 
-                                                onclick="openEditModal('<%= JSON.stringify(item) %>')" 
-                                                class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">
-                                                Edit
-                                            </button>
-                                            <button
-                                                onclick="openDeleteModal('/dashboard/penelitian/mandiri/delete/<%= item._id %>?_method=DELETE')"
-                                                class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
-                                                Hapus
-                                            </button>
-                                        </td>
+                        <div class="overflow-y-auto max-h-[38rem]">
+                            <table class="w-full text-sm text-left text-gray-600 whitespace-nowrap">
+                                <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">No</th>
+                                        <th scope="col" class="px-6 py-3">Judul</th>
+                                        <th scope="col" class="px-6 py-3">Skema</th>
+                                        <th scope="col" class="px-6 py-3">Prodi</th>
+                                        <th scope="col" class="px-6 py-3">Ketua</th>
+                                        <th scope="col" class="px-6 py-3">Anggota 1</th>
+                                        <th scope="col" class="px-6 py-3">Anggota 2</th>
+                                        <th scope="col" class="px-6 py-3">Anggota 3</th>
+                                        <th scope="col" class="px-6 py-3">Anggota 4</th>
+                                        <th scope="col" class="px-6 py-3">Dana</th>
+                                        <th scope="col" class="px-6 py-3">Tahun</th>
+                                        <th scope="col" class="px-6 py-3 text-center"></th>
                                     </tr>
-                                    <% }) %>
-
-                                    <!-- Menampilkan pesan jika tidak ada data ditemukan -->
-                                    <% if (data.length === 0) { %>
-                                        <tr>
-                                            <td colspan="14" class="py-10 text-center text-gray-500">
-                                                <div>
-                                                    Data tidak ditemukan untuk pencarian "<%= searchQuery %>".
-                                                </div>
+                                </thead>
+                                <tbody>
+                                    <% data.forEach((item, index)=> { %>
+                                        <tr class="bg-white border-b hover:bg-gray-50">
+                                            <td class="px-6 py-4 font-medium text-gray-900"><%= index + 1 %></td>
+                                            <td class="px-6 py-4"><%= item.Judul %></td>
+                                            <td class="px-6 py-4"><%= item.Skema %></td>
+                                            <td class="px-6 py-4"><%= item.Prodi %></td>
+                                            <td class="px-6 py-4"><%= item.Ketua %></td>
+                                            <td class="px-6 py-4"><%= item.Anggota1 %></td>
+                                            <td class="px-6 py-4"><%= item.Anggota2 %></td>
+                                            <td class="px-6 py-4"><%= item.Anggota3 %></td>
+                                            <td class="px-6 py-4"><%= item.Anggota4 %></td>
+                                            <td class="px-6 py-4"><%= item.Dana %></td>
+                                            <td class="px-6 py-4"><%= item.tahun %></td>
+                                            <td class="px-6 py-4 text-center whitespace-nowrap">
+                                                <button 
+                                                    onclick="openEditModal('<%= JSON.stringify(item) %>')" 
+                                                    class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onclick="openDeleteModal('/dashboard/penelitian/mandiri/delete/<%= item._id %>?_method=DELETE')"
+                                                    class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
+                                                    Hapus
+                                                </button>
                                             </td>
                                         </tr>
-                                    <% } %>
-                            </tbody>
-                        </table>
+                                        <% }) %>
+
+                                        <!-- Menampilkan pesan jika tidak ada data ditemukan -->
+                                        <% if (data.length === 0) { %>
+                                            <tr>
+                                                <td colspan="14" class="py-10 text-center text-gray-500">
+                                                    <div>
+                                                        Data tidak ditemukan untuk pencarian "<%= searchQuery %>".
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <% } %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                 </div>
