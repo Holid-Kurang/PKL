@@ -15,5 +15,6 @@ router.put("/dashboard/penelitian/pnbp/update/:id", isLogin, pnbpControl.updateD
 router.delete("/dashboard/penelitian/pnbp/delete/:id", isLogin, pnbpControl.deleteData);
 router.get("/dashboard/penelitian/pnbp/export", isLogin, pnbpControl.exportData);
 router.post("/dashboard/penelitian/pnbp/import", isLogin, upload.single("file"), pnbpControl.importData);
+router.get("/dashboard/penelitian/pnbp/template", isLogin, pnbpControl.downloadTemplate);
 
 module.exports = router;

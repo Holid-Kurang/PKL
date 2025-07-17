@@ -1,5 +1,34 @@
 const pnbpModel = require('../../models/penelitian/pnbp');
+const ExcelJS = require('exceljs');
+const kategoriOptionModel = require('../../models/kategoriOptionModel');
+// const createKategoriProdi = async () => {
+//     try {
+//         const prodiData = [
+//             'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
+//             'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
+//             'S2 Teknik Sipil', 'S2 Teknologi Informasi'
+//         ];
+        
+//         const existingKategori = await kategoriOptionModel.findOne({ kategori: 'prodi' });
+        
+//         if (existingKategori) {
+//             existingKategori.options = prodiData;
+//             await existingKategori.save();
+//         } else {
+//             await kategoriOptionModel.create({
+//                 kategori: 'prodi',
+//                 option: prodiData
+//             });
+//         }
+        
+//         console.log('Kategori prodi berhasil disimpan');
+//     } catch (error) {
+//         console.error('Error creating kategori prodi:', error);
+//     }
+// };
 
+// // Initialize kategori prodi data
+// createKategoriProdi();
 // Read dan Search
 exports.getAllData = async (req, res) => {
     try {
@@ -35,11 +64,16 @@ exports.getAllData = async (req, res) => {
             .sort({ TAHUN: -1 }) // Mengurutkan berdasarkan tahun terbaru
             .skip(skip)
             .limit(limit);
+
+        let prodiOptions = await kategoriOptionModel.find({ kategori: 'prodi' });
+        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
+
         // --- Merender Halaman ---
         res.render('dashboard/penelitian/dash-pnbp', {
             data,
             searchQuery,
             title: 'Penelitian PNBP',
+            prodiOptions,
             currentPage: page,
             totalPages,
             limit // Kirim limit ke view agar bisa digunakan di link pagination
@@ -53,22 +87,24 @@ exports.getAllData = async (req, res) => {
 
 exports.createData = async (req, res) => {
     try {
-        // Replace empty fields with '-'
         const {
             Judul = '-', SKEMA = '-', Prodi = '-', Ketua = '-',
-            Anggota1 = '-', Anggota2 = '-', Anggota3 = '-', Anggota4 = '-',
             Biaya = 0, Tahun = 0, Nilai = 0
         } = req.body;
+        
+        // Handle Anggota array from form data
+        let Anggota = req.body['Anggota[]'] || [];
+        // Ensure Anggota is always an array, even if it contains only one element
+        if (!Array.isArray(Anggota)) {
+            Anggota = [Anggota];
+        }
 
         const newData = new pnbpModel({
             Judul: Judul || '-',
             SKEMA: SKEMA || '-',
             Prodi: Prodi || '-',
             Ketua: Ketua || '-',
-            Anggota1: Anggota1 || '-',
-            Anggota2: Anggota2 || '-',
-            Anggota3: Anggota3 || '-',
-            Anggota4: Anggota4 || '-',
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [], 
             Biaya: Biaya || 0,
             Tahun: Tahun || 0,
             Nilai: Nilai || 0
@@ -94,7 +130,6 @@ exports.deleteData = async (req, res) => {
         // If the current URL contains a search query, append it to the redirect
         const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
         // Redirect to the same page with the search query
-        console.log(currentUrl + searchQuery);
         res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting penelitian pnbp data:', error);
@@ -107,19 +142,21 @@ exports.updateData = async (req, res) => {
         const id = req.params.id;
         const {
             Judul, SKEMA, Prodi, Ketua,
-            Anggota1, Anggota2, Anggota3, Anggota4,
             Biaya, Tahun, Nilai
         } = req.body;
 
+        // Handle Anggota array from form data
+        let Anggota = req.body['Anggota[]'] || [];
+        // Ensure Anggota is always an array, even if it contains only one element
+        if (!Array.isArray(Anggota)) {
+            Anggota = [Anggota];
+        }
         const updatedData = {
             Judul: Judul || '-',
             SKEMA: SKEMA || '-',
             Prodi: Prodi || '-',
             Ketua: Ketua || '-',
-            Anggota1: Anggota1 || '-',
-            Anggota2: Anggota2 || '-',
-            Anggota3: Anggota3 || '-',
-            Anggota4: Anggota4 || '-',
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [],
             Biaya: Biaya || 0,
             Tahun: Tahun || 0,
             Nilai: Nilai || 0
@@ -131,7 +168,6 @@ exports.updateData = async (req, res) => {
         // If the current URL contains a search query, append it to the redirect
         const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
         // Redirect to the same page with the search query
-        console.log(currentUrl + searchQuery);
         res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating penelitian pnbp data:', error);
@@ -142,14 +178,13 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await pnbpModel.find({});
-        const ExcelJS = require('exceljs');
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('PenelitianPNBP');
 
         // Define header row
         worksheet.addRow([
             'Judul', 'SKEMA', 'Prodi', 'Ketua',
-            'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
+            'Anggota',
             'Biaya', 'Tahun', 'Nilai'
         ]);
 
@@ -160,10 +195,7 @@ exports.exportData = async (req, res) => {
                 item.SKEMA,
                 item.Prodi,
                 item.Ketua,
-                item.Anggota1,
-                item.Anggota2,
-                item.Anggota3,
-                item.Anggota4,
+                item.Anggota ? item.Anggota.join(', ') : '-',
                 item.Biaya,
                 item.Tahun,
                 item.Nilai
@@ -190,7 +222,6 @@ exports.importData = async (req, res) => {
         if (!file) {
             return res.send("<script>alert('No file uploaded'); window.location.href='/dashboard/penelitian/pnbp';</script>");
         }
-        const ExcelJS = require('exceljs');
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.load(file.buffer);
         const worksheet = workbook.worksheets[0];
@@ -200,7 +231,7 @@ exports.importData = async (req, res) => {
         worksheet.getRow(1).eachCell(cell => headers.push(cell.value));
         const expectedHeaders = [
             'Judul', 'SKEMA', 'Prodi', 'Ketua',
-            'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
+            'Anggota', // Menggunakan kolom tunggal untuk anggota
             'Biaya', 'Tahun', 'Nilai'
         ];
 
@@ -216,19 +247,25 @@ exports.importData = async (req, res) => {
             if (rowNumber === 1) return; // skip header
             const [
                 Judul, SKEMA, Prodi, Ketua,
-                Anggota1, Anggota2, Anggota3, Anggota4,
+                Anggota,
                 Biaya, Tahun, Nilai
             ] = row.values.slice(1); // slice(1) karena row.values[0] undefined
+
+            // Parse anggota string menjadi array, handling titles with commas
+            let anggotaArray = [];
+            if (Anggota && typeof Anggota === 'string') {
+                // Split by comma followed by space and a title (Dr., Prof., Ir.) or capital letter
+                // This regex looks for comma + space + (title or capital letter) to identify person boundaries
+                const parts = Anggota.split(/,\s+(?=(?:Dr\.|Prof\.|Ir\.|\b[A-Z][a-z]+\s+[A-Z]))/);
+                anggotaArray = parts.map(item => item.trim()).filter(item => item !== '');
+            }
 
             dataToInsert.push({
                 Judul: Judul || '-',
                 SKEMA: SKEMA || '-',
                 Prodi: Prodi || '-',
                 Ketua: Ketua || '-',
-                Anggota1: Anggota1 || '-',
-                Anggota2: Anggota2 || '-',
-                Anggota3: Anggota3 || '-',
-                Anggota4: Anggota4 || '-',
+                Anggota: anggotaArray,
                 Biaya: parseFloat(Biaya) || 0,
                 Tahun: parseInt(Tahun) || 0,
                 Nilai: parseFloat(Nilai) || 0
@@ -243,5 +280,54 @@ exports.importData = async (req, res) => {
     } catch (error) {
         console.error('Error importing penelitian pnbp data:', error);
         res.status(500).send('Internal Server Error. Pastikan file XLSX sesuai format.');
+    }
+};
+
+exports.downloadTemplate = async (req, res) => {
+    try {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Template Penelitian PNBP');
+
+        // Define header row
+        worksheet.addRow([
+            'Judul', 'SKEMA', 'Prodi', 'Ketua',
+            'Anggota',
+            'Biaya', 'Tahun', 'Nilai'
+        ]);
+
+        // Add example data row
+        worksheet.addRow([
+            'Contoh Judul Penelitian',
+            'Penelitian Dosen Pemula',
+            'S1 Teknik Informatika',
+            'Dr. John Doe, M.T.',
+            'Dr. Jane Smith, S.T., M.T., Prof. Dr. Bob Johnson, M.T., Ir. Alice Brown, M.T.',
+            50000000,
+            2024,
+            85.5
+        ]);
+
+        // Set column widths
+        worksheet.columns = [
+            { width: 50 }, // Judul
+            { width: 30 }, // SKEMA
+            { width: 25 }, // Prodi
+            { width: 25 }, // Ketua
+            { width: 40 }, // Anggota
+            { width: 15 }, // Biaya
+            { width: 10 }, // Tahun
+            { width: 10 }  // Nilai
+        ];
+
+        // Set response headers
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=template_penelitian_pnbp.xlsx');
+
+        // Write workbook to response
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (error) {
+        console.error('Error creating template:', error);
+        res.status(500).send('Internal Server Error');
     }
 };

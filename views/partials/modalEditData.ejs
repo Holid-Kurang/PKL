@@ -6,7 +6,7 @@
                     class="material-icons-outlined">close</span></button>
         </div>
 
-        <form id="editDataForm" action="<%= action %>?_method=PUT" method="POST" _method="PUT" >
+        <form id="editDataForm" method="POST" _method="PUT">
             <div class="p-6 max-h-[60vh] overflow-y-auto space-y-4">
                 <% formFields.forEach(field => { %>
                     <div>
@@ -29,6 +29,18 @@
                                     </option>
                                 <% }); %>
                             </select>
+                        <%# Kondisi untuk tipe input 'anggota' (dynamic member input) untuk edit %>
+                        <% } else if (field.type === 'anggota') { %>
+                            <div id="editAnggotaContainer">
+                                <!-- Dynamic anggota inputs will be populated by JavaScript -->
+                            </div>
+                            <button 
+                                type="button" 
+                                onclick="addEditAnggotaInput()"
+                                class="mt-2 flex items-center px-3 py-2 text-sm text-[#4F46E5] border border-[#4F46E5] rounded-md hover:bg-[#4F46E5] hover:text-white transition-colors">
+                                <span class="mr-1 text-sm material-icons-outlined">add</span>
+                                Tambah Anggota
+                            </button>
                         <% } else { %>
                             <input 
                                 type="<%= field.type %>" 
@@ -58,3 +70,86 @@
         </form>
     </div>
 </div>
+
+<script>
+function addEditAnggotaInput() {
+    const container = document.getElementById('editAnggotaContainer');
+    const newInputGroup = document.createElement('div');
+    newInputGroup.className = 'edit-anggota-input-group flex items-center space-x-2 mb-2';
+    
+    newInputGroup.innerHTML = `
+        <input 
+            type="text" 
+            name="Anggota[]" 
+            placeholder="Nama Anggota"
+            class="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+        <button 
+            type="button" 
+            onclick="removeEditAnggotaInput(this)"
+            class="px-3 py-2 text-red-600 border border-red-300 rounded-md hover:bg-red-50 focus:outline-none">
+            <span class="text-sm material-icons-outlined">remove</span>
+        </button>
+    `;
+    
+    container.appendChild(newInputGroup);
+    updateEditRemoveButtons();
+}
+
+function removeEditAnggotaInput(button) {
+    const inputGroup = button.parentElement;
+    inputGroup.remove();
+    updateEditRemoveButtons();
+}
+
+function updateEditRemoveButtons() {
+    const inputGroups = document.querySelectorAll('.edit-anggota-input-group');
+    inputGroups.forEach((group, index) => {
+        const removeButton = group.querySelector('button');
+        if (inputGroups.length > 1) {
+            removeButton.style.display = 'block';
+        } else {
+            removeButton.style.display = 'none';
+        }
+    });
+}
+
+function populateEditAnggotaFields(anggotaArray) {
+    const container = document.getElementById('editAnggotaContainer');
+    container.innerHTML = ''; // Clear existing inputs
+    
+    // If no anggota data, create one empty input
+    if (!anggotaArray || anggotaArray.length === 0) {
+        anggotaArray = [''];
+    }
+    
+    anggotaArray.forEach((anggota, index) => {
+        const inputGroup = document.createElement('div');
+        inputGroup.className = 'edit-anggota-input-group flex items-center space-x-2 mb-2';
+        
+        inputGroup.innerHTML = `
+            <input 
+                type="text" 
+                name="Anggota[]" 
+                placeholder="Nama Anggota"
+                value="${anggota || ''}"
+                class="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+            <button 
+                type="button" 
+                onclick="removeEditAnggotaInput(this)"
+                class="px-3 py-2 text-red-600 border border-red-300 rounded-md hover:bg-red-50 focus:outline-none"
+                style="display: none;">
+                <span class="text-sm material-icons-outlined">remove</span>
+            </button>
+        `;
+        
+        container.appendChild(inputGroup);
+    });
+    
+    updateEditRemoveButtons();
+}
+
+// Function to be called when edit modal opens
+function initializeEditAnggotaInputs() {
+    updateEditRemoveButtons();
+}
+</script>

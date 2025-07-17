@@ -35,6 +35,31 @@
                                     </option>
                                 <% }); %>
                             </select>
+                        <%# Kondisi untuk tipe input 'anggota' (dynamic member input) %>
+                        <% } else if (field.type === 'anggota') { %>
+                            <div id="anggotaContainer">
+                                <div class="flex items-center mb-2 space-x-2 anggota-input-group">
+                                    <input 
+                                        type="text" 
+                                        name="Anggota[]" 
+                                        placeholder="Nama Anggota"
+                                        class="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+                                    <button 
+                                        type="button" 
+                                        onclick="removeAnggotaInput(this)"
+                                        class="px-3 py-2 text-red-600 border border-red-300 rounded-md hover:bg-red-50 focus:outline-none"
+                                        style="display: none;">
+                                        <span class="text-sm material-icons-outlined">remove</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button 
+                                type="button" 
+                                onclick="addAnggotaInput()"
+                                class="mt-2 flex items-center px-3 py-2 text-sm text-[#4F46E5] border border-[#4F46E5] rounded-md hover:bg-[#4F46E5] hover:text-white transition-colors">
+                                <span class="mr-1 text-sm material-icons-outlined">add</span>
+                                Tambah Anggota
+                            </button>
                         <%# Kondisi untuk tipe input lain (text, number, email, dll) %>
                         <% } else { %>
                             <input 
@@ -67,3 +92,65 @@
         </div>
     </div>
 </div>
+
+<script>
+function addAnggotaInput() {
+    const container = document.getElementById('anggotaContainer');
+    const newInputGroup = document.createElement('div');
+    newInputGroup.className = 'anggota-input-group flex items-center space-x-2 mb-2';
+    
+    newInputGroup.innerHTML = `
+        <input 
+            type="text" 
+            name="Anggota[]" 
+            placeholder="Nama Anggota"
+            class="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#4F46E5] focus:border-[#4F46E5]">
+        <button 
+            type="button" 
+            onclick="removeAnggotaInput(this)"
+            class="px-3 py-2 text-red-600 border border-red-300 rounded-md hover:bg-red-50 focus:outline-none">
+            <span class="text-sm material-icons-outlined">remove</span>
+        </button>
+    `;
+    
+    container.appendChild(newInputGroup);
+    updateRemoveButtons();
+}
+
+function removeAnggotaInput(button) {
+    const inputGroup = button.parentElement;
+    inputGroup.remove();
+    updateRemoveButtons();
+}
+
+function updateRemoveButtons() {
+    const inputGroups = document.querySelectorAll('.anggota-input-group');
+    inputGroups.forEach((group, index) => {
+        const removeButton = group.querySelector('button');
+        if (inputGroups.length > 1) {
+            removeButton.style.display = 'block';
+        } else {
+            removeButton.style.display = 'none';
+        }
+    });
+}
+
+// Function to be called when modal opens
+function initializeAnggotaInputs() {
+    updateRemoveButtons();
+}
+
+// Make sure to call this when the modal opens
+window.openModal = function(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+    if (modalId === 'addDataModal') {
+        initializeAnggotaInputs();
+    }
+}
+
+// Initialize remove buttons visibility on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateRemoveButtons();
+});
+
+</script>
