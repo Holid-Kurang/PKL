@@ -20,19 +20,19 @@ function openEditModal(itemString) {
 
     // Pilih form dan atur actionnya ke route update yang benar
     const form = document.getElementById('editDataForm');
-    form.action = `/dashboard/penelitian/mandiri/update/${item._id}`;
+    form.action = `/dashboard/penelitian/mandiri/update/${item._id}?_method=PUT`;
 
     // Isi setiap field dalam form edit dengan data dari item
     document.getElementById('edit_Judul').value = item.Judul || '';
     document.getElementById('edit_Skema').value = item.Skema || '';
     document.getElementById('edit_Prodi').value = item.Prodi || '';
     document.getElementById('edit_Ketua').value = item.Ketua || '';
-    document.getElementById('edit_Anggota1').value = item.Anggota1 || '';
-    document.getElementById('edit_Anggota2').value = item.Anggota2 || '';
-    document.getElementById('edit_Anggota3').value = item.Anggota3 || '';
-    document.getElementById('edit_Anggota4').value = item.Anggota4 || '';
     document.getElementById('edit_Dana').value = item.Dana || '';
     document.getElementById('edit_tahun').value = item.tahun || '';
+
+    // Handle dynamic anggota fields
+    const anggotaArray = item.Anggota || [];
+    populateEditAnggotaFields(anggotaArray);
 
     // Tampilkan modal edit
     openModal('editDataModal');
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function validateForm(event) {
     let valid = true;
     const requiredFields = [
-        'JUDUL', 'SKEMA', 'PRODI', 'NAMA', 'Anggota1', 'BIAYA', 'TAHUN'
+        'JUDUL', 'SKEMA', 'PRODI', 'NAMA', 'BIAYA', 'TAHUN'
     ];
     requiredFields.forEach(function (field) {
         const input = document.getElementById(field);
@@ -85,3 +85,28 @@ function validateForm(event) {
     if (!valid) event.preventDefault();
     return valid;
 }
+
+// General keyboard event handler for all modals
+document.addEventListener('keydown', function(event) {
+    // Check if any modal is open
+    const modals = ['addDataModal', 'editDataModal', 'deleteDataModal', 'importDataModal'];
+    const openModal = modals.find(modalId => {
+        const modal = document.getElementById(modalId);
+        return modal && !modal.classList.contains('hidden');
+    });
+    
+    if (openModal) {
+        if (event.key === 'Escape') {
+            closeModal(openModal);
+            event.preventDefault();
+        } else if (event.key === 'Enter') {
+            // Find submit button in the open modal and click it
+            const modal = document.getElementById(openModal);
+            const submitButton = modal.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitButton) {
+                submitButton.click();
+                event.preventDefault();
+            }
+        }
+    }
+});

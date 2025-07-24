@@ -2,6 +2,7 @@
 window.onload = function () {
     toggleMenu('penelitianMenu');
 };
+
 // Fungsi untuk membuka modal (ganti 'addDataModal' dengan ID modal yang sesuai)
 function openModal(modalId) {
     document.getElementById(modalId).classList.remove('hidden');
@@ -62,37 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
-    // Nilai harus angka (jika memang harus angka, jika tidak hapus bagian ini)
-    const nilaiInput = document.getElementById('Nilai');
-    const nilaiTypeError = document.getElementById('type-error-Nilai');
-    if (nilaiInput && nilaiTypeError) {
-        nilaiInput.addEventListener('input', function () {
-            if (nilaiInput.value && isNaN(Number(nilaiInput.value))) {
-                nilaiTypeError.classList.remove('hidden');
-            } else {
-                nilaiTypeError.classList.add('hidden');
-            }
-        });
-    }
-
-    // Pindahkan validasi tombol Simpan ke event submit form
-    const addDataForm = document.getElementById('addDataForm');
-    if (addDataForm) {
-        addDataForm.addEventListener('submit', function (event) {
-            // Nilai harus angka
-            const nilaiInput = document.getElementById('Nilai');
-            const nilaiTypeError = document.getElementById('type-error-Nilai');
-            if (nilaiInput && (nilaiInput.value === '' || isNaN(Number(nilaiInput.value)))) {
-                if (nilaiTypeError) nilaiTypeError.classList.remove('hidden');
-                event.preventDefault();
-                return false;
-            }
-            if (!validateForm(event)) {
-                event.preventDefault();
-                return false;
-            }
-        });
-    }
 });
 
 function validateForm(event) {

@@ -15,5 +15,6 @@ router.put("/dashboard/penelitian/mandiri/update/:id", isLogin, mandiriControl.u
 router.delete("/dashboard/penelitian/mandiri/delete/:id", isLogin, mandiriControl.deleteData);
 router.get("/dashboard/penelitian/mandiri/export", isLogin, mandiriControl.exportData);
 router.post("/dashboard/penelitian/mandiri/import", isLogin, upload.single("file"), mandiriControl.importData);
+router.get("/dashboard/penelitian/mandiri/template", isLogin, mandiriControl.downloadTemplate);
 
 module.exports = router;

@@ -13,15 +13,6 @@ function closeModal(modalId) {
     document.getElementById(modalId).classList.add('hidden');
 }
 
-function openDeleteModal(action) {
-    const deleteForm = document.getElementById('deleteForm');
-    deleteForm.action = action;
-
-    // Tampilkan modal konfirmasi
-    openModal('deleteDataModal');
-}
-
-
 // Fungsi BARU untuk membuka dan mengisi modal edit
 function openEditModal(itemString) {
     // Parse string JSON yang dikirim dari tombol
@@ -29,16 +20,12 @@ function openEditModal(itemString) {
 
     // Pilih form dan atur actionnya ke route update yang benar
     const form = document.getElementById('editDataForm');
-    form.action = `/dashboard/pengabdian/pusat/update/${item._id}`;
+    form.action = `/dashboard/pengabdian/pusat/update/${item._id}?_method=PUT`;
 
     // Isi setiap field dalam form edit dengan data dari item
     document.getElementById('edit_Judul').value = item.Judul || '';
     document.getElementById('edit_SKEMA').value = item.SKEMA || '';
     document.getElementById('edit_Nama').value = item.Nama || '';
-    document.getElementById('edit_Anggota1').value = item.Anggota1 || '';
-    document.getElementById('edit_Anggota2').value = item.Anggota2 || '';
-    document.getElementById('edit_Anggota3').value = item.Anggota3 || '';
-    document.getElementById('edit_Anggota4').value = item.Anggota4 || '';
     document.getElementById('edit_Dana').value = item.Dana || '';
     document.getElementById('edit_Tahun').value = item.Tahun || '';
     document.getElementById('edit_NomorKontrakLPPM').value = item.NomorKontrakLPPM || '';
@@ -46,10 +33,21 @@ function openEditModal(itemString) {
     document.getElementById('edit_JumlahAnggota').value = item.JumlahAnggota || '';
     document.getElementById('edit_JumlahMshTerlibat').value = item.JumlahMshTerlibat || '';
 
+    // Handle dynamic anggota fields
+    const anggotaArray = item.Anggota || [];
+    populateEditAnggotaFields(anggotaArray);
+
     // Tampilkan modal edit
     openModal('editDataModal');
 }
 
+function openDeleteModal(action) {
+    const deleteForm = document.getElementById('deleteForm');
+    deleteForm.action = action;
+
+    // Tampilkan modal konfirmasi
+    openModal('deleteDataModal');
+}
 // Tipe data warning
 document.addEventListener('DOMContentLoaded', function () {
     // Biaya dan Tahun harus angka
@@ -71,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function validateForm(event) {
     let valid = true;
     const requiredFields = [
-        'Judul', 'SKEMA', 'Nama', 'Anggota1', 'Dana', 'Tahun'
+        'Judul', 'SKEMA', 'Nama', 'Dana', 'Tahun'
     ];
     requiredFields.forEach(function (field) {
         const input = document.getElementById(field);
@@ -88,3 +86,28 @@ function validateForm(event) {
     if (!valid) event.preventDefault();
     return valid;
 }
+
+// General keyboard event handler for all modals
+document.addEventListener('keydown', function(event) {
+    // Check if any modal is open
+    const modals = ['addDataModal', 'editDataModal', 'deleteDataModal', 'importDataModal'];
+    const openModal = modals.find(modalId => {
+        const modal = document.getElementById(modalId);
+        return modal && !modal.classList.contains('hidden');
+    });
+    
+    if (openModal) {
+        if (event.key === 'Escape') {
+            closeModal(openModal);
+            event.preventDefault();
+        } else if (event.key === 'Enter') {
+            // Find submit button in the open modal and click it
+            const modal = document.getElementById(openModal);
+            const submitButton = modal.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitButton) {
+                submitButton.click();
+                event.preventDefault();
+            }
+        }
+    }
+});

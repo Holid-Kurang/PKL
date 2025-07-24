@@ -1,4 +1,6 @@
 const mandiriModel = require('../../models/penelitian/mandiri');
+const ExcelJS = require('exceljs');
+const kategoriOptionModel = require('../../models/kategoriOptionModel');
 
 // Read dan Search
 exports.getAllData = async (req, res) => {
@@ -34,11 +36,16 @@ exports.getAllData = async (req, res) => {
         const data = await mandiriModel.find(filter)
             .skip(skip)
             .limit(limit);
+
+        let prodiOptions = await kategoriOptionModel.find({ kategori: 'prodi' });
+        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
+            
         // --- Merender Halaman ---
         res.render('dashboard/penelitian/dash-mandiri', {
             data,
             searchQuery,
             title: 'Penelitian Pusat',
+            prodiOptions,
             currentPage: page,
             totalPages,
             limit // Kirim limit ke view agar bisa digunakan di link pagination
@@ -56,23 +63,23 @@ exports.createData = async (req, res) => {
         const {
             tahun = 0,
             Ketua = '-',
-            Anggota1 = '-',
-            Anggota2 = '-',
-            Anggota3 = '-',
-            Anggota4 = '-',
             Skema = '-',
             Judul = '-',
             Prodi = '-',
             Dana = 0
         } = req.body;
 
+        // Handle Anggota array from form data
+        let Anggota = req.body['Anggota[]'] || [];
+        // Ensure Anggota is always an array, even if it contains only one element
+        if (!Array.isArray(Anggota)) {
+            Anggota = [Anggota];
+        }
+
         const newData = new mandiriModel({
             tahun: tahun || 0,
             Ketua: Ketua || '-',
-            Anggota1: Anggota1 || '-',
-            Anggota2: Anggota2 || '-',
-            Anggota3: Anggota3 || '-',
-            Anggota4: Anggota4 || '-',
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [], 
             Skema: Skema || '-',
             Judul: Judul || '-',
             Prodi: Prodi || '-',
@@ -112,23 +119,23 @@ exports.updateData = async (req, res) => {
         const {
             tahun,
             Ketua,
-            Anggota1,
-            Anggota2,
-            Anggota3,
-            Anggota4,
             Skema,
             Judul,
             Prodi,
             Dana
         } = req.body;
 
+        // Handle Anggota array from form data
+        let Anggota = req.body['Anggota[]'] || [];
+        // Ensure Anggota is always an array, even if it contains only one element
+        if (!Array.isArray(Anggota)) {
+            Anggota = [Anggota];
+        }
+
         const updatedData = {
             tahun: tahun || 0,
             Ketua: Ketua || '-',
-            Anggota1: Anggota1 || '-',
-            Anggota2: Anggota2 || '-',
-            Anggota3: Anggota3 || '-',
-            Anggota4: Anggota4 || '-',
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [],
             Skema: Skema || '-',
             Judul: Judul || '-',
             Prodi: Prodi || '-',
@@ -155,34 +162,23 @@ exports.exportData = async (req, res) => {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('PenelitianMandiri');
 
-        // Define columns
-        worksheet.columns = [
-            { header: 'Judul', key: 'Judul', width: 30 },
-            { header: 'Skema', key: 'Skema', width: 20 },
-            { header: 'Prodi', key: 'Prodi', width: 20 },
-            { header: 'Ketua', key: 'Ketua', width: 20 },
-            { header: 'Anggota1', key: 'Anggota1', width: 20 },
-            { header: 'Anggota2', key: 'Anggota2', width: 20 },
-            { header: 'Anggota3', key: 'Anggota3', width: 20 },
-            { header: 'Anggota4', key: 'Anggota4', width: 20 },
-            { header: 'Dana', key: 'Dana', width: 15 },
-            { header: 'tahun', key: 'tahun', width: 10 }
-        ];
+        // Define header row
+        worksheet.addRow([
+            'Judul', 'Skema', 'Prodi', 'Ketua', 'Anggota',
+            'Dana', 'tahun'
+        ]);
 
-        // Add rows
+        // Add data rows
         data.forEach(item => {
-            worksheet.addRow({
-                Judul: item.Judul,
-                Skema: item.Skema,
-                Prodi: item.Prodi,
-                Ketua: item.Ketua,
-                Anggota1: item.Anggota1,
-                Anggota2: item.Anggota2,
-                Anggota3: item.Anggota3,
-                Anggota4: item.Anggota4,
-                Dana: item.Dana,
-                tahun: item.tahun
-            });
+            worksheet.addRow([
+                item.Judul,
+                item.Skema,
+                item.Prodi,
+                item.Ketua,
+                item.Anggota ? item.Anggota.join(', ') : '-',
+                item.Dana,
+                item.tahun
+            ]);
         });
 
         // Set response headers
@@ -212,8 +208,7 @@ exports.importData = async (req, res) => {
         // Kolom yang wajib ada
         const requiredColumns = [
             'Judul', 'Skema', 'Prodi', 'Ketua',
-            'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
-            'Dana', 'tahun'
+            'Anggota', 'Dana', 'tahun'
         ];
 
         // Ambil header dari baris pertama
@@ -230,21 +225,27 @@ exports.importData = async (req, res) => {
         const dataToInsert = [];
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber === 1) return; // skip header
-            const rowData = {};
-            fileColumns.forEach((col, idx) => {
-                rowData[col] = row.getCell(idx + 1).value || '-';
-            });
+            const [
+                Judul, Skema, Prodi, Ketua,
+                Anggota, Dana, tahun
+            ] = row.values.slice(1); // slice(1) karena row.values[0] undefined
+
+            // Parse anggota string menjadi array, handling titles with commas
+            let anggotaArray = [];
+            if (Anggota && typeof Anggota === 'string') {
+                // Split by comma followed by space and a title (Dr., Prof., Ir.) or capital letter
+                const parts = Anggota.split(/,\s+(?=(?:Dr\.|Prof\.|Ir\.|\b[A-Z][a-z]+\s+[A-Z]))/);
+                anggotaArray = parts.map(item => item.trim()).filter(item => item !== '');
+            }
+
             dataToInsert.push({
-                Judul: rowData.Judul || '-',
-                Skema: rowData.Skema || '-',
-                Prodi: rowData.Prodi || '-',
-                Ketua: rowData.Ketua || '-',
-                Anggota1: rowData.Anggota1 || '-',
-                Anggota2: rowData.Anggota2 || '-',
-                Anggota3: rowData.Anggota3 || '-',
-                Anggota4: rowData.Anggota4 || '-',
-                Dana: parseFloat(rowData.Dana) || 0,
-                tahun: parseInt(rowData.tahun) || 0
+                Judul: Judul || '-',
+                Skema: Skema || '-',
+                Prodi: Prodi || '-',
+                Ketua: Ketua || '-',
+                Anggota: anggotaArray,
+                Dana: parseFloat(Dana) || 0,
+                tahun: parseInt(tahun) || 0
             });
         });
 
@@ -256,5 +257,51 @@ exports.importData = async (req, res) => {
     } catch (error) {
         console.error('Error importing penelitian mandiri data:', error);
         res.status(500).send('Internal Server Error. Pastikan kolom di file XLSX sesuai dengan format yang dibutuhkan.');
+    }
+};
+
+exports.downloadTemplate = async (req, res) => {
+    try {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Template Penelitian Mandiri');
+
+        // Define header row
+        worksheet.addRow([
+            'Judul', 'Skema', 'Prodi', 'Ketua', 'Anggota',
+            'Dana', 'tahun'
+        ]);
+
+        // Add example data row
+        worksheet.addRow([
+            'Contoh Judul Penelitian Mandiri',
+            'Penelitian Dosen Pemula',
+            'S1 Teknik Informatika',
+            'Dr. John Doe, M.T.',
+            'Dr. Jane Smith, S.T., M.T., Prof. Dr. Bob Johnson, M.T., Ir. Alice Brown, M.T.',
+            25000000,
+            2024
+        ]);
+
+        // Set column widths
+        worksheet.columns = [
+            { width: 50 }, // Judul
+            { width: 30 }, // Skema
+            { width: 25 }, // Prodi
+            { width: 25 }, // Ketua
+            { width: 40 }, // Anggota
+            { width: 15 }, // Dana
+            { width: 10 }  // tahun
+        ];
+
+        // Set response headers
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=template_penelitian_mandiri.xlsx');
+
+        // Write workbook to response
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (error) {
+        console.error('Error creating template:', error);
+        res.status(500).send('Internal Server Error');
     }
 };

@@ -14,5 +14,6 @@ router.put("/dashboard/pengabdian/pusat/update/:id", isLogin, pusatControl.updat
 router.delete("/dashboard/pengabdian/pusat/delete/:id", isLogin, pusatControl.deleteData);
 router.get("/dashboard/pengabdian/pusat/export", isLogin, pusatControl.exportData);
 router.post("/dashboard/pengabdian/pusat/import", isLogin, upload.single("file"), pusatControl.importData);
+router.get("/dashboard/pengabdian/pusat/template", isLogin, pusatControl.downloadTemplate);
 
 module.exports = router;

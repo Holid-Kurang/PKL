@@ -114,8 +114,8 @@
                     <!-- Tabel -->
                     <div class="overflow-x-auto bg-white rounded-lg shadow-md">
                         <div class="overflow-y-auto max-h-[38rem]">
-                            <table class="w-full text-sm text-left text-gray-600 whitespace-nowrap">
-                                <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50">
+                            <table class="w-full text-sm text-left whitespace-nowrap">
+                                <thead class="sticky top-0 z-30 text-xs uppercase bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">No</th>
                                         <th scope="col" class="px-6 py-3">Judul HKI</th>
@@ -126,15 +126,15 @@
                                         <th scope="col" class="px-6 py-3">Kode Pengguna</th>
                                         <th scope="col" class="px-6 py-3">Nama Pengguna</th>
                                         <th scope="col" class="px-6 py-3">Prodi</th>
-                                        <th scope="col" class="px-6 py-3 text-center"></th>
+                                        <th scope="col" class="sticky right-0 px-6 py-3 text-center bg-gray-200 "></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% data.forEach((item, index)=> { %>
-                                        <tr class="bg-white border-b hover:bg-gray-50">
+                                        <tr class="bg-white border-b hover:bg-gray-200">
                                             <td class="px-6 py-4 font-medium text-gray-900"><%= index + 1 %></td>
                                             <td class="px-6 py-4">
-                                                <%= item.hki_judul %>
+                                                <p class="w-96 text-wrap"><%= item.hki_judul %></p>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <%= item.hki_jenis %>
@@ -161,7 +161,7 @@
                                             <td class="px-6 py-4">
                                                 <%= item._prodi_nama %>
                                             </td>
-                                            <td class="px-6 py-4 text-center whitespace-nowrap">
+                                            <td class="sticky right-0 z-10 px-6 py-4 text-center bg-gray-200 whitespace-nowrap">
                                                 <button 
                                                     onclick="openEditModal('<%= JSON.stringify(item) %>')" 
                                                     class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">

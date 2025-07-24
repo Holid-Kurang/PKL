@@ -1,4 +1,5 @@
 const pusatModel = require('../../models/pengabdian/pusat');
+const ExcelJS = require('exceljs');
 
 // Read dan Search
 exports.getAllData = async (req, res) => {
@@ -31,7 +32,6 @@ exports.getAllData = async (req, res) => {
         const totalPages = Math.ceil(totalData / limit) || 1; // Pastikan totalPages minimal 1
         // 2. Mengambil data untuk halaman saat ini dengan limit dan skip
         const data = await pusatModel.find(filter)
-            .sort({ TAHUN: -1 }) // Mengurutkan berdasarkan tahun terbaru
             .skip(skip)
             .limit(limit);
         // --- Merender Halaman ---
@@ -57,10 +57,6 @@ exports.createData = async (req, res) => {
             Judul = '-',
             SKEMA = '-',
             Nama = '-',
-            Anggota1 = '-',
-            Anggota2 = '-',
-            Anggota3 = '-',
-            Anggota4 = '-',
             Dana = 0,
             Tahun = 0,
             NomorKontrakLPPM = '-',
@@ -69,14 +65,18 @@ exports.createData = async (req, res) => {
             JumlahMshTerlibat = 0
         } = req.body;
 
+        // Handle Anggota array from form data
+        let Anggota = req.body['Anggota[]'] || [];
+        // Ensure Anggota is always an array, even if it contains only one element
+        if (!Array.isArray(Anggota)) {
+            Anggota = [Anggota];
+        }
+
         const newData = new pusatModel({
             Judul: Judul || '-',
             SKEMA: SKEMA || '-',
             Nama: Nama || '-',
-            Anggota1: Anggota1 || '-',
-            Anggota2: Anggota2 || '-',
-            Anggota3: Anggota3 || '-',
-            Anggota4: Anggota4 || '-',
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [], 
             Dana: Dana || 0,
             Tahun: Tahun || 0,
             NomorKontrakLPPM: NomorKontrakLPPM || '-',
@@ -105,7 +105,6 @@ exports.deleteData = async (req, res) => {
         // If the current URL contains a search query, append it to the redirect
         const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
         // Redirect to the same page with the search query
-        console.log(currentUrl + searchQuery);
         res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting pengabdian pusat data:', error);
@@ -120,10 +119,6 @@ exports.updateData = async (req, res) => {
             Judul = '-',
             SKEMA = '-',
             Nama = '-',
-            Anggota1 = '-',
-            Anggota2 = '-',
-            Anggota3 = '-',
-            Anggota4 = '-',
             Dana = 0,
             Tahun = 0,
             NomorKontrakLPPM = '-',
@@ -132,14 +127,18 @@ exports.updateData = async (req, res) => {
             JumlahMshTerlibat = 0
         } = req.body;
 
+        // Handle Anggota array from form data
+        let Anggota = req.body['Anggota[]'] || [];
+        // Ensure Anggota is always an array, even if it contains only one element
+        if (!Array.isArray(Anggota)) {
+            Anggota = [Anggota];
+        }
+
         const updatedData = {
             Judul: Judul || '-',
             SKEMA: SKEMA || '-',
             Nama: Nama || '-',
-            Anggota1: Anggota1 || '-',
-            Anggota2: Anggota2 || '-',
-            Anggota3: Anggota3 || '-',
-            Anggota4: Anggota4 || '-',
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [],
             Dana: Dana || 0,
             Tahun: Tahun || 0,
             NomorKontrakLPPM: NomorKontrakLPPM || '-',
@@ -154,7 +153,6 @@ exports.updateData = async (req, res) => {
         // If the current URL contains a search query, append it to the redirect
         const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
         // Redirect to the same page with the search query
-        console.log(currentUrl + searchQuery);
         res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating pengabdian pusat data:', error);
@@ -165,44 +163,30 @@ exports.updateData = async (req, res) => {
 exports.exportData = async (req, res) => {
     try {
         const data = await pusatModel.find({});
-        const ExcelJS = require('exceljs');
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('PengabdianPusat');
 
-        // Define columns
-        worksheet.columns = [
-            { header: 'Judul', key: 'Judul', width: 30 },
-            { header: 'SKEMA', key: 'SKEMA', width: 20 },
-            { header: 'Nama', key: 'Nama', width: 25 },
-            { header: 'Anggota1', key: 'Anggota1', width: 20 },
-            { header: 'Anggota2', key: 'Anggota2', width: 20 },
-            { header: 'Anggota3', key: 'Anggota3', width: 20 },
-            { header: 'Anggota4', key: 'Anggota4', width: 20 },
-            { header: 'Dana', key: 'Dana', width: 15 },
-            { header: 'Tahun', key: 'Tahun', width: 10 },
-            { header: 'NomorKontrakLPPM', key: 'NomorKontrakLPPM', width: 25 },
-            { header: 'NIP', key: 'NIP', width: 20 },
-            { header: 'JumlahAnggota', key: 'JumlahAnggota', width: 15 },
-            { header: 'JumlahMshTerlibat', key: 'JumlahMshTerlibat', width: 18 }
-        ];
+        // Define header row
+        worksheet.addRow([
+            'Judul', 'SKEMA', 'Nama', 'Anggota',
+            'Dana', 'Tahun', 'NomorKontrakLPPM', 'NIP',
+            'JumlahAnggota', 'JumlahMshTerlibat'
+        ]);
 
-        // Add rows
+        // Add data rows
         data.forEach(item => {
-            worksheet.addRow({
-                Judul: item.Judul,
-                SKEMA: item.SKEMA,
-                Nama: item.Nama,
-                Anggota1: item.Anggota1,
-                Anggota2: item.Anggota2,
-                Anggota3: item.Anggota3,
-                Anggota4: item.Anggota4,
-                Dana: item.Dana,
-                Tahun: item.Tahun,
-                NomorKontrakLPPM: item.NomorKontrakLPPM,
-                NIP: item.NIP,
-                JumlahAnggota: item.JumlahAnggota,
-                JumlahMshTerlibat: item.JumlahMshTerlibat
-            });
+            worksheet.addRow([
+                item.Judul,
+                item.SKEMA,
+                item.Nama,
+                item.Anggota ? item.Anggota.join(', ') : '-',
+                item.Dana,
+                item.Tahun,
+                item.NomorKontrakLPPM,
+                item.NIP,
+                item.JumlahAnggota,
+                item.JumlahMshTerlibat
+            ]);
         });
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -222,15 +206,15 @@ exports.importData = async (req, res) => {
         if (!file) {
             return res.send("<script>alert('No file uploaded'); window.location.href='/dashboard/pengabdian/pusat';</script>");
         }
-        const ExcelJS = require('exceljs');
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.load(file.buffer);
         const worksheet = workbook.worksheets[0];
 
         // Ambil header kolom dari file
         const expectedHeaders = [
-            'Judul', 'SKEMA', 'Nama', 'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
-            'Dana', 'Tahun', 'NomorKontrakLPPM', 'NIP', 'JumlahAnggota', 'JumlahMshTerlibat'
+            'Judul', 'SKEMA', 'Nama', 'Anggota',
+            'Dana', 'Tahun', 'NomorKontrakLPPM', 'NIP',
+            'JumlahAnggota', 'JumlahMshTerlibat'
         ];
         const headers = worksheet.getRow(1).values.slice(1); // slice(1) to skip first empty cell
 
@@ -245,18 +229,24 @@ exports.importData = async (req, res) => {
         worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
             if (rowNumber === 1) return; // skip header
             const [
-                Judul, SKEMA, Nama, Anggota1, Anggota2, Anggota3, Anggota4,
-                Dana, Tahun, NomorKontrakLPPM, NIP, JumlahAnggota, JumlahMshTerlibat
+                Judul, SKEMA, Nama, Anggota,
+                Dana, Tahun, NomorKontrakLPPM, NIP,
+                JumlahAnggota, JumlahMshTerlibat
             ] = row.values.slice(1); // slice(1) to skip first empty cell
+
+            // Parse anggota string menjadi array, handling titles with commas
+            let anggotaArray = [];
+            if (Anggota && typeof Anggota === 'string') {
+                // Split by comma followed by space and a title (Dr., Prof., Ir.) or capital letter
+                const parts = Anggota.split(/,\s+(?=(?:Dr\.|Prof\.|Ir\.|\b[A-Z][a-z]+\s+[A-Z]))/);
+                anggotaArray = parts.map(item => item.trim()).filter(item => item !== '');
+            }
 
             dataToInsert.push({
                 Judul: Judul || '-',
                 SKEMA: SKEMA || '-',
                 Nama: Nama || '-',
-                Anggota1: Anggota1 || '-',
-                Anggota2: Anggota2 || '-',
-                Anggota3: Anggota3 || '-',
-                Anggota4: Anggota4 || '-',
+                Anggota: anggotaArray,
                 Dana: parseFloat(Dana) || 0,
                 Tahun: parseInt(Tahun) || 0,
                 NomorKontrakLPPM: NomorKontrakLPPM || '-',
@@ -274,5 +264,58 @@ exports.importData = async (req, res) => {
     } catch (error) {
         console.error('Error importing pengabdian pusat data:', error);
         res.status(500).send('Internal Server Error. Pastikan file XLSX sesuai format.');
+    }
+};
+
+exports.downloadTemplate = async (req, res) => {
+    try {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Template Pengabdian Pusat');
+
+        // Define header row
+        worksheet.addRow([
+            'Judul', 'SKEMA', 'Nama', 'Anggota',
+            'Dana', 'Tahun', 'NomorKontrakLPPM', 'NIP',
+            'JumlahAnggota', 'JumlahMshTerlibat'
+        ]);
+
+        // Add example data row
+        worksheet.addRow([
+            'Contoh Judul Pengabdian Pusat',
+            'Pengabdian Dosen Pemula',
+            'Dr. John Doe, M.T.',
+            'Dr. Jane Smith, S.T., M.T., Prof. Dr. Bob Johnson, M.T., Ir. Alice Brown, M.T.',
+            35000000,
+            2024,
+            'LPPM-001/2024',
+            '197001011998021001',
+            3,
+            2
+        ]);
+
+        // Set column widths
+        worksheet.columns = [
+            { width: 50 }, // Judul
+            { width: 30 }, // SKEMA
+            { width: 25 }, // Nama
+            { width: 40 }, // Anggota
+            { width: 15 }, // Dana
+            { width: 10 }, // Tahun
+            { width: 20 }, // NomorKontrakLPPM
+            { width: 20 }, // NIP
+            { width: 15 }, // JumlahAnggota
+            { width: 18 }  // JumlahMshTerlibat
+        ];
+
+        // Set response headers
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=template_pengabdian_pusat.xlsx');
+
+        // Write workbook to response
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (error) {
+        console.error('Error creating template:', error);
+        res.status(500).send('Internal Server Error');
     }
 };

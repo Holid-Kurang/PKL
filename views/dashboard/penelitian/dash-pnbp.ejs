@@ -112,9 +112,9 @@
                     <% } %>
                     <!-- Tabel -->
                     <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-                        <div class="overflow-y-auto max-h-[38rem]">
+                        <div class="overflow-y-auto md:max-h-[610px]  ">
                             <table class="w-full text-sm text-left whitespace-nowrap">
-                                <thead class="sticky top-0 text-xs uppercase bg-gray-200">
+                                <thead class="sticky top-0 z-30 text-xs uppercase bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">No</th>
                                         <th scope="col" class="px-6 py-3">Judul</th>
@@ -125,61 +125,42 @@
                                         <th scope="col" class="px-6 py-3">Dana</th>
                                         <th scope="col" class="px-6 py-3">Tahun</th>
                                         <th scope="col" class="px-6 py-3">Nilai</th>
-                                        <th scope="col" class="px-6 py-3 text-center"></th>
+                                        <th scope="col" class="sticky right-0 px-6 py-3 text-center bg-gray-200"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% data.forEach((item, index)=> { %>
                                         <tr class="bg-white border-b hover:bg-gray-200">
-                                            <td class="px-6 py-4 font-medium ">
-                                                <%= index + 1 %>
+                                            <td class="px-6 py-4 font-medium "><%= index + 1 %></td>
+                                            <td class="px-6 py-4 ">
+                                                <p class="w-96 text-wrap"><%= item.Judul %></p>
                                             </td>
-                                            <td class="px-6 py-4">
-                                                <%= item.Judul %>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <%= item.SKEMA %>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <%= item.Prodi %>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <%= item.Ketua %>
-                                            </td>
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4"><%= item.SKEMA %></td>
+                                            <td class="px-6 py-4"><%= item.Prodi %></td>
+                                            <td class="px-6 py-4"><%= item.Ketua %></td>
+                                            <td class="relative px-6 py-4">
                                                 <%
                                                     let anggotaArray = [];
                                                     if (item.Anggota && Array.isArray(item.Anggota)) {
                                                         anggotaArray = item.Anggota.filter(anggota => anggota && anggota.trim() !== '');
-                                                    } else {
-                                                        // Fallback untuk format lama dengan Anggota1, Anggota2, dll
-                                                        ['Anggota1', 'Anggota2', 'Anggota3', 'Anggota4'].forEach(key => {
-                                                            if (item[key] && item[key].trim() !== '') {
-                                                                anggotaArray.push(item[key]);
-                                                            }
-                                                        });
-                                                    }
+                                                    } 
                                                 %>
                                                 <% if (anggotaArray.length > 0) { %>
-                                                    <% anggotaArray.forEach(anggota => { %>
-                                                        <div class="flex flex-row flex-shrink px-2 py-1 mb-1 text-xs text-blue-800 bg-blue-100 rounded-md">
-                                                            <%= anggota %>
-                                                        </div>
-                                                    <% }) %>
+                                                    <div class="flex flex-col space-y-1">
+                                                        <% anggotaArray.forEach(anggota => { %>
+                                                            <div class="px-2 py-1 text-xs text-blue-800 bg-blue-100 rounded-md">
+                                                                <%= anggota %>
+                                                            </div>
+                                                        <% }) %>
+                                                    </div>
                                                 <% } else { %>
                                                     <span class="italic text-gray-400">-</span>
                                                 <% } %>
                                             </td>
-                                            <td class="px-6 py-4">
-                                                <%= item.Biaya %>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <%= item.Tahun %>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <%= item.Nilai %>
-                                            </td>
-                                            <td class="px-6 py-4 text-center whitespace-nowrap">
+                                            <td class="px-6 py-4"><%= item.Biaya %></td>
+                                            <td class="px-6 py-4"><%= item.Tahun %></td>
+                                            <td class="px-6 py-4"><%= item.Nilai %></td>
+                                            <td class="sticky right-0 z-10 px-6 py-4 text-center bg-gray-200 whitespace-nowrap">
                                                 <button 
                                                     onclick="openEditModal('<%= JSON.stringify(item) %>')" 
                                                     class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">
@@ -187,7 +168,7 @@
                                                 </button>
                                                 <button
                                                     onclick="openDeleteModal('/dashboard/penelitian/pnbp/delete/<%= item._id %>?_method=DELETE')"
-                                                    class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
+                                                    class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg">
                                                     Hapus
                                                 </button>
                                             </td>

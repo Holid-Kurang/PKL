@@ -113,39 +113,55 @@
 
                     <!-- Tabel -->
                     <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-                        <div class="overflow-y-auto max-h-[38rem]">
-                            <table class="w-full text-sm text-left text-gray-600 whitespace-nowrap">
-                                <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50">
+                        <div class="overflow-y-auto md:max-h-[710px] sm:max-h-[600px]">
+                            <table class="w-full text-sm text-left whitespace-nowrap">
+                                <thead class="sticky top-0 z-30 text-xs uppercase bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">No</th>
                                         <th scope="col" class="px-6 py-3">Judul</th>
                                         <th scope="col" class="px-6 py-3">Skema</th>
                                         <th scope="col" class="px-6 py-3">Prodi</th>
                                         <th scope="col" class="px-6 py-3">Ketua</th>
-                                        <th scope="col" class="px-6 py-3">Anggota 1</th>
-                                        <th scope="col" class="px-6 py-3">Anggota 2</th>
-                                        <th scope="col" class="px-6 py-3">Anggota 3</th>
-                                        <th scope="col" class="px-6 py-3">Anggota 4</th>
+                                        <th scope="col" class="px-6 py-3">Anggota</th>
                                         <th scope="col" class="px-6 py-3">Dana</th>
                                         <th scope="col" class="px-6 py-3">Tahun</th>
-                                        <th scope="col" class="px-6 py-3 text-center"></th>
+                                        <th scope="col" class="sticky right-0 px-6 py-3 text-center bg-gray-200"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% data.forEach((item, index)=> { %>
-                                        <tr class="bg-white border-b hover:bg-gray-50">
-                                            <td class="px-6 py-4 font-medium text-gray-900"><%= index + 1 %></td>
-                                            <td class="px-6 py-4"><%= item.Judul %></td>
+                                        <tr class="bg-white border-b hover:bg-gray-200">
+                                            <td class="px-6 py-4 font-medium "><%= index + 1 %></td>
+                                            <td class="px-6 py-4">
+                                                <p class="w-96 text-wrap">
+                                                    <%= item.Judul %>
+                                                </p>
+                                            </td>
                                             <td class="px-6 py-4"><%= item.Skema %></td>
                                             <td class="px-6 py-4"><%= item.Prodi %></td>
                                             <td class="px-6 py-4"><%= item.Ketua %></td>
-                                            <td class="px-6 py-4"><%= item.Anggota1 %></td>
-                                            <td class="px-6 py-4"><%= item.Anggota2 %></td>
-                                            <td class="px-6 py-4"><%= item.Anggota3 %></td>
-                                            <td class="px-6 py-4"><%= item.Anggota4 %></td>
+                                            <td class="relative px-6 py-4">
+                                                <%
+                                                    let anggotaArray = [];
+                                                    if (item.Anggota && Array.isArray(item.Anggota)) {
+                                                        anggotaArray = item.Anggota.filter(anggota => anggota && anggota.trim() !== '');
+                                                    } 
+                                                %>
+                                                <% if (anggotaArray.length > 0) { %>
+                                                    <div class="flex flex-col space-y-1">
+                                                        <% anggotaArray.forEach(anggota => { %>
+                                                            <div class="px-2 py-1 text-xs text-blue-800 bg-blue-100 rounded-md">
+                                                                <%= anggota %>
+                                                            </div>
+                                                        <% }) %>
+                                                    </div>
+                                                <% } else { %>
+                                                    <span class="italic text-gray-400">-</span>
+                                                <% } %>
+                                            </td>
                                             <td class="px-6 py-4"><%= item.Dana %></td>
                                             <td class="px-6 py-4"><%= item.tahun %></td>
-                                            <td class="px-6 py-4 text-center whitespace-nowrap">
+                                            <td class="sticky right-0 px-6 py-4 text-center bg-gray-200 whitespace-nowrap">
                                                 <button 
                                                     onclick="openEditModal('<%= JSON.stringify(item) %>')" 
                                                     class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">
@@ -179,52 +195,27 @@
             </main>
     </div>
 
+    <!-- Modal Tambah Data (awalnya tersembunyi) -->
     <%- include('../../partials/modalAddData.ejs', {
         action: '/dashboard/penelitian/mandiri/create',
         formFields: [
         { name: 'Judul', label: 'Judul', type: 'text', required: true },
         { name: 'Skema', label: 'Skema', type: 'text', required: true },
-        { 
-            name: 'Prodi', 
-            label: 'Prodi', 
-            type: 'select', 
-            required: true,
-            options: [
-                'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
-                'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
-                'S2 Teknik Sipil', 'S2 Teknologi Informasi'
-            ] 
-        },
+        { name: 'Prodi', label: 'Prodi', type: 'select', required: true, options: prodiOptions },
         { name: 'Ketua', label: 'Ketua', type: 'text', required: true },
-        { name: 'Anggota1', label: 'Anggota 1', type: 'text', required: true },
-        { name: 'Anggota2', label: 'Anggota 2', type: 'text', required: false },
-        { name: 'Anggota3', label: 'Anggota 3', type: 'text', required: false },
-        { name: 'Anggota4', label: 'Anggota 4', type: 'text', required: false },
+        { name: 'Anggota', label: 'Anggota', type: 'anggota', required: false },
         { name: 'Dana', label: 'Dana', type: 'number', required: true },
         { name: 'tahun', label: 'Tahun', type: 'number', required: true } // ganti nama field dari 'tahun' menjadi 'Tahun' agar konsisten jika perlu
     ]}) %>
     
+    <!-- Modal Edit Data (awalnya tersembunyi) -->
     <%- include('../../partials/modalEditData.ejs', {
-        action: '/dashboard/penelitian/mandiri/update',
         formFields: [
         { name: 'Judul', label: 'Judul', type: 'text', required: true },
         { name: 'Skema', label: 'Skema', type: 'text', required: true },
-        { 
-            name: 'Prodi', 
-            label: 'Prodi', 
-            type: 'select', 
-            required: true,
-            options: [
-                'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
-                'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
-                'S2 Teknik Sipil', 'S2 Teknologi Informasi'
-            ] 
-        },
+        { name: 'Prodi', label: 'Prodi', type: 'select', required: true, options: prodiOptions },
         { name: 'Ketua', label: 'Ketua', type: 'text', required: true },
-        { name: 'Anggota1', label: 'Anggota 1', type: 'text', required: true },
-        { name: 'Anggota2', label: 'Anggota 2', type: 'text', required: false },
-        { name: 'Anggota3', label: 'Anggota 3', type: 'text', required: false },
-        { name: 'Anggota4', label: 'Anggota 4', type: 'text', required: false },
+        { name: 'Anggota', label: 'Anggota', type: 'anggota', required: false },
         { name: 'Dana', label: 'Dana', type: 'number', required: true },
         { name: 'tahun', label: 'Tahun', type: 'number', required: true } // ganti nama field dari 'tahun' menjadi 'Tahun' agar konsisten jika perlu
     ]}) %>
@@ -232,7 +223,7 @@
     <%- include('../../partials/modalDeleteData.ejs') %>
     <%- include('../../partials/modalImportData.ejs', { 
         action: '/dashboard/penelitian/mandiri/import',
-        templateUrl: '/dashboard/download/1',
+        templateUrl: '/dashboard/penelitian/mandiri/template',
     }) %>
     
     <script src="/script/penelitian/dash-mandiri.js"></script>

@@ -1,34 +1,7 @@
 const pnbpModel = require('../../models/penelitian/pnbp');
 const ExcelJS = require('exceljs');
 const kategoriOptionModel = require('../../models/kategoriOptionModel');
-// const createKategoriProdi = async () => {
-//     try {
-//         const prodiData = [
-//             'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
-//             'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
-//             'S2 Teknik Sipil', 'S2 Teknologi Informasi'
-//         ];
-        
-//         const existingKategori = await kategoriOptionModel.findOne({ kategori: 'prodi' });
-        
-//         if (existingKategori) {
-//             existingKategori.options = prodiData;
-//             await existingKategori.save();
-//         } else {
-//             await kategoriOptionModel.create({
-//                 kategori: 'prodi',
-//                 option: prodiData
-//             });
-//         }
-        
-//         console.log('Kategori prodi berhasil disimpan');
-//     } catch (error) {
-//         console.error('Error creating kategori prodi:', error);
-//     }
-// };
 
-// // Initialize kategori prodi data
-// createKategoriProdi();
 // Read dan Search
 exports.getAllData = async (req, res) => {
     try {
@@ -61,7 +34,6 @@ exports.getAllData = async (req, res) => {
         const totalPages = Math.ceil(totalData / limit) || 1; // Pastikan totalPages minimal 1
         // 2. Mengambil data untuk halaman saat ini dengan limit dan skip
         const data = await pnbpModel.find(filter)
-            .sort({ TAHUN: -1 }) // Mengurutkan berdasarkan tahun terbaru
             .skip(skip)
             .limit(limit);
 
@@ -151,6 +123,7 @@ exports.updateData = async (req, res) => {
         if (!Array.isArray(Anggota)) {
             Anggota = [Anggota];
         }
+        
         const updatedData = {
             Judul: Judul || '-',
             SKEMA: SKEMA || '-',

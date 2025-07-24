@@ -15,5 +15,6 @@ router.put("/dashboard/pengabdian/pnbp/update/:id", isLogin, pnbpControl.updateD
 router.delete("/dashboard/pengabdian/pnbp/delete/:id", isLogin, pnbpControl.deleteData);
 router.get("/dashboard/pengabdian/pnbp/export", isLogin, pnbpControl.exportData);
 router.post("/dashboard/pengabdian/pnbp/import", isLogin, upload.single("file"), pnbpControl.importData);
+router.get("/dashboard/pengabdian/pnbp/template", isLogin, pnbpControl.downloadTemplate);
 
 module.exports = router;

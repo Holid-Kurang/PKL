@@ -1,4 +1,6 @@
 const pusatModel = require('../../models/penelitian/pusat');
+const ExcelJS = require('exceljs');
+const kategoriOptionModel = require('../../models/kategoriOptionModel');
 
 // Read dan Search
 exports.getAllData = async (req, res) => {
@@ -32,14 +34,18 @@ exports.getAllData = async (req, res) => {
         const totalPages = Math.ceil(totalData / limit) || 1; // Pastikan totalPages minimal 1
         // 2. Mengambil data untuk halaman saat ini dengan limit dan skip
         const data = await pusatModel.find(filter)
-            .sort({ TAHUN: -1 }) // Mengurutkan berdasarkan tahun terbaru
             .skip(skip)
             .limit(limit);
+
+        let prodiOptions = await kategoriOptionModel.find({ kategori: 'prodi' });
+        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
+        
         // --- Merender Halaman ---
         res.render('dashboard/penelitian/dash-pusat', {
             data,
             searchQuery,
             title: 'Penelitian Pusat',
+            prodiOptions,
             currentPage: page,
             totalPages,
             limit // Kirim limit ke view agar bisa digunakan di link pagination
@@ -58,10 +64,6 @@ exports.createData = async (req, res) => {
             TAHUN = 0,
             SKEMA = '-',
             NAMA = '-',
-            Anggota1 = '-',
-            Anggota2 = '-',
-            Anggota3 = '-',
-            Anggota4 = '-',
             NIP = '-',
             NIDN = '-',
             PRODI = '-',
@@ -69,14 +71,18 @@ exports.createData = async (req, res) => {
             BIAYA = 0
         } = req.body;
 
+        // Handle Anggota array from form data
+        let Anggota = req.body['Anggota[]'] || [];
+        // Ensure Anggota is always an array, even if it contains only one element
+        if (!Array.isArray(Anggota)) {
+            Anggota = [Anggota];
+        }
+
         const newData = new pusatModel({
             TAHUN: TAHUN || 0,
             SKEMA: SKEMA || '-',
             NAMA: NAMA || '-',
-            Anggota1: Anggota1 || '-',
-            Anggota2: Anggota2 || '-',
-            Anggota3: Anggota3 || '-',
-            Anggota4: Anggota4 || '-',
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [], 
             NIP: NIP || '-',
             NIDN: NIDN || '-',
             PRODI: PRODI || '-',
@@ -104,7 +110,6 @@ exports.deleteData = async (req, res) => {
         // If the current URL contains a search query, append it to the redirect
         const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
         // Redirect to the same page with the search query
-        console.log(currentUrl + searchQuery);
         res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error deleting penelitian pusat data:', error);
@@ -119,10 +124,6 @@ exports.updateData = async (req, res) => {
             TAHUN,
             SKEMA,
             NAMA,
-            Anggota1,
-            Anggota2,
-            Anggota3,
-            Anggota4,
             NIP,
             NIDN,
             PRODI,
@@ -130,14 +131,18 @@ exports.updateData = async (req, res) => {
             BIAYA
         } = req.body;
 
+        // Handle Anggota array from form data
+        let Anggota = req.body['Anggota[]'] || [];
+        // Ensure Anggota is always an array, even if it contains only one element
+        if (!Array.isArray(Anggota)) {
+            Anggota = [Anggota];
+        }
+
         const updatedData = {
             TAHUN: TAHUN || 0,
             SKEMA: SKEMA || '-',
             NAMA: NAMA || '-',
-            Anggota1: Anggota1 || '-',
-            Anggota2: Anggota2 || '-',
-            Anggota3: Anggota3 || '-',
-            Anggota4: Anggota4 || '-',
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [],
             NIP: NIP || '-',
             NIDN: NIDN || '-',
             PRODI: PRODI || '-',
@@ -151,7 +156,6 @@ exports.updateData = async (req, res) => {
         // If the current URL contains a search query, append it to the redirect
         const searchQuery = req.query.search ? `?search=${req.query.search}` : '';
         // Redirect to the same page with the search query
-        console.log(currentUrl + searchQuery);
         res.redirect(currentUrl + searchQuery);
     } catch (error) {
         console.error('Error updating penelitian pusat data:', error);
@@ -167,11 +171,10 @@ exports.exportData = async (req, res) => {
         const worksheet = workbook.addWorksheet('PenelitianPusat');
 
         // Define header row
-        const headers = [
-            'TAHUN', 'SKEMA', 'NAMA', 'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
+        worksheet.addRow([
+            'TAHUN', 'SKEMA', 'NAMA', 'Anggota',
             'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
-        ];
-        worksheet.addRow(headers);
+        ]);
 
         // Add data rows
         data.forEach(item => {
@@ -179,10 +182,7 @@ exports.exportData = async (req, res) => {
                 item.TAHUN,
                 item.SKEMA,
                 item.NAMA,
-                item.Anggota1,
-                item.Anggota2,
-                item.Anggota3,
-                item.Anggota4,
+                item.Anggota ? item.Anggota.join(', ') : '-',
                 item.NIP,
                 item.NIDN,
                 item.PRODI,
@@ -222,7 +222,7 @@ exports.importData = async (req, res) => {
 
         // Ambil header kolom dari baris pertama
         const expectedHeaders = [
-            'TAHUN', 'SKEMA', 'NAMA', 'Anggota1', 'Anggota2', 'Anggota3', 'Anggota4',
+            'TAHUN', 'SKEMA', 'NAMA', 'Anggota',
             'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
         ];
         const headers = [];
@@ -239,18 +239,23 @@ exports.importData = async (req, res) => {
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber === 1) return; // skip header
             const [
-                TAHUN, SKEMA, NAMA, Anggota1, Anggota2, Anggota3, Anggota4,
+                TAHUN, SKEMA, NAMA, Anggota,
                 NIP, NIDN, PRODI, JUDUL, BIAYA
             ] = row.values.slice(1); // slice(1) karena row.values[0] undefined
+
+            // Parse anggota string menjadi array, handling titles with commas
+            let anggotaArray = [];
+            if (Anggota && typeof Anggota === 'string') {
+                // Split by comma followed by space and a title (Dr., Prof., Ir.) or capital letter
+                const parts = Anggota.split(/,\s+(?=(?:Dr\.|Prof\.|Ir\.|\b[A-Z][a-z]+\s+[A-Z]))/);
+                anggotaArray = parts.map(item => item.trim()).filter(item => item !== '');
+            }
 
             dataToInsert.push({
                 TAHUN: parseInt(TAHUN) || 0,
                 SKEMA: SKEMA || '-',
                 NAMA: NAMA || '-',
-                Anggota1: Anggota1 || '-',
-                Anggota2: Anggota2 || '-',
-                Anggota3: Anggota3 || '-',
-                Anggota4: Anggota4 || '-',
+                Anggota: anggotaArray,
                 NIP: NIP || '-',
                 NIDN: NIDN || '-',
                 PRODI: PRODI || '-',
@@ -267,5 +272,55 @@ exports.importData = async (req, res) => {
     } catch (error) {
         console.error('Error importing penelitian pusat data:', error);
         res.status(500).send('Internal Server Error. Pastikan file XLSX sesuai format.');
+    }
+};
+
+exports.downloadTemplate = async (req, res) => {
+    try {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Template Penelitian Pusat');
+
+        // Define header row
+        worksheet.addRow([
+            'TAHUN', 'SKEMA', 'NAMA', 'Anggota',
+            'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
+        ]);
+
+        // Add example data row
+        worksheet.addRow([
+            2024,
+            'Penelitian Fundamental',
+            'Dr. John Doe, M.T.',
+            'Dr. Jane Smith, S.T., M.T., Prof. Dr. Bob Johnson, M.T., Ir. Alice Brown, M.T.',
+            '197001011998021001',
+            '0001017001',
+            'S1 Teknik Informatika',
+            'Contoh Judul Penelitian Pusat',
+            75000000
+        ]);
+
+        // Set column widths
+        worksheet.columns = [
+            { width: 10 }, // TAHUN
+            { width: 30 }, // SKEMA
+            { width: 25 }, // NAMA
+            { width: 40 }, // Anggota
+            { width: 20 }, // NIP
+            { width: 15 }, // NIDN
+            { width: 25 }, // PRODI
+            { width: 50 }, // JUDUL
+            { width: 15 }  // BIAYA
+        ];
+
+        // Set response headers
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=template_penelitian_pusat.xlsx');
+
+        // Write workbook to response
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (error) {
+        console.error('Error creating template:', error);
+        res.status(500).send('Internal Server Error');
     }
 };

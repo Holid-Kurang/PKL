@@ -4,12 +4,9 @@ const pnbpSchema = new mongoose.Schema({
     Judul: { type: String, required: true },
     SKEMA: { type: String, required: true },
     Ketua: { type: String, required: true },
-    Anggota1: { type: String },
-    Anggota2: { type: String },
-    Anggota3: { type: String },
-    Anggota4: { type: String },
-    Nilai: { type: Number },
+    Anggota: [{ type: String }],
     Dana: { type: Number },
+    Nilai: { type: Number },
     Prodi: { type: String },
     Tahun: { type: Number }
 }, { collection: 'pengabdianPNBP' });

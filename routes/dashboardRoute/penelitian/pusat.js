@@ -15,6 +15,6 @@ router.put("/dashboard/penelitian/pusat/update/:id", isLogin, pusatControl.updat
 router.delete("/dashboard/penelitian/pusat/delete/:id", isLogin, pusatControl.deleteData);
 router.get("/dashboard/penelitian/pusat/export", isLogin, pusatControl.exportData);
 router.post("/dashboard/penelitian/pusat/import", isLogin, upload.single("file"), pusatControl.importData);
-
+router.get("/dashboard/penelitian/pusat/template", isLogin, pusatControl.downloadTemplate);
 
 module.exports = router;
