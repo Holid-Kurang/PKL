@@ -161,7 +161,14 @@
                                                     <span class="italic text-gray-400">-</span>
                                                 <% } %>
                                             </td>
-                                            <td class="px-6 py-4"><%= item.Dana %></td>
+                                            <td class="px-6 py-4">
+                                                <%= new Intl.NumberFormat('id-ID', { 
+                                                    style: 'currency', 
+                                                    currency: 'IDR',
+                                                    minimumFractionDigits: 0,
+                                                    maximumFractionDigits: 0
+                                                }).format(item.Dana) %>
+                                            </td>
                                             <td class="px-6 py-4"><%= item.Tahun %></td>
                                             <td class="px-6 py-4"><%= item.NomorKontrakLPPM %></td>
                                             <td class="px-6 py-4"><%= item.NIP %></td>

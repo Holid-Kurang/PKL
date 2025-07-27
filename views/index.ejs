@@ -24,8 +24,8 @@
                     Mataram.</p>
                 <img class="rounded-[30px] w-full md:w-[500px] self-center" src="/assets/gedung-teknik.png" alt="">
             </div>
-            <h1 class="font-bold text-[25px] md:text-[35px] text-center my-5">Data Penelitian, Pengabdian, dan
-                Publikasi 5 Tahun Terakhir </h1>
+            <h1 class="font-bold text-[25px] md:text-[35px] text-center my-5">Rangkuman Data Penelitian, Pengabdian, dan
+                Publikasi</h1>
             <div class="flex flex-col justify-center gap-6 md:flex-row md:gap-36">
                 <div
                     class="w-[30%] flex flex-col shadow-xl shadow-gray-800/25  rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
@@ -33,15 +33,17 @@
                 </div>
                 <p
                     class="w-full md:w-[30%]  text-[16px] md:text-[20px] text-justify md:text-left aspect-square content-center animate-on-scroll slide-right-fade-in">
-                    Selama lima tahun terakhir, Fakultas Teknik telah menunjukkan komitmen tinggi dalam bidang penelitian. Sebagian besar dana penelitian, 
-                    yaitu 78.91%, berasal dari sumber PNBP, sementara 17.45% berasal dari dana pusat, dan 3.64% dari pendanaan mandiri. <a href="/penelitian" class="text-blue-500 hover:underline">Lihat lebih lanjut</a>
+                    Dari total <strong><%= penelitianStats.total %></strong> penelitian, sumber pendanaan mayoritas berasal dari 
+                    <strong><%= penelitianStats.topCategory %></strong> yang mencakup <strong><%= penelitianStats.topPercentage.toFixed(1) %>%</strong> dari keseluruhan.
+                    <a href="/penelitian" class="text-blue-600 hover:underline">Lihat detail.</a>
                 </p>
             </div>
             <div class="flex flex-col-reverse justify-center gap-6 md:flex-row md:gap-36">
                 <p class="w-[30%] md:text-[20px]  aspect-square content-center animate-on-scroll slide-left-fade-in">
-                    Fakultas Teknik juga aktif dalam kegiatan pengabdian kepada masyarakat. Sebesar 97.02% kegiatan pengabdian dibiayai oleh PNBP, 
-                    dan 2.98% lainnya dari dana pusat. Ini menunjukkan peran serta fakultas dalam menerapkan 
-                    ilmu pengetahuan dan teknologi untuk kemajuan masyarakat secara luas. <a href="/pengabdian" class="text-blue-500 hover:underline">Lihat lebih lanjut</a>
+                    Sebanyak <strong><%= pengabdianStats.total %></strong> kegiatan pengabdian telah dilaksanakan, dengan 
+                    kontribusi terbesar datang dari sumber <strong><%= pengabdianStats.topCategory %></strong> 
+                    sebesar <strong><%= pengabdianStats.topPercentage.toFixed(1) %>%</strong>.
+                    <a href="/pengabdian" class="text-blue-600 hover:underline">Lihat detail.</a>
                 </p>
                 <div
                     class="w-[30%] flex flex-col shadow-xl shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-right-fade-in">
@@ -54,9 +56,9 @@
                     <canvas id="publikasiChart" class="w-full h-full "></canvas>
                 </div>
                 <p class="w-[30%]  md:text-[20px]  aspect-square content-center animate-on-scroll slide-right-fade-in">
-                    Dalam aspek publikasi ilmiah, Fakultas Teknik berhasil menghasilkan karya yang beragam. Sebanyak 62.77% publikasi berupa jurnal pengabdian, 
-                    22.70% dalam bentuk HAKI (Hak Atas Kekayaan Intelektual), dan 14.54% berupa buku.  
-                    Proporsi ini menunjukkan keberagaman output akademik dan kontribusi nyata dosen serta peneliti terhadap dunia keilmuan. <a href="/publikasi" class="text-blue-500 hover:underline">Lihat lebih lanjut</a>
+                    Total <strong><%= publikasiStats.total %></strong> karya telah dipublikasikan. Jenis publikasi terbanyak adalah <strong><%= publikasiStats.topCategory %></strong>, 
+                    mencapai <strong><%= publikasiStats.topPercentage.toFixed(1) %>%</strong> dari total.
+                    <a href="/publikasi" class="text-blue-600 hover:underline">Lihat detail.</a>
                 </p>
             </div>
         </div>

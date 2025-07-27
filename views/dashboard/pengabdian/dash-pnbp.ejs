@@ -159,7 +159,14 @@
                                                 <% } %>
                                             </td>
                                             <td class="px-6 py-4"><%= typeof item.Nilai !== 'undefined' ? item.Nilai : '' %></td>
-                                            <td class="px-6 py-4"><%= typeof item.Dana !== 'undefined' ? item.Dana : '' %></td>
+                                            <td class="px-6 py-4">
+                                                <%= new Intl.NumberFormat('id-ID', { 
+                                                    style: 'currency', 
+                                                    currency: 'IDR',
+                                                    minimumFractionDigits: 0,
+                                                    maximumFractionDigits: 0
+                                                }).format(item.Dana) %>
+                                            </td>
                                             <td class="px-6 py-4"><%= item.Prodi %></td>
                                             <td class="px-6 py-4"><%= item.Tahun %></td>
                                             <td class="sticky right-0 px-6 py-4 text-center bg-gray-200 whitespace-nowrap">

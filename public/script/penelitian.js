@@ -1,3 +1,19 @@
+document.getElementById('jenispenelitian').addEventListener('change', function () {
+    const selectedValue = this.value;
+    const sections = document.querySelectorAll('.chart-section');
+
+    // Hide all sections
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show selected section
+    const selectedSection = document.getElementById(selectedValue + '-section');
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const pusatData = window.pusatData || {};
     const pnbpData = window.pnbpData || {};
@@ -308,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     layout: { padding: 20 }
                 }
             })
-        }, 
+        },
         // PNBP
         {
             id: 'pnbpPerTahun',
@@ -971,9 +987,9 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'mandiriAvgDanaPerProdi',
             init: () => new Chart(document.getElementById('mandiriAvgDanaPerProdi').getContext('2d'), {
                 type: 'doughnut',
-                data:{
-                    labels : mandiriData.avgDanaPerProdi.map(item => item._id),
-                    datasets:[{
+                data: {
+                    labels: mandiriData.avgDanaPerProdi.map(item => item._id),
+                    datasets: [{
                         label: 'Rata-rata Dana Penelitian Mandiri per Program Studi',
                         data: mandiriData.avgDanaPerProdi.map(item => item.avg),
                         backgroundColor: [

@@ -1,3 +1,19 @@
+document.getElementById('jenispenelitian').addEventListener('change', function () {
+    const selectedValue = this.value;
+    const sections = document.querySelectorAll('.chart-section');
+
+    // Hide all sections
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show selected section
+    const selectedSection = document.getElementById(selectedValue + '-section');
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     // Ambil semua data yang sudah disiapkan di EJS
     const pusatData = window.pusatData || {};
@@ -61,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             })
-        },{
+        }, {
             id: 'pusatDanaPerTahun',
             init: () => new Chart(document.getElementById('pusatDanaPerTahun').getContext('2d'), {
                 type: 'bar',
@@ -113,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             })
-        },{
+        }, {
             id: 'pusatAvgDanaPerTahun',
             init: () => new Chart(document.getElementById('pusatAvgDanaPerTahun').getContext('2d'), {
                 type: 'bar',
