@@ -28,7 +28,7 @@
                 Publikasi</h1>
             <div class="flex flex-col justify-center gap-6 md:flex-row md:gap-36">
                 <div
-                    class="w-[30%] flex flex-col shadow-xl shadow-gray-800/25  rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
+                    class="w-[30%] flex flex-col shadow-xl bg-white shadow-gray-800/25  rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
                     <canvas id="penelitianChart" class="w-full h-full "></canvas>
                 </div>
                 <p
@@ -46,13 +46,13 @@
                     <a href="/pengabdian" class="text-blue-600 hover:underline">Lihat detail.</a>
                 </p>
                 <div
-                    class="w-[30%] flex flex-col shadow-xl shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-right-fade-in">
+                    class="w-[30%] flex flex-col bg-white shadow-xl shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-right-fade-in">
                     <canvas id="pengabdianChart" class="w-full h-full "></canvas>
                 </div>
             </div>
             <div class="flex flex-col justify-center gap-6 md:flex-row md:gap-36">
                 <div
-                    class="w-[30%] flex flex-col shadow-xl shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
+                    class="w-[30%] flex flex-col shadow-xl bg-white shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
                     <canvas id="publikasiChart" class="w-full h-full "></canvas>
                 </div>
                 <p class="w-[30%]  md:text-[20px]  aspect-square content-center animate-on-scroll slide-right-fade-in">
@@ -60,6 +60,84 @@
                     mencapai <strong><%= publikasiStats.topPercentage.toFixed(1) %>%</strong> dari total.
                     <a href="/publikasi" class="text-blue-600 hover:underline">Lihat detail.</a>
                 </p>
+            </div>
+        </div>
+        <div class="py-8">
+            <div class="mx-14 md:mx-28">
+                <h2 class="font-bold text-[25px] md:text-[35px] text-center mb-8">Data Per Program Studi</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border border-collapse border-gray-300">
+                        <thead class="text-white">
+                            <tr class="bg-veronica">
+                                <th rowspan="2" class="px-4 py-3 font-semibold text-center border border-gray-300">Prodi</th>
+                                <th colspan="3" class="px-4 py-2 font-semibold text-center border border-gray-300">Penelitian</th>
+                                <th colspan="2" class="px-4 py-2 font-semibold text-center border border-gray-300">Pengabdian</th>
+                                <th colspan="3" class="px-4 py-2 font-semibold text-center border border-gray-300">Publikasi</th>
+                            </tr>
+                            <tr class="bg-veronica">
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Pusat</th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">PNBP</th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Mandiri</th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">PNBP</th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Pusat</th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">HAKI</th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Buku</th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Jurnal Pengabdian</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (typeof prodiData !== 'undefined' && prodiData.length > 0) { %>
+                                <% prodiData.forEach(prodi => { %>
+                                    <tr class="hover:bg-white">
+                                        <td class="px-4 py-3 font-medium border border-gray-300"><%= prodi.name %></td>
+                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.penelitian?.pusat || 0 %></td>
+                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.penelitian?.pnbp || 0 %></td>
+                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.penelitian?.mandiri || 0 %></td>
+                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.pengabdian?.pnbp || 0 %></td>
+                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.pengabdian?.pusat || 0 %></td>
+                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.publikasi?.haki || 0 %></td>
+                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.publikasi?.buku || 0 %></td>
+                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.publikasi?.jupeng || 0 %></td>
+                                    </tr>
+                                <% }) %>
+                                <!-- Total row -->
+                                <tr class="font-semibold bg-white">
+                                    <td class="px-4 py-3 border border-gray-300">Total</td>
+                                    <td class="px-3 py-2 text-center border border-gray-300">
+                                        <%= prodiData.reduce((sum, p) => sum + (p.penelitian?.pusat || 0), 0) %>
+                                    </td>
+                                    <td class="px-3 py-2 text-center border border-gray-300">
+                                        <%= prodiData.reduce((sum, p) => sum + (p.penelitian?.pnbp || 0), 0) %>
+                                    </td>
+                                    <td class="px-3 py-2 text-center border border-gray-300">
+                                        <%= prodiData.reduce((sum, p) => sum + (p.penelitian?.mandiri || 0), 0) %>
+                                    </td>
+                                    <td class="px-3 py-2 text-center border border-gray-300">
+                                        <%= prodiData.reduce((sum, p) => sum + (p.pengabdian?.pnbp || 0), 0) %>
+                                    </td>
+                                    <td class="px-3 py-2 text-center border border-gray-300">
+                                        <%= prodiData.reduce((sum, p) => sum + (p.pengabdian?.pusat || 0), 0) %>
+                                    </td>
+                                    <td class="px-3 py-2 text-center border border-gray-300">
+                                        <%= prodiData.reduce((sum, p) => sum + (p.publikasi?.haki || 0), 0) %>
+                                    </td>
+                                    <td class="px-3 py-2 text-center border border-gray-300">
+                                        <%= prodiData.reduce((sum, p) => sum + (p.publikasi?.buku || 0), 0) %>
+                                    </td>
+                                    <td class="px-3 py-2 text-center border border-gray-300">
+                                        <%= prodiData.reduce((sum, p) => sum + (p.publikasi?.jupeng || 0), 0) %>
+                                    </td>
+                                </tr>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="9" class="px-4 py-8 text-center text-gray-500 border border-gray-300">
+                                        Data tidak tersedia
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     <%- include('partials/footer') %>

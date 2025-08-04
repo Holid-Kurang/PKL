@@ -48,6 +48,7 @@ exports.getAllData = async (req, res) => {
             prodiOptions,
             currentPage: page,
             totalPages,
+            totalData, // Tambahkan totalData untuk informasi "Menampilkan X-Y of Z"
             limit // Kirim limit ke view agar bisa digunakan di link pagination
         });
 

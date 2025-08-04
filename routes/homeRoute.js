@@ -35,12 +35,71 @@ function calculateStats(counts) {
     };
 }
 
+// Fungsi untuk mengumpulkan data per program studi
+async function getProdiData() {
+    try {
+        // Ambil semua data dari setiap model
+        const [penelitianPNBP, penelitianPusat, penelitianMandiri, 
+               pengabdianPNBP, pengabdianPusat, 
+               haki, buku, jupeng] = await Promise.all([
+            penelitianPNBPModel.find({}, 'Prodi'),
+            penelitianPusatModel.find({}, 'PRODI'),
+            penelitianMandiriModel.find({}, 'Prodi'),
+            pengabdianPNBPModel.find({}, 'Prodi'),
+            pengabdianPusatModel.find({}, 'PRODI'),
+            hakiModel.find({}, '_prodi_nama'),
+            bukuModel.find({}, '_prodi_nama'),
+            jupengModel.find({}, '_prodi_nama')
+        ]);
+
+        // Kumpulkan semua program studi unik
+        const prodiSet = new Set();
+        
+        penelitianPNBP.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
+        penelitianPusat.forEach(item => item.PRODI && prodiSet.add(item.PRODI));
+        penelitianMandiri.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
+        pengabdianPNBP.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
+        pengabdianPusat.forEach(item => item.PRODI && prodiSet.add(item.PRODI));
+        haki.forEach(item => item._prodi_nama && prodiSet.add(item._prodi_nama));
+        buku.forEach(item => item._prodi_nama && prodiSet.add(item._prodi_nama));
+        jupeng.forEach(item => item._prodi_nama && prodiSet.add(item._prodi_nama));
+
+        // Buat array data per prodi
+        const prodiData = Array.from(prodiSet).map(prodi => {
+            return {
+                name: prodi,
+                penelitian: {
+                    pusat: penelitianPusat.filter(item => item.PRODI === prodi).length,
+                    pnbp: penelitianPNBP.filter(item => item.Prodi === prodi).length,
+                    mandiri: penelitianMandiri.filter(item => item.Prodi === prodi).length
+                },
+                pengabdian: {
+                    pnbp: pengabdianPNBP.filter(item => item.Prodi === prodi).length,
+                    pusat: pengabdianPusat.filter(item => item.PRODI === prodi).length
+                },
+                publikasi: {
+                    haki: haki.filter(item => item._prodi_nama === prodi).length,
+                    buku: buku.filter(item => item._prodi_nama === prodi).length,
+                    jupeng: jupeng.filter(item => item._prodi_nama === prodi).length
+                }
+            };
+        });
+
+        // Urutkan berdasarkan nama prodi
+        return prodiData.sort((a, b) => a.name.localeCompare(b.name));
+        
+    } catch (error) {
+        console.error('Error getting prodi data:', error);
+        return [];
+    }
+}
+
 // Halaman utama
 router.get("/", async (req, res) => {
     const isLogin = req.session.isLogin || false;
     const [totalHAKI, totalBuku, totalJupeng,
         totalPNBP, totalPusat, totalMandiri,
-        totalPengabdianPNBP, totalPengabdianPusat] = await Promise.all([
+        totalPengabdianPNBP, totalPengabdianPusat, prodiData] = await Promise.all([
             hakiModel.countDocuments(),
             bukuModel.countDocuments(),
             jupengModel.countDocuments(),
@@ -48,6 +107,8 @@ router.get("/", async (req, res) => {
             penelitianPusatModel.countDocuments(),
             penelitianMandiriModel.countDocuments(),
             pengabdianPNBPModel.countDocuments(),
+            pengabdianPusatModel.countDocuments(),
+            getProdiData(),
             pengabdianPusatModel.countDocuments()
         ]);
     const publikasiCounts = {
@@ -89,8 +150,8 @@ router.get("/", async (req, res) => {
         pengabdianCounts,
         penelitianStats, 
         pengabdianStats,  
-        publikasiStats
+        publikasiStats,
+        prodiData
     });
 });
-
 module.exports = router;

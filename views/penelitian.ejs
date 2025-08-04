@@ -13,7 +13,29 @@
 
 <body class="text-center bg-[#EDF0F1] ">
     <%- include('partials/navbar', {isLogin}) %>
-        
+        <div id="scrollable-container" class="flex p-5 space-x-4 overflow-x-auto scrollbar-none">
+            <% for (let i = 0; i < 5; i++) { %>
+                <div
+                    class="flex flex-row items-center justify-center flex-none gap-4 py-5 rounded-3xl bg-veronica px-9">
+                    <img src="/assets/analytics.png" alt="" class="w-16 ">
+                    <div class="">
+                        <h1 class="text-2xl font-semibold text-white">Analytics</h1>
+                        <p class="text-xl">123</p>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+        <script>
+            window.addEventListener('load', function () {
+                const container = document.getElementById('scrollable-container');
+                const totalWidth = Array.from(container.children).reduce((acc, child) => acc + child.offsetWidth, 0);
+                if (totalWidth <= window.innerWidth) {
+                    container.classList.add('justify-center');
+                } else {
+                    container.classList.add('justify-start');
+                }
+            });
+        </script>
         <!-- Dropdown untuk memilih jenis penelitian -->
         <div class="py-6 ">
             <div class="text-center">
@@ -30,7 +52,7 @@
         <div id="chart-container" >
             <!-- Grafik Pusat -->
             <div id="pusat-section" class="chart-section">
-            <h1 class="text-4xl font-bold text-center  text-indigo">Pusat</h1>
+            <h1 class="text-4xl font-bold text-center text-indigo">Pusat</h1>
             <div class="grid grid-cols-2 grid-rows-3 gap-8 px-32 py-2 h-[150vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                 <canvas id="pusatPerTahun" class="block w-full h-full "></canvas>
@@ -55,7 +77,7 @@
             
             <!-- Grafik PNBP -->
             <div id="pnbp-section" class="chart-section" style="display: none;">
-            <h1 class="text-4xl font-bold text-center  text-indigo">PNBP</h1>
+            <h1 class="text-4xl font-bold text-center text-indigo">PNBP</h1>
             <div class="grid grid-cols-2 grid-rows-4 gap-8 px-32 py-2 h-[200vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                 <canvas id="pnbpPerTahun" class="block w-full h-full"></canvas>
@@ -86,7 +108,7 @@
             
             <!-- Grafik Mandiri -->
             <div id="mandiri-section" class="chart-section" style="display: none;">
-            <h1 class="text-4xl font-bold text-center  text-indigo">Mandiri</h1>
+            <h1 class="text-4xl font-bold text-center text-indigo">Mandiri</h1>
             <div class="grid grid-cols-2 grid-rows-3 gap-8 px-32 py-2 h-[100vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                 <canvas id="mandiriPerTahun" class="block w-full h-full"></canvas>

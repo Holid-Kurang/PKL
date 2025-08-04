@@ -240,10 +240,10 @@ document.addEventListener('DOMContentLoaded', () => {
             init: () => new Chart(document.getElementById('pnbpPerProdi').getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: pnbpData.jumlahPerProdi.slice(1).map(item => item._id),
+                    labels: pnbpData.jumlahPerProdi.map(item => item._id),
                     datasets: [{
                         label: 'Jumlah Penelitian PNBP per Program Studi',
-                        data: pnbpData.jumlahPerProdi.slice(1).map(item => item.total),
+                        data: pnbpData.jumlahPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
                         ],
@@ -340,10 +340,10 @@ document.addEventListener('DOMContentLoaded', () => {
             init: () => new Chart(document.getElementById('pnbpDanaPerProdi').getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: pnbpData.jumlahDanaPerProdi.slice(1).map(item => item._id),
+                    labels: pnbpData.jumlahDanaPerProdi.map(item => item._id),
                     datasets: [{
                         label: 'Jumlah Dana Penelitian PNBP per Program Studi',
-                        data: pnbpData.jumlahDanaPerProdi.slice(1).map(item => item.total),
+                        data: pnbpData.jumlahDanaPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
                         ],
@@ -440,10 +440,10 @@ document.addEventListener('DOMContentLoaded', () => {
             init: () => new Chart(document.getElementById('pnbpAvgDanaPerProdi').getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: pnbpData.avgDanaPerProdi.slice(1).map(item => item._id),
+                    labels: pnbpData.avgDanaPerProdi.map(item => item._id),
                     datasets: [{
                         label: 'Rata-rata Dana Penelitian PNBP per Program Studi',
-                        data: pnbpData.avgDanaPerProdi.slice(1).map(item => item.avg),
+                        data: pnbpData.avgDanaPerProdi.map(item => item.avg),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
                         ],
@@ -541,10 +541,10 @@ document.addEventListener('DOMContentLoaded', () => {
             init: () => new Chart(document.getElementById('pnbpAvgNilaiPerProdi').getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: pnbpData.avgNilaiPerProdi.slice(1).map(item => item._id),
+                    labels: pnbpData.avgNilaiPerProdi.map(item => item._id),
                     datasets: [{
                         label: 'Rata-rata Nilai Penelitian PNBP per Program Studi',
-                        data: pnbpData.avgNilaiPerProdi.slice(1).map(item => item.avg),
+                        data: pnbpData.avgNilaiPerProdi.map(item => item.avg),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
                         ],

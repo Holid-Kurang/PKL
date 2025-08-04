@@ -110,3 +110,84 @@ document.addEventListener('keydown', function(event) {
         }
     }
 });
+
+// Variables untuk tracking sorting
+let currentSortColumn = '';
+let currentSortDirection = 'asc';
+
+// Fungsi untuk sorting tabel
+function sortTable(column) {
+    const table = document.querySelector('table tbody');
+    const rows = Array.from(table.querySelectorAll('tr')).filter(row => 
+        !row.querySelector('td[colspan]') // Exclude "no data" row
+    );
+    
+    // Reset semua ikon sort
+    document.querySelectorAll('.sort-icon').forEach(icon => {
+        icon.textContent = 'unfold_more';
+        icon.classList.remove('text-blue-600');
+    });
+    
+    // Determine sort direction
+    if (currentSortColumn === column) {
+        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSortDirection = 'asc';
+        currentSortColumn = column;
+    }
+    
+    // Update sort icon
+    const sortIcon = document.getElementById(`sort-${column}`);
+    if (sortIcon) {
+        sortIcon.textContent = currentSortDirection === 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
+        sortIcon.classList.add('text-blue-600');
+    }
+    
+    // Get column index for sorting
+    const columnMap = {
+        'Judul': 1,
+        'SKEMA': 2,
+        'Prodi': 3,
+        'Ketua': 4,
+        'Biaya': 6,
+        'Tahun': 7,
+        'Nilai': 8
+    };
+    
+    const columnIndex = columnMap[column];
+    
+    // Sort rows
+    rows.sort((a, b) => {
+        let aValue = a.cells[columnIndex].textContent.trim();
+        let bValue = b.cells[columnIndex].textContent.trim();
+        
+        // Handle numeric columns
+        if (column === 'Biaya') {
+            // Remove currency formatting and convert to number
+            aValue = parseFloat(aValue.replace(/[^\d.-]/g, '')) || 0;
+            bValue = parseFloat(bValue.replace(/[^\d.-]/g, '')) || 0;
+        } else if (column === 'Tahun' || column === 'Nilai') {
+            aValue = parseFloat(aValue) || 0;
+            bValue = parseFloat(bValue) || 0;
+        } else {
+            // String comparison - case insensitive
+            aValue = aValue.toLowerCase();
+            bValue = bValue.toLowerCase();
+        }
+        
+        let comparison = 0;
+        if (aValue > bValue) {
+            comparison = 1;
+        } else if (aValue < bValue) {
+            comparison = -1;
+        }
+        
+        return currentSortDirection === 'asc' ? comparison : -comparison;
+    });
+    
+    // Update row numbers and reappend sorted rows
+    rows.forEach((row, index) => {
+        row.cells[0].textContent = index + 1; // Update row number
+        table.appendChild(row);
+    });
+}

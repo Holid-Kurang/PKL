@@ -89,3 +89,108 @@ function validateForm(event) {
     if (!valid) event.preventDefault();
     return valid;
 }
+
+// General keyboard event handler for all modals
+document.addEventListener('keydown', function(event) {
+    // Check if any modal is open
+    const modals = ['addDataModal', 'editDataModal', 'deleteDataModal', 'importDataModal'];
+    const openModal = modals.find(modalId => {
+        const modal = document.getElementById(modalId);
+        return modal && !modal.classList.contains('hidden');
+    });
+    
+    if (openModal) {
+        if (event.key === 'Escape') {
+            closeModal(openModal);
+            event.preventDefault();
+        } else if (event.key === 'Enter') {
+            // Find submit button in the open modal and click it
+            const modal = document.getElementById(openModal);
+            const submitButton = modal.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitButton) {
+                submitButton.click();
+                event.preventDefault();
+            }
+        }
+    }
+});
+
+// Variables untuk tracking sorting
+let currentSortColumn = '';
+let currentSortDirection = 'asc';
+
+// Fungsi untuk sorting tabel
+function sortTable(column) {
+    const table = document.querySelector('table tbody');
+    const rows = Array.from(table.querySelectorAll('tr')).filter(row => 
+        !row.querySelector('td[colspan]') // Exclude "no data" row
+    );
+    
+    // Reset semua ikon sort
+    document.querySelectorAll('.sort-icon').forEach(icon => {
+        icon.textContent = 'unfold_more';
+        icon.classList.remove('text-blue-600');
+    });
+    
+    // Determine sort direction
+    if (currentSortColumn === column) {
+        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSortDirection = 'asc';
+        currentSortColumn = column;
+    }
+    
+    // Update sort icon
+    const sortIcon = document.getElementById(`sort-${column}`);
+    if (sortIcon) {
+        sortIcon.textContent = currentSortDirection === 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
+        sortIcon.classList.add('text-blue-600');
+    }
+    
+    // Get column index for sorting (adjusted for publikasi Jupeng table structure)
+    const columnMap = {
+        'jurnal_judul': 1,
+        'jurnal_tahun': 4,
+        'jurnal_bulan': 5,
+        'pengguna_kode': 6,
+        '_pengguna_jenis': 7,
+        '_pengguna_nama': 8,
+        '_prodi_nama': 9,
+        '_personil_data_ketua': 10,
+        '_personil_data_ketua_kode': 11,
+        '_personil_data_ketua_jenis': 12
+    };
+    
+    const columnIndex = columnMap[column];
+    
+    // Sort rows
+    rows.sort((a, b) => {
+        let aValue = a.cells[columnIndex].textContent.trim();
+        let bValue = b.cells[columnIndex].textContent.trim();
+        
+        // Handle numeric columns
+        if (column === 'jurnal_tahun') {
+            aValue = parseFloat(aValue) || 0;
+            bValue = parseFloat(bValue) || 0;
+        } else {
+            // String comparison - case insensitive
+            aValue = aValue.toLowerCase();
+            bValue = bValue.toLowerCase();
+        }
+        
+        let comparison = 0;
+        if (aValue > bValue) {
+            comparison = 1;
+        } else if (aValue < bValue) {
+            comparison = -1;
+        }
+        
+        return currentSortDirection === 'asc' ? comparison : -comparison;
+    });
+    
+    // Update row numbers and reappend sorted rows
+    rows.forEach((row, index) => {
+        row.cells[0].textContent = index + 1; // Update row number
+        table.appendChild(row);
+    });
+}

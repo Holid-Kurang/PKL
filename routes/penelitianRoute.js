@@ -8,6 +8,95 @@ const mandiriModel = require("../models/penelitian/mandiri");
 // Halaman utama penelitian
 router.get("/penelitian", async (req, res) => {
     try {
+
+        // Aggregate data gabungan dari ketiga jenis penelitian
+        const currentYear = new Date().getFullYear();
+
+        const hasilRangkuman = await Promise.all([
+            // Total biaya keseluruhan dari semua penelitian
+            Promise.all([
+                pusatModel.aggregate([{ $group: { _id: null, total: { $sum: "$BIAYA" } } }]),
+                pnbpModel.aggregate([{ $group: { _id: null, total: { $sum: "$Biaya" } } }]),
+                mandiriModel.aggregate([{ $group: { _id: null, total: { $sum: "$Dana" } } }])
+            ]),
+            
+            // Rata-rata biaya per penelitian dari semua jenis
+            Promise.all([
+                pusatModel.aggregate([{ $group: { _id: null, avg: { $avg: "$BIAYA" } } }]),
+                pnbpModel.aggregate([{ $group: { _id: null, avg: { $avg: "$Biaya" } } }]),
+                mandiriModel.aggregate([{ $group: { _id: null, avg: { $avg: "$Dana" } } }])
+            ]),
+            
+            // Prodi teraktif (jumlah penelitian per prodi)
+            Promise.all([
+                pusatModel.aggregate([{ $group: { _id: "$PRODI", count: { $sum: 1 } } }]),
+                pnbpModel.aggregate([{ $group: { _id: "$Prodi", count: { $sum: 1 } } }]),
+                mandiriModel.aggregate([{ $group: { _id: "$Prodi", count: { $sum: 1 } } }])
+            ]),
+            
+            // Total prodi terlibat (unique prodi)
+            Promise.all([
+                pusatModel.distinct("PRODI"),
+                pnbpModel.distinct("Prodi"),
+                mandiriModel.distinct("Prodi")
+            ]),
+            
+            // Penelitian tahun aktif (tahun berjalan)
+            Promise.all([
+                pusatModel.countDocuments({ TAHUN: currentYear }),
+                pnbpModel.countDocuments({ Tahun: currentYear }),
+                mandiriModel.countDocuments({ tahun: currentYear })
+            ])
+        ]);
+
+        // Hitung total biaya keseluruhan
+        const totalBiayaKeseluruhan = hasilRangkuman[0].reduce((sum, result) => {
+            return sum + (result[0]?.total || 0);
+        }, 0);
+
+        // Hitung rata-rata biaya gabungan
+        const avgBiayaResults = hasilRangkuman[1];
+        const totalAvgBiaya = avgBiayaResults.reduce((sum, result) => {
+            return sum + (result[0]?.avg || 0);
+        }, 0);
+        const rataRataBiayaGabungan = totalAvgBiaya / avgBiayaResults.length;
+
+        // Gabungkan data prodi dan cari yang teraktif
+        const prodiCounts = {};
+        hasilRangkuman[2].forEach(prodiData => {
+            prodiData.forEach(item => {
+            const prodi = item._id;
+            if (prodi !== "-") {
+                prodiCounts[prodi] = (prodiCounts[prodi] || 0) + item.count;
+            }
+            });
+        });
+        const prodiTeraktif = Object.keys(prodiCounts).reduce((a, b) => 
+            prodiCounts[a] > prodiCounts[b] ? a : b, "");
+
+        // Hitung total prodi unik
+        const allProdi = new Set();
+        hasilRangkuman[3].forEach(prodiList => {
+            prodiList.forEach(prodi => {
+            if (prodi !== "-") {
+                allProdi.add(prodi);
+            }
+            });
+        });
+        const totalProdiTerlibat = allProdi.size;
+
+        // Total penelitian tahun aktif
+        const penelitianTahunAktif = hasilRangkuman[4].reduce((sum, count) => sum + count, 0);
+
+        const gabunganData = {
+            totalBiayaKeseluruhan,
+            rataRataBiayaGabungan,
+            prodiTeraktif,
+            totalProdiTerlibat,
+            penelitianTahunAktif,
+            tahunAktif: currentYear
+        };
+        console.log("Gabungan Data:", gabunganData);
         const [
             pusatResults,
             pnbpResults,

@@ -48,6 +48,7 @@ exports.getAllData = async (req, res) => {
             prodiOptions,
             currentPage: page,
             totalPages,
+            totalData,
             limit // Kirim limit ke view agar bisa digunakan di link pagination
         });
 

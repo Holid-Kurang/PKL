@@ -34,6 +34,20 @@
             overflow: hidden;
             transition: max-height 0.3s ease-out;
         }
+        
+        /* Style untuk header table yang dapat disortir */
+        .sortable-header {
+            user-select: none;
+        }
+
+        .sort-icon {
+            transition: all 0.2s ease;
+            font-size: 16px !important;
+        }
+
+        .sortable-header:hover .sort-icon {
+            color: #4F46E5;
+        }
     </style>
 </head>
 
@@ -91,40 +105,158 @@
                         </button>
                     </div>
                     <% if (totalPages> 1) { %>
-                        <div
-                            class="flex flex-col items-center px-5 py-5 bg-white border-t rounded xs:flex-row xs:justify-between">
-                            <span class="text-xs text-gray-900 xs:text-sm">
-                                <%= currentPage %> dari <%= totalPages %>
-                            </span>
-                            <div class="inline-flex mt-2 xs:mt-0">
-                                <!-- Tombol Previous -->
-                                <a href="/dashboard/pengabdian/pnbp?page=<%= currentPage - 1 %>&search=<%= searchQuery %>"
-                                    class="text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-l transition-colors duration-200 <%= currentPage <= 1 ? 'pointer-events-none opacity-50' : '' %>">
-                                    Prev
+                        <div class="flex flex-col items-center justify-between px-5 py-4 bg-white border-t sm:flex-row">
+                            <!-- Info Menampilkan data -->
+                            <div class="mb-4 text-sm text-gray-700 sm:mb-0">
+                                <%
+                                    const startItem = ((currentPage - 1) * limit) + 1;
+                                    const endItem = Math.min(currentPage * limit, typeof totalData !== 'undefined' ? totalData : data.length);
+                                    const total = typeof totalData !== 'undefined' ? totalData : data.length;
+                                %>
+                                Menampilkan <span class="font-medium"><%= startItem %></span> hingga <span class="font-medium"><%= endItem %></span> dari <span class="font-medium"><%= total %></span> hasil
+                            </div>
+                            
+                            <!-- Pagination buttons -->
+                            <div class="flex items-center space-x-1">
+                                <!-- Previous button -->
+                                <a href="/dashboard/pengabdian/pnbp?page=<%= currentPage - 1 %>&search=<%= searchQuery %>" 
+                                   class="relative inline-flex items-center px-2 py-2 text-gray-400 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 <%= currentPage <= 1 ? 'cursor-not-allowed opacity-50' : 'hover:text-gray-500' %>"
+                                   <%= currentPage <= 1 ? 'onclick="return false;"' : '' %>>
+                                    <span class="sr-only">Previous</span>
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
                                 </a>
-                                <!-- Tombol Next -->
-                                <a href="/dashboard/pengabdian/pnbp?page=<%= currentPage + 1 %>&search=<%= searchQuery %>"
-                                    class="text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-r transition-colors duration-200 <%= currentPage >= totalPages ? 'pointer-events-none opacity-50' : '' %>">
-                                    Next
+
+                                <%
+                                    // Calculate pagination range
+                                    let startPage = Math.max(1, currentPage - 2);
+                                    let endPage = Math.min(totalPages, currentPage + 2);
+                                    
+                                    // Adjust if we're near the beginning or end
+                                    if (currentPage <= 3) {
+                                        endPage = Math.min(totalPages, 5);
+                                    }
+                                    if (currentPage >= totalPages - 2) {
+                                        startPage = Math.max(1, totalPages - 4);
+                                    }
+                                %>
+
+                                <!-- First page and ellipsis -->
+                                <% if (startPage > 1) { %>
+                                    <a href="/dashboard/pengabdian/pnbp?page=1&search=<%= searchQuery %>" 
+                                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
+                                        1
+                                    </a>
+                                    <% if (startPage > 2) { %>
+                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                                            ...
+                                        </span>
+                                    <% } %>
+                                <% } %>
+
+                                <!-- Page numbers -->
+                                <% for (let i = startPage; i <= endPage; i++) { %>
+                                    <% if (i === currentPage) { %>
+                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-indigo-600">
+                                            <%= i %>
+                                        </span>
+                                    <% } else { %>
+                                        <a href="/dashboard/pengabdian/pnbp?page=<%= i %>&search=<%= searchQuery %>" 
+                                           class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
+                                            <%= i %>
+                                        </a>
+                                    <% } %>
+                                <% } %>
+
+                                <!-- Last page and ellipsis -->
+                                <% if (endPage < totalPages) { %>
+                                    <% if (endPage < totalPages - 1) { %>
+                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                                            ...
+                                        </span>
+                                    <% } %>
+                                    <a href="/dashboard/pengabdian/pnbp?page=<%= totalPages %>&search=<%= searchQuery %>" 
+                                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
+                                        <%= totalPages %>
+                                    </a>
+                                <% } %>
+
+                                <!-- Next button -->
+                                <a href="/dashboard/pengabdian/pnbp?page=<%= currentPage + 1 %>&search=<%= searchQuery %>" 
+                                   class="relative inline-flex items-center px-2 py-2 text-gray-400 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 <%= currentPage >= totalPages ? 'cursor-not-allowed opacity-50' : 'hover:text-gray-500' %>"
+                                   <%= currentPage >= totalPages ? 'onclick="return false;"' : '' %>>
+                                    <span class="sr-only">Next</span>
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                                    </svg>
                                 </a>
                             </div>
                         </div>
                     <% } %>
+                    
+                    <!-- Info data untuk semua kasus -->
+                    <% if (totalPages <= 1) { %>
+                        <div class="flex items-center justify-between px-5 py-6 bg-white border-t">
+                            <div class="text-sm text-gray-700">
+                                <%
+                                    const total = typeof totalData !== 'undefined' ? totalData : data.length;
+                                %>
+                                Menampilkan <span class="font-medium">1</span> hingga <span class="font-medium"><%= total %></span> dari <span class="font-medium"><%= total %></span> hasil
+                            </div>
+                        </div>
+                    <% } %>
+                    
                     <!-- Tabel -->
                     <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-                        <div class="overflow-y-auto max-h-[38rem]">
+                        <div class="overflow-y-auto md:max-h-[640px]">
                             <table class="w-full text-sm text-left whitespace-nowrap">
                                 <thead class="sticky top-0 z-30 text-xs uppercase bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">No</th>
-                                        <th scope="col" class="px-6 py-3">Judul</th>
-                                        <th scope="col" class="px-6 py-3">Skema</th>
-                                        <th scope="col" class="px-6 py-3">Ketua</th>
+                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer sortable-header hover:bg-gray-300" onclick="sortTable('Judul')">
+                                            <div class="flex items-center justify-between">
+                                                <span>Judul</span>
+                                                <span id="sort-Judul" class="text-gray-400 sort-icon material-icons-outlined">unfold_more</span>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer sortable-header hover:bg-gray-300" onclick="sortTable('SKEMA')">
+                                            <div class="flex items-center justify-between">
+                                                <span>Skema</span>
+                                                <span id="sort-SKEMA" class="text-gray-400 sort-icon material-icons-outlined">unfold_more</span>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer sortable-header hover:bg-gray-300" onclick="sortTable('Ketua')">
+                                            <div class="flex items-center justify-between">
+                                                <span>Ketua</span>
+                                                <span id="sort-Ketua" class="text-gray-400 sort-icon material-icons-outlined">unfold_more</span>
+                                            </div>
+                                        </th>
                                         <th scope="col" class="px-6 py-3">Anggota</th>
-                                        <th scope="col" class="px-6 py-3">Nilai</th>
-                                        <th scope="col" class="px-6 py-3">Dana</th>
-                                        <th scope="col" class="px-6 py-3">Prodi</th>
-                                        <th scope="col" class="px-6 py-3">Tahun</th>
+                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer sortable-header hover:bg-gray-300" onclick="sortTable('Nilai')">
+                                            <div class="flex items-center justify-between">
+                                                <span>Nilai</span>
+                                                <span id="sort-Nilai" class="text-gray-400 sort-icon material-icons-outlined">unfold_more</span>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer sortable-header hover:bg-gray-300" onclick="sortTable('Dana')">
+                                            <div class="flex items-center justify-between">
+                                                <span>Dana</span>
+                                                <span id="sort-Dana" class="text-gray-400 sort-icon material-icons-outlined">unfold_more</span>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer sortable-header hover:bg-gray-300" onclick="sortTable('Prodi')">
+                                            <div class="flex items-center justify-between">
+                                                <span>Prodi</span>
+                                                <span id="sort-Prodi" class="text-gray-400 sort-icon material-icons-outlined">unfold_more</span>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer sortable-header hover:bg-gray-300" onclick="sortTable('Tahun')">
+                                            <div class="flex items-center justify-between">
+                                                <span>Tahun</span>
+                                                <span id="sort-Tahun" class="text-gray-400 sort-icon material-icons-outlined">unfold_more</span>
+                                            </div>
+                                        </th>
                                         <th scope="col" class="sticky top-0 right-0 px-6 py-3 text-center bg-gray-200"></th>
                                     </tr>
                                 </thead>
