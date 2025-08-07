@@ -6,6 +6,96 @@ const pnbpModel = require("../models/pengabdian/pnbp");
 // Halaman utama
 router.get("/pengabdian", async (req, res) => {
     try {
+
+        // Rangkuman data pengabdian tahun ini
+        const currentYear = new Date().getFullYear() - 1;
+
+        const hasilRangkumanTahunIni = await Promise.all([
+            // Total dana pengabdian tahun ini
+            Promise.all([
+                pusatModel.aggregate([
+                    { $match: { Tahun: currentYear } },
+                    { $group: { _id: null, total: { $sum: "$Dana" } } }
+                ]),
+                pnbpModel.aggregate([
+                    { $match: { Tahun: currentYear } },
+                    { $group: { _id: null, total: { $sum: "$Dana" } } }
+                ])
+            ]),
+
+            // Rata-rata dana pengabdian tahun ini
+            Promise.all([
+                pusatModel.aggregate([
+                    { $match: { Tahun: currentYear } },
+                    { $group: { _id: null, avg: { $avg: "$Dana" } } }
+                ]),
+                pnbpModel.aggregate([
+                    { $match: { Tahun: currentYear } },
+                    { $group: { _id: null, avg: { $avg: "$Dana" } } }
+                ])
+            ]),
+
+            // Jumlah pengabdian per prodi tahun ini
+            Promise.all([
+                pusatModel.aggregate([
+                    { $match: { Tahun: currentYear } },
+                    { $group: { _id: "$Prodi", count: { $sum: 1 } } }
+                ]),
+                pnbpModel.aggregate([
+                    { $match: { Tahun: currentYear } },
+                    { $group: { _id: "$Prodi", count: { $sum: 1 } } }
+                ])
+            ]),
+
+            // Total pengabdian tahun ini
+            Promise.all([
+                pusatModel.countDocuments({ Tahun: currentYear }),
+                pnbpModel.countDocuments({ Tahun: currentYear })
+            ])
+        ]);
+
+        // Hitung total dana tahun ini
+        const totalDanaTahunIni = hasilRangkumanTahunIni[0].reduce((sum, result) => {
+            return sum + (result[0]?.total || 0);
+        }, 0);
+
+        // Hitung rata-rata dana tahun ini
+        const avgDanaResults = hasilRangkumanTahunIni[1];
+        const totalAvgDana = avgDanaResults.reduce((sum, result) => {
+            return sum + (result[0]?.avg || 0);
+        }, 0);
+        const validAvgCount = avgDanaResults.filter(result => result[0]?.avg).length;
+        const rataRataDanaTahunIni = validAvgCount > 0 ? totalAvgDana / validAvgCount : 0;
+
+        // Gabungkan data prodi tahun ini dan cari yang teraktif
+        const prodiCountsTahunIni = {};
+        hasilRangkumanTahunIni[2].forEach(prodiData => {
+            prodiData.forEach(item => {
+                const prodi = item._id;
+                if (prodi && prodi !== "-") {
+                    prodiCountsTahunIni[prodi] = (prodiCountsTahunIni[prodi] || 0) + item.count;
+                }
+            });
+        });
+
+        const prodiTeraktif = Object.keys(prodiCountsTahunIni).length > 0
+            ? Object.keys(prodiCountsTahunIni).reduce((a, b) =>
+                prodiCountsTahunIni[a] > prodiCountsTahunIni[b] ? a : b)
+            : "";
+
+        // Total pengabdian tahun ini
+        const totalPengabdianTahunIni = hasilRangkumanTahunIni[3].reduce((sum, count) => sum + count, 0);
+
+        const gabunganData = {
+            totalDanaKeseluruhan: totalDanaTahunIni,
+            rataRataDanaGabungan: rataRataDanaTahunIni,
+            prodiTeraktif,
+            prodiCounts: prodiCountsTahunIni,
+            pengabdianTahunAktif: totalPengabdianTahunIni,
+            tahunAktif: currentYear
+        };
+        console.log("Gabungan Data Pengabdian Tahun Ini:", gabunganData);
+
         const [
             pusatResults,
             pnbpResults,
@@ -97,6 +187,7 @@ router.get("/pengabdian", async (req, res) => {
             isLogin,
             pusatData: pusatResults[0],
             pnbpData: pnbpResults[0],
+            gabunganData
         });
 
     } catch (error) {

@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pusatData.jumlahPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Publikasi per Tahun',
+                        label: 'Jumlah Pengabdian per Tahun',
                         data: pusatData.jumlahPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.jumlahPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Penelitian PNBP per Tahun',
+                        label: 'Jumlah Pengabdian PNBP per Tahun',
                         data: pnbpData.jumlahPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -213,12 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
-                                label: context => context.parsed.y + ' penelitian'
+                                label: context => context.parsed.y + ' Pengabdian'
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Penelitian PNBP per Tahun',
+                            text: 'Jumlah Pengabdian PNBP per Tahun',
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.jumlahPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Penelitian PNBP per Program Studi',
+                        label: 'Jumlah Pengabdian PNBP per Program Studi',
                         data: pnbpData.jumlahPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -263,12 +263,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + ' publikasi'
+                                label: context => context.parsed + ' pengabdian'
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Penelitian PNBP per Program Studi',
+                            text: 'Jumlah Pengabdian PNBP per Program Studi',
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.jumlahDanaPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Dana Penelitian PNBP per Tahun',
+                        label: 'Jumlah Dana Pengabdian PNBP per Tahun',
                         data: pnbpData.jumlahDanaPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Penelitian PNBP per Tahun',
+                            text: 'Jumlah Dana Pengabdian PNBP per Tahun',
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.jumlahDanaPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Dana Penelitian PNBP per Program Studi',
+                        label: 'Jumlah Dana Pengabdian PNBP per Program Studi',
                         data: pnbpData.jumlahDanaPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Penelitian PNBP per Program Studi',
+                            text: 'Jumlah Dana Pengabdian PNBP per Program Studi',
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.avgDanaPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Dana Penelitian PNBP per Tahun',
+                        label: 'Rata-rata Dana Pengabdian PNBP per Tahun',
                         data: pnbpData.avgDanaPerTahun.map(item => item.avg),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Penelitian PNBP per Tahun',
+                            text: 'Rata-rata Dana Pengabdian PNBP per Tahun',
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -442,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.avgDanaPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Dana Penelitian PNBP per Program Studi',
+                        label: 'Rata-rata Dana Pengabdian PNBP per Program Studi',
                         data: pnbpData.avgDanaPerProdi.map(item => item.avg),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Penelitian PNBP per Program Studi',
+                            text: 'Rata-rata Dana Pengabdian PNBP per Program Studi',
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -488,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.avgNilaiPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Nilai Penelitian PNBP per Tahun',
+                        label: 'Rata-rata Nilai Pengabdian PNBP per Tahun',
                         data: pnbpData.avgNilaiPerTahun.map(item => item.avg),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Nilai Penelitian PNBP per Tahun',
+                            text: 'Rata-rata Nilai Pengabdian PNBP per Tahun',
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -543,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.avgNilaiPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Nilai Penelitian PNBP per Program Studi',
+                        label: 'Rata-rata Nilai Pengabdian PNBP per Program Studi',
                         data: pnbpData.avgNilaiPerProdi.map(item => item.avg),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -569,7 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Nilai Penelitian PNBP per Program Studi',
+                            text: 'Rata-rata Nilai Pengabdian PNBP per Program Studi',
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },

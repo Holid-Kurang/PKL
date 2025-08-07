@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pusatData.jumlahPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Publikasi per Tahun',
+                        label: 'Jumlah Penelitian per Tahun',
                         data: pusatData.jumlahPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pusatData.jumlahPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Publikasi per Program Studi',
+                        label: 'Jumlah Penelitian per Program Studi',
                         data: pusatData.jumlahPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + ' publikasi'
+                                label: context => context.parsed + ' penelitian'
                             }
                         },
                         title: {
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + ' publikasi'
+                                label: context => context.parsed + ' penelitian'
                             }
                         },
                         title: {
@@ -809,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + ' publikasi'
+                                label: context => context.parsed + ' penelitian'
                             }
                         },
                         title: {
