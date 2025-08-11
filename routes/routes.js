@@ -20,6 +20,8 @@ const dashboardPublikasiJupengRoutes = require("./dashboardRoute/publikasi/jupen
 const dashboardPublikasiHAKIRoutes = require("./dashboardRoute/publikasi/haki");
 // dashboard for prodi
 const prodiRoutes = require("./prodiRoute");
+// dashboard for pengaturan
+const pengaturanRoutes = require("./dashboardRoute/pengaturanRoute");
 
 
 // Gunakan route yang sudah dibuat
@@ -37,5 +39,6 @@ route.use("/", dashboardPublikasiBukuRoutes);
 route.use("/", dashboardPublikasiJupengRoutes);
 route.use("/", dashboardPublikasiHAKIRoutes);
 route.use("/", prodiRoutes);
+route.use("/", pengaturanRoutes);
 
 module.exports = route;

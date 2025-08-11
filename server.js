@@ -12,6 +12,7 @@ require('dotenv').config();
 connectDB(); // Connect to MongoDB
 
 // Set view engine dan folder views
+app.use('/js', express.static('node_modules/chart.js/dist'));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public"))); // Set folder public untuk file statis
@@ -29,20 +30,25 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { 
+    cookie: {
         secure: process.env.NODE_ENV === 'production',
         maxAge: 5 * 60 * 1000,  // Session expires in 5 minutes
         httpOnly: true, // 4. Mencegah akses cookie dari JavaScript sisi klien
         sameSite: 'lax' // 5. Melindungi dari serangan CSRF
-    }, 
+    },
 })); // Middleware untuk session
 app.use("/", routes); // Gunakan routes yang sudah dibuat
-app.use((req, res, next) => {
+app.use( async (req, res, next) => {
+    // Ambil semua prodi dari database
+    const kategoriOptionModel = require('./models/kategoriOptionModel');
+    let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
+    prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
     // Mengatur status 404 dan merender halaman 404 kustom
-    res.status(404).render('404page', { 
+    res.status(404).render('404page', {
         title: 'Halaman Tidak Ditemukan',
         url: req.originalUrl, // Mengirim URL yang coba diakses ke view
-        isLogin: req.session.isLogin || false // Mengirim status login ke view
+        isLogin: req.session.isLogin || false, // Mengirim status login ke view
+        prodiOptions
     });
 });
 // Jalankan server

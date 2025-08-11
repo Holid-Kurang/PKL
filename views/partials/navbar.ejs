@@ -49,11 +49,23 @@
                         <span
                             class="absolute left-0 w-0 h-1 transition-all bg-veronica -bottom-2 group-hover:w-full"></span>
                     </div>
-                    <%- include('dropdown', { menu: "prodi" , item: ['Arsitektur', 'Teknik Elektro' , 'Teknik Industri'
-                        , 'Teknik Informatika' , 'Teknik Mesin' , 'Teknik Sipil' , 'S2 Teknik Sipil'
-                        , 'S2 Teknologi Informasi' ], href: ['arsitektur', 'teknik-elektro' , 'teknik-industri'
-                        , 'teknik-informatika' , 'teknik-mesin' , 'teknik-sipil' , 's2-teknik-sipil'
-                        , 's2-teknologi-informasi' ], group: 'group' }) %>
+                    <% 
+                        // Buat array href dinamis dari prodiOptions
+                        let prodiHrefs = [];
+                        if (prodiOptions && prodiOptions.length > 0) {
+                            prodiHrefs = prodiOptions.map(prodi => 
+                                prodi.toLowerCase()
+                                    .replace(/\s+/g, '-')
+                                    .replace(/[^a-z0-9\-]/g, '')
+                            );
+                        }
+                    %>
+                    <%- include('dropdown', { 
+                        menu: "prodi", 
+                        item: prodiOptions || [], 
+                        href: prodiHrefs, 
+                        group: 'group' 
+                    }) %>
                 </div>
             </div>
             <% if (!isLogin) { %>
@@ -138,6 +150,34 @@
                 </div>
                 <%- include('dropdown-menu-mb', {menu: "publikasi" , id: "publikasiDropdown" , item: ['Buku', 'HAKI'
                     , 'Jurnal Pengabdian' ],}) %>
+            </div>
+            <div class="relative group">
+                <div class="flex justify-between px-4 bg-[#EDF0F1]">
+                    <span class="block py-2 font-semibold">Program Studi</span>
+                    <button onclick="toggleDropdown('prodiDropdown')">
+                        <img src="/assets/arrow-down.svg" alt="" class="ml-12 transition-all">
+                    </button>
+                </div>
+                <div id="prodiDropdown" class="hidden text-center bg-white shadow-lg">
+                    <% if (prodiOptions && prodiOptions.length > 0) { %>
+                        <% for (let i = 0; i < prodiOptions.length; i++) { %>
+                            <% 
+                                const prodiSlug = prodiOptions[i]
+                                    .toLowerCase()
+                                    .replace(/\s+/g, '-')
+                                    .replace(/[^a-z0-9\-]/g, '');
+                            %>
+                            <a href="/prodi/<%= prodiSlug %>"
+                                class="block px-4 py-2 font-semibold hover:bg-blue-600 hover:text-white">
+                                <%= prodiOptions[i] %>
+                            </a>
+                        <% } %>
+                    <% } else { %>
+                        <div class="px-4 py-2 text-sm text-gray-500">
+                            Belum ada data program studi
+                        </div>
+                    <% } %>
+                </div>
             </div>
             <a href="/login"
                 class="block px-4 py-2 font-semibold text-center text-white bg-veronica rounded-b-2xl hover:bg-blue-700">LOGIN</a>

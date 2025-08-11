@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan - Dashboard</title>
+    <link href="/style/main.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        /* Style untuk scrollbar agar lebih minimalis */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Efek transisi untuk submenu di sidebar */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        /* Style untuk card kategori */
+        .kategori-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .kategori-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Style untuk option tags */
+        .option-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #3b82f6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            margin: 2px;
+        }
+
+        .option-tag button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 4px;
+        }
+
+        .option-tag button:hover {
+            color: #fecaca;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex h-screen bg-gray-100">
+        <!-- include Sidebar -->
+        <%- include('../partials/sidebar-dashboard.ejs') %>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Content Area -->
+            <header class="flex items-center justify-between h-20 px-8 bg-white shadow-md">
+                <h1 class="text-2xl font-bold text-gray-800">Pengaturan Kategori</h1>
+                <div class="flex items-center">
+                    <!-- Tombol Tambah Data -->
+                    <button id="addKategoriBtn" 
+                        class="ml-4 flex items-center bg-[#4F46E5] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#4338CA] transition-colors">
+                        <span class="text-sm material-icons-outlined">add</span>
+                        Tambah Kategori
+                    </button>
+                </div>
+            </header>
+            <div class="container p-8">
+                
+                <!-- Success/Error Messages -->
+                <div id="messageContainer"></div>
+
+                <!-- Kategori Cards -->
+                <div id="kategoriContainer" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
+                    <!-- Kategori cards akan dimuat di sini -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Kategori -->
+    <div id="addKategoriModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addKategoriModal')">&times;</span>
+            <h2 class="mb-4 text-xl font-bold">Tambah Kategori Baru</h2>
+            <form id="addKategoriForm">
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Nama Kategori</label>
+                    <input type="text" id="kategoriName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Option Pertama (Opsional)</label>
+                    <input type="text" id="firstOption" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeModal('addKategoriModal')" class="px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Option -->
+    <div id="addOptionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addOptionModal')">&times;</span>
+            <h2 class="mb-4 text-xl font-bold">Tambah Option</h2>
+            <form id="addOptionForm">
+                <input type="hidden" id="optionKategoriId">
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Nama Option</label>
+                    <input type="text" id="optionName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeModal('addOptionModal')" class="px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Edit Kategori -->
+    <div id="editKategoriModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editKategoriModal')">&times;</span>
+            <h2 class="mb-4 text-xl font-bold">Edit Kategori</h2>
+            <form id="editKategoriForm">
+                <input type="hidden" id="editKategoriId">
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Nama Kategori</label>
+                    <input type="text" id="editKategoriName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeModal('editKategoriModal')" class="px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/script/pengaturan.js"></script>
+</body>
+
+</html>

@@ -333,23 +333,14 @@
         action: '/dashboard/publikasi/haki/create',
         formFields: [
             { name: 'hki_judul', label: 'Judul HKI', type: 'text', required: true },
-            { name: 'hki_jenis', label: 'Jenis HKI', type: 'text', required: true },
+            { name: 'hki_jenis', label: 'Jenis HKI', type: 'select', required: true, options: hakiOptions },
             { name: 'hki_file', label: 'File', type: 'text', required: false },
             { name: 'hki_bulan', label: 'Bulan', type: 'text', required: true },
             { name: 'hki_tahun', label: 'Tahun', type: 'number', required: true },
             { name: 'pengguna_kode', label: 'Kode Pengguna', type: 'text', required: true },
             { name: '_pengguna_nama', label: 'Nama Pengguna', type: 'text', required: true },
-            { 
-                name: '_prodi_nama', 
-                label: 'Prodi', 
-                type: 'select', 
-                required: true,
-                options: [
-                    'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
-                    'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
-                    'S2 Teknik Sipil', 'S2 Teknologi Informasi'
-                ]
-            }
+            { name: '_prodi_nama', label: 'Prodi', type: 'select', required: true, options: prodiOptions},
+
         ]
     }) %>
     
@@ -358,23 +349,14 @@
         action: '/dashboard/publikasi/haki/create',
         formFields: [
             { name: 'hki_judul', label: 'Judul HKI', type: 'text', required: true },
-            { name: 'hki_jenis', label: 'Jenis HKI', type: 'text', required: true },
+            { name: 'hki_jenis', label: 'Jenis HKI', type: 'select', required: true, options: hakiOptions },
             { name: 'hki_file', label: 'File', type: 'text', required: false },
             { name: 'hki_bulan', label: 'Bulan', type: 'text', required: true },
             { name: 'hki_tahun', label: 'Tahun', type: 'number', required: true },
             { name: 'pengguna_kode', label: 'Kode Pengguna', type: 'text', required: true },
             { name: '_pengguna_nama', label: 'Nama Pengguna', type: 'text', required: true },
-            { 
-                name: '_prodi_nama', 
-                label: 'Prodi', 
-                type: 'select', 
-                required: true,
-                options: [
-                    'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
-                    'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
-                    'S2 Teknik Sipil', 'S2 Teknologi Informasi'
-                ]
-            }
+            { name: '_prodi_nama', label: 'Prodi', type: 'select', required: true, options: prodiOptions},
+
         ]
     }) %>
 

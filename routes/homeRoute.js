@@ -9,6 +9,7 @@ const penelitianPusatModel = require("../models/penelitian/pusat");
 const penelitianMandiriModel = require("../models/penelitian/mandiri");
 const pengabdianPNBPModel = require("../models/pengabdian/pnbp");
 const pengabdianPusatModel = require("../models/pengabdian/pusat");
+const kategoriOptionModel = require('../models/kategoriOptionModel');
 
 function calculateStats(counts) {
     // Menghitung total dari semua nilai dalam objek counts
@@ -39,22 +40,22 @@ function calculateStats(counts) {
 async function getProdiData() {
     try {
         // Ambil semua data dari setiap model
-        const [penelitianPNBP, penelitianPusat, penelitianMandiri, 
-               pengabdianPNBP, pengabdianPusat, 
-               haki, buku, jupeng] = await Promise.all([
-            penelitianPNBPModel.find({}, 'Prodi'),
-            penelitianPusatModel.find({}, 'PRODI'),
-            penelitianMandiriModel.find({}, 'Prodi'),
-            pengabdianPNBPModel.find({}, 'Prodi'),
-            pengabdianPusatModel.find({}, 'PRODI'),
-            hakiModel.find({}, '_prodi_nama'),
-            bukuModel.find({}, '_prodi_nama'),
-            jupengModel.find({}, '_prodi_nama')
-        ]);
+        const [penelitianPNBP, penelitianPusat, penelitianMandiri,
+            pengabdianPNBP, pengabdianPusat,
+            haki, buku, jupeng] = await Promise.all([
+                penelitianPNBPModel.find({}, 'Prodi'),
+                penelitianPusatModel.find({}, 'PRODI'),
+                penelitianMandiriModel.find({}, 'Prodi'),
+                pengabdianPNBPModel.find({}, 'Prodi'),
+                pengabdianPusatModel.find({}, 'PRODI'),
+                hakiModel.find({}, '_prodi_nama'),
+                bukuModel.find({}, '_prodi_nama'),
+                jupengModel.find({}, '_prodi_nama')
+            ]);
 
         // Kumpulkan semua program studi unik
         const prodiSet = new Set();
-        
+
         penelitianPNBP.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
         penelitianPusat.forEach(item => item.PRODI && prodiSet.add(item.PRODI));
         penelitianMandiri.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
@@ -87,7 +88,7 @@ async function getProdiData() {
 
         // Urutkan berdasarkan nama prodi
         return prodiData.sort((a, b) => a.name.localeCompare(b.name));
-        
+
     } catch (error) {
         console.error('Error getting prodi data:', error);
         return [];
@@ -142,16 +143,24 @@ router.get("/", async (req, res) => {
         "Buku": totalBuku,
         "Jurnal Pengabdian": totalJupeng
     });
+
+    let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
+    prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
+    // let hrefProdiOptions = prodiOptions.map(prodi => ({
+    //     name: prodi,
+    //     href: `/prodi/${encodeURIComponent(prodi)}`
+    // }));
     res.render("index", {
         title: "Home",
         isLogin,
         publikasiCounts,
         penelitianCounts,
         pengabdianCounts,
-        penelitianStats, 
-        pengabdianStats,  
+        penelitianStats,
+        pengabdianStats,
         publikasiStats,
-        prodiData
+        prodiData,
+        prodiOptions
     });
 });
 module.exports = router;

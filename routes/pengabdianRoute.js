@@ -3,12 +3,14 @@ const router = express.Router();
 
 const pusatModel = require("../models/pengabdian/pusat");
 const pnbpModel = require("../models/pengabdian/pnbp");
+const kategoriOptionModel = require('../models/kategoriOptionModel');
+
 // Halaman utama
 router.get("/pengabdian", async (req, res) => {
     try {
 
         // Rangkuman data pengabdian tahun ini
-        const currentYear = new Date().getFullYear() - 1;
+        const currentYear = new Date().getFullYear();
 
         const hasilRangkumanTahunIni = await Promise.all([
             // Total dana pengabdian tahun ini
@@ -94,7 +96,6 @@ router.get("/pengabdian", async (req, res) => {
             pengabdianTahunAktif: totalPengabdianTahunIni,
             tahunAktif: currentYear
         };
-        console.log("Gabungan Data Pengabdian Tahun Ini:", gabunganData);
 
         const [
             pusatResults,
@@ -181,13 +182,17 @@ router.get("/pengabdian", async (req, res) => {
         ]);
         const isLogin = req.session.isLogin || false;
 
+        let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
+        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
+
         // Hasil dari $facet adalah array dengan satu objek, jadi kita ambil elemen pertama [0]
         res.render("pengabdian", {
             title: "Pengabdian",
             isLogin,
             pusatData: pusatResults[0],
             pnbpData: pnbpResults[0],
-            gabunganData
+            gabunganData,
+            prodiOptions
         });
 
     } catch (error) {

@@ -1,4 +1,5 @@
 const hakiModel = require('../../models/publikasi/HAKIModel');
+const kategoriOptionModel = require('../../models/kategoriOptionModel');
 
 // Read dan Search
 exports.getAllData = async (req, res) => {
@@ -6,10 +7,10 @@ exports.getAllData = async (req, res) => {
         // --- Menangani Parameter untuk Pencarian dan Pagination ---
         const searchQuery = req.query.search || '';
         const page = parseInt(req.query.page) || 1;
-        
+
         // Mengambil limit dari query, dengan nilai default 50 jika tidak ada
-        const limit = parseInt(req.query.limit) || 50; 
-        
+        const limit = parseInt(req.query.limit) || 50;
+
         const skip = (page - 1) * limit;
 
         // --- Membuat Filter Pencarian (jika ada) ---
@@ -35,12 +36,21 @@ exports.getAllData = async (req, res) => {
             // .sort({ hki_tahun: -1 }) // Mengurutkan berdasarkan tahun terbaru
             .skip(skip)
             .limit(limit);
+
+        let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
+        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
+
+        let hakiOptions = await kategoriOptionModel.find({ kategori: 'Jenis HAKI' });
+        hakiOptions = hakiOptions.length > 0 ? hakiOptions[0].option : []; // Ambil opsi haki dari kategori
+
         // --- Merender Halaman ---
         res.render('dashboard/publikasi/dash-haki', {
             data,
             searchQuery,
             title: 'Publikasi HAKI',
             currentPage: page,
+            prodiOptions,
+            hakiOptions,
             totalPages,
             totalData,
             limit // Kirim limit ke view agar bisa digunakan di link pagination
@@ -56,13 +66,13 @@ exports.createData = async (req, res) => {
     try {
         // Replace empty fields with '-'
         const {
-            hki_judul = '-', 
-            hki_jenis = '-', 
-            hki_file = '-', 
-            hki_bulan = '-', 
-            hki_tahun = 0, 
-            pengguna_kode = '-', 
-            _pengguna_nama = '-', 
+            hki_judul = '-',
+            hki_jenis = '-',
+            hki_file = '-',
+            hki_bulan = '-',
+            hki_tahun = 0,
+            pengguna_kode = '-',
+            _pengguna_nama = '-',
             _prodi_nama = '-'
         } = req.body;
         console.log(req.body);
@@ -109,13 +119,13 @@ exports.updateData = async (req, res) => {
     try {
         const id = req.params.id;
         const {
-            hki_judul = '-', 
-            hki_jenis = '-', 
-            hki_file = '-', 
-            hki_bulan = '-', 
-            hki_tahun = 0, 
-            pengguna_kode = '-', 
-            _pengguna_nama = '-', 
+            hki_judul = '-',
+            hki_jenis = '-',
+            hki_file = '-',
+            hki_bulan = '-',
+            hki_tahun = 0,
+            pengguna_kode = '-',
+            _pengguna_nama = '-',
             _prodi_nama = '-'
         } = req.body;
         console.log(req.body);
