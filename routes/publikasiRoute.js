@@ -65,6 +65,85 @@ router.get("/publikasi", async (req, res) => {
             ])
         ]);
 
+        // Mengolah data gabungan untuk cards statistik
+        const tahunSekarang = new Date().getFullYear();
+
+        // 1. Total publikasi tahun ini dari semua jenis
+        const jupengTahunIni = jupengData[0].jumlahPerTahun.find(item => item._id === tahunSekarang)?.totalPublikasi || 0;
+        const hakiTahunIni = hakiData[0].jumlahPerTahun.find(item => item._id === tahunSekarang)?.jumlahHKI || 0;
+        const bukuTahunIni = bukuData[0].jumlahPerTahun.find(item => item._id === tahunSekarang)?.jumlahBuku || 0;
+        const totalPublikasiTahunIni = jupengTahunIni + hakiTahunIni + bukuTahunIni;
+
+        // 2. Gabungkan data prodi dari semua jenis publikasi tahun ini
+        const prodiDataTahunIni = {};
+
+        // Tambahkan data dari jupeng tahun ini
+        const jupengProdiTahunIni = await jupengModel.aggregate([
+            { $match: { jurnal_tahun: tahunSekarang } },
+            { $group: { _id: "$_prodi_nama", count: { $sum: 1 } } }
+        ]);
+
+        // Tambahkan data dari haki tahun ini
+        const hakiProdiTahunIni = await hakiModel.aggregate([
+            { $match: { hki_tahun: tahunSekarang } },
+            { $group: { _id: "$_prodi_nama", count: { $sum: 1 } } }
+        ]);
+
+        // Tambahkan data dari buku tahun ini
+        const bukuProdiTahunIni = await bukuModel.aggregate([
+            { $match: { buku_tahun: tahunSekarang } },
+            { $group: { _id: "$_prodi_nama", count: { $sum: 1 } } }
+        ]);
+
+        // Gabungkan semua data prodi
+        [...jupengProdiTahunIni, ...hakiProdiTahunIni, ...bukuProdiTahunIni].forEach(item => {
+            if (item._id) {
+                prodiDataTahunIni[item._id] = (prodiDataTahunIni[item._id] || 0) + item.count;
+            }
+        });
+
+        // Cari prodi paling produktif
+        let prodiPalingProduktif = 'Tidak ada data';
+        let jumlahProdiTerproduktif = 0;
+        Object.entries(prodiDataTahunIni).forEach(([prodi, jumlah]) => {
+            if (jumlah > jumlahProdiTerproduktif) {
+                prodiPalingProduktif = prodi;
+                jumlahProdiTerproduktif = jumlah;
+            }
+        });
+
+        // 3. Jenis publikasi terpopuler tahun ini
+        const jenisPublikasiTahunIni = {
+            'Jurnal Pengabdian': jupengTahunIni,
+            'HAKI': hakiTahunIni,
+            'Buku': bukuTahunIni
+        };
+
+        let jenisPublikasiTerpopuler = 'Tidak ada data';
+        let jumlahJenisTerpopuler = 0;
+        Object.entries(jenisPublikasiTahunIni).forEach(([jenis, jumlah]) => {
+            if (jumlah > jumlahJenisTerpopuler) {
+                jenisPublikasiTerpopuler = jenis;
+                jumlahJenisTerpopuler = jumlah;
+            }
+        });
+
+        // 4. Total publikasi keseluruhan
+        const totalJupeng = jupengData[0].jumlahPerTahun.reduce((sum, item) => sum + item.totalPublikasi, 0);
+        const totalHaki = hakiData[0].jumlahPerTahun.reduce((sum, item) => sum + item.jumlahHKI, 0);
+        const totalBuku = bukuData[0].jumlahPerTahun.reduce((sum, item) => sum + item.jumlahBuku, 0);
+        const totalPublikasiKeseluruhan = totalJupeng + totalHaki + totalBuku;
+
+        // Buat objek gabunganData
+        const gabunganData = {
+            totalPublikasiTahunIni,
+            tahunAktif: tahunSekarang,
+            prodiPalingProduktif,
+            jumlahProdiTerproduktif,
+            jenisPublikasiTerpopuler,
+            jumlahJenisTerpopuler,
+            totalPublikasiKeseluruhan
+        };
         const isLogin = req.session.isLogin || false;
 
         let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
@@ -77,6 +156,7 @@ router.get("/publikasi", async (req, res) => {
             jupengData: jupengData[0],
             hakiData: hakiData[0],
             bukuData: bukuData[0],
+            gabunganData,
             prodiOptions
         });
 
