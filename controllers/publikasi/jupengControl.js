@@ -1,4 +1,5 @@
 const jupengModel = require('../../models/publikasi/jupengModel');
+const kategoriOptionModel = require('../../models/kategoriOptionModel');
 
 // Read dan Search
 exports.getAllData = async (req, res) => {
@@ -25,6 +26,9 @@ exports.getAllData = async (req, res) => {
             };
         }
 
+        let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
+        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
+
         // --- Mengambil Data dari Database ---
         // 1. Menghitung total dokumen yang cocok dengan filter untuk pagination
         const totalData = await jupengModel.countDocuments(filter);
@@ -40,6 +44,7 @@ exports.getAllData = async (req, res) => {
             searchQuery,
             title: 'Publikasi Jurnal Pengabdian',
             currentPage: page,
+            prodiOptions,
             totalPages,
             totalData,
             limit // Kirim limit ke view agar bisa digunakan di link pagination

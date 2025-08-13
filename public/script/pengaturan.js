@@ -58,16 +58,6 @@ function displayKategori(kategoriList) {
         <div class="kategori-card bg-white rounded-lg p-6 shadow-sm">
             <div class="flex justify-between items-start mb-4">
                 <h3 class="text-lg font-semibold text-gray-800">${kategori.kategori}</h3>
-                <div class="flex gap-2">
-                    <button onclick="editKategori('${kategori._id}', '${kategori.kategori}')" 
-                            class="text-blue-500 hover:text-blue-700">
-                        <span class="material-icons-outlined text-sm">edit</span>
-                    </button>
-                    <button onclick="deleteKategori('${kategori._id}')" 
-                            class="text-red-500 hover:text-red-700">
-                        <span class="material-icons-outlined text-sm">delete</span>
-                    </button>
-                </div>
             </div>
             
             <div class="mb-4">

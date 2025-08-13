@@ -367,6 +367,7 @@
         action: '/dashboard/publikasi/jupeng/create',
         formFields: [
             { name: 'jurnal_judul', label: 'Judul Jurnal', type: 'text', required: true },
+            { name: '_prodi_nama', label: 'Prodi', type: 'select', required: true, options: prodiOptions},
             { name: 'jurnal_url', label: 'URL Jurnal', type: 'text', required: false },
             { name: 'jurnal_file', label: 'File Jurnal', type: 'text', required: false },
             { name: 'jurnal_tahun', label: 'Tahun', type: 'number', required: true },
@@ -374,17 +375,6 @@
             { name: 'pengguna_kode', label: 'Kode Pengguna', type: 'text', required: false },
             { name: '_pengguna_jenis', label: 'Jenis Pengguna', type: 'text', required: false },
             { name: '_pengguna_nama', label: 'Nama Pengguna', type: 'text', required: false },
-            { 
-                name: '_prodi_nama', 
-                label: 'Nama Prodi', 
-                type: 'select', 
-                required: true,
-                options: [
-                    'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
-                    'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
-                    'S2 Teknik Sipil', 'S2 Teknologi Informasi'
-                ]
-            },
             { name: '_personil_data_ketua', label: 'Ketua Personil', type: 'text', required: false },
             { name: '_personil_data_ketua_kode', label: 'Kode Ketua Personil', type: 'text', required: false },
             { name: '_personil_data_ketua_jenis', label: 'Jenis Ketua Personil', type: 'text', required: false }
@@ -396,6 +386,7 @@
         action: '/dashboard/publikasi/jupeng/create',
         formFields: [
             { name: 'jurnal_judul', label: 'Judul Jurnal', type: 'text', required: true },
+            { name: '_prodi_nama', label: 'Prodi', type: 'select', required: true, options: prodiOptions},
             { name: 'jurnal_url', label: 'URL Jurnal', type: 'text', required: false },
             { name: 'jurnal_file', label: 'File Jurnal', type: 'text', required: false },
             { name: 'jurnal_tahun', label: 'Tahun', type: 'number', required: true },
@@ -403,17 +394,6 @@
             { name: 'pengguna_kode', label: 'Kode Pengguna', type: 'text', required: false },
             { name: '_pengguna_jenis', label: 'Jenis Pengguna', type: 'text', required: false },
             { name: '_pengguna_nama', label: 'Nama Pengguna', type: 'text', required: false },
-            { 
-                name: '_prodi_nama', 
-                label: 'Nama Prodi', 
-                type: 'select', 
-                required: true,
-                options: [
-                    'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
-                    'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
-                    'S2 Teknik Sipil', 'S2 Teknologi Informasi'
-                ]
-            },
             { name: '_personil_data_ketua', label: 'Ketua Personil', type: 'text', required: false },
             { name: '_personil_data_ketua_kode', label: 'Kode Ketua Personil', type: 'text', required: false },
             { name: '_personil_data_ketua_jenis', label: 'Jenis Ketua Personil', type: 'text', required: false }

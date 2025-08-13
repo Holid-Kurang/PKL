@@ -1,4 +1,5 @@
 const bukuModel = require('../../models/publikasi/bukuModel');
+const kategoriOptionModel = require('../../models/kategoriOptionModel');
 
 // Read dan Search
 exports.getAllData = async (req, res) => {
@@ -6,10 +7,10 @@ exports.getAllData = async (req, res) => {
         // --- Menangani Parameter untuk Pencarian dan Pagination ---
         const searchQuery = req.query.search || '';
         const page = parseInt(req.query.page) || 1;
-        
+
         // Mengambil limit dari query, dengan nilai default 50 jika tidak ada
-        const limit = parseInt(req.query.limit) || 50; 
-        
+        const limit = parseInt(req.query.limit) || 50;
+
         const skip = (page - 1) * limit;
 
         // --- Membuat Filter Pencarian (jika ada) ---
@@ -24,6 +25,9 @@ exports.getAllData = async (req, res) => {
                 ]
             };
         }
+
+        let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
+        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
 
         // --- Mengambil Data dari Database ---
         // 1. Menghitung total dokumen yang cocok dengan filter untuk pagination
@@ -40,6 +44,7 @@ exports.getAllData = async (req, res) => {
             searchQuery,
             title: 'Publikasi Buku',
             currentPage: page,
+            prodiOptions,
             totalPages,
             totalData,
             limit // Kirim limit ke view agar bisa digunakan di link pagination
@@ -204,7 +209,7 @@ exports.importData = async (req, res) => {
         const headers = headerRow.values.slice(1); // values[0] is null
 
         const expectedHeaders = [
-            'buku_judul', 'buku_isbn', 'buku_jumlah_halaman', 'buku_penerbit', 'buku_file', 
+            'buku_judul', 'buku_isbn', 'buku_jumlah_halaman', 'buku_penerbit', 'buku_file',
             'buku_tahun', 'pengguna_kode', '_pengguna_jenis', '_pengguna_nama', '_prodi_nama'
         ];
 

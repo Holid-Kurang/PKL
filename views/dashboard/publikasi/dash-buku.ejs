@@ -351,6 +351,7 @@
         action: '/dashboard/publikasi/buku/create',
         formFields: [
             { name: 'buku_judul', label: 'Judul Buku', type: 'text', required: true },
+            { name: '_prodi_nama', label: 'Prodi', type: 'select', required: true, options: prodiOptions},
             { name: 'buku_isbn', label: 'ISBN', type: 'text', required: true },
             { name: 'buku_jumlah_halaman', label: 'Jumlah Halaman', type: 'number', required: true },
             { name: 'buku_penerbit', label: 'Penerbit', type: 'text', required: true },
@@ -359,17 +360,6 @@
             { name: 'pengguna_kode', label: 'Kode Pengguna', type: 'text', required: true },
             { name: '_pengguna_jenis', label: 'Jenis Pengguna', type: 'text', required: true },
             { name: '_pengguna_nama', label: 'Nama Pengguna', type: 'text', required: true },
-            { 
-                name: '_prodi_nama', 
-                label: 'Prodi', 
-                type: 'select', 
-                required: true,
-                options: [
-                    'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
-                    'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
-                    'S2 Teknik Sipil', 'S2 Teknologi Informasi'
-                ]
-            }
         ]
     }) %>
     
@@ -378,6 +368,7 @@
         action: '/dashboard/publikasi/buku/create',
         formFields: [
             { name: 'buku_judul', label: 'Judul Buku', type: 'text', required: true },
+            { name: '_prodi_nama', label: 'Prodi', type: 'select', required: true, options: prodiOptions},
             { name: 'buku_isbn', label: 'ISBN', type: 'text', required: true },
             { name: 'buku_jumlah_halaman', label: 'Jumlah Halaman', type: 'number', required: true },
             { name: 'buku_penerbit', label: 'Penerbit', type: 'text', required: true },
@@ -386,17 +377,6 @@
             { name: 'pengguna_kode', label: 'Kode Pengguna', type: 'text', required: true },
             { name: '_pengguna_jenis', label: 'Jenis Pengguna', type: 'text', required: true },
             { name: '_pengguna_nama', label: 'Nama Pengguna', type: 'text', required: true },
-            { 
-                name: '_prodi_nama', 
-                label: 'Prodi', 
-                type: 'select', 
-                required: true,
-                options: [
-                    'S1 Arsitektur', 'S1 Teknik Elektro', 'S1 Teknik Industri', 
-                    'S1 Teknik Informatika', 'S1 Teknik Mesin', 'S1 Teknik Sipil',
-                    'S2 Teknik Sipil', 'S2 Teknologi Informasi'
-                ]
-            }
         ]
     }) %>
 
