@@ -1,8 +1,24 @@
+// Event listener untuk dropdown kategori data
+document.getElementById('kategoriData').addEventListener('change', function () {
+    const selectedValue = this.value;
+    const sections = document.querySelectorAll('.chart-section');
+
+    // Hide all sections
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show selected section
+    const selectedSection = document.getElementById(selectedValue + '-section');
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const penelitian = window.penelitian || {};
     const pengabdian = window.pengabdian || {};
     const publikasi = window.publikasi || {};
-    // Tambahkan pnbpData, mandiriData jika ingin sekaligus
 
     const chartInstances = {};
 
@@ -170,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             })
-        }, 
+        },
         // Penelitian PNBP
         {
             id: 'pnbpPerTahun',
@@ -818,7 +834,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     layout: { padding: 20 }
                 }
             })
-        },{
+        }, {
             id: 'hakiPerTahun',
             init: () => new Chart(document.getElementById('hakiPerTahun').getContext('2d'), {
                 type: 'bar',
@@ -867,28 +883,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    // Intersection Observer untuk lazy rendering
-    const observer = new IntersectionObserver((entries) => {
+    // =================================================================
+    // SETUP INTERSECTION OBSERVER UNTUK LAZY RENDERING
+    // =================================================================
+    const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             const canvasId = entry.target.id;
             if (entry.isIntersecting) {
+                // Render chart jika belum ada
                 if (!chartInstances[canvasId]) {
                     const chartConfig = chartConfigurations.find(c => c.id === canvasId);
                     if (chartConfig) {
-                        chartInstances[canvasId] = chartConfig.init();
+                        try {
+                            chartInstances[canvasId] = chartConfig.init();
+                        } catch (error) {
+                            console.error(`Error initializing chart ${canvasId}:`, error);
+                        }
                     }
                 }
             } else {
+                // Destroy chart untuk menghemat memory
                 if (chartInstances[canvasId]) {
                     chartInstances[canvasId].destroy();
                     delete chartInstances[canvasId];
                 }
             }
         });
-    }, { rootMargin: '0px', threshold: 0.1 });
+    }, {
+        rootMargin: '0px',
+        threshold: 0.1
+    });
 
+    // Observe semua canvas elements
     chartConfigurations.forEach(config => {
         const element = document.getElementById(config.id);
-        if (element) observer.observe(element);
+        if (element) {
+            observer.observe(element);
+        }
     });
 });

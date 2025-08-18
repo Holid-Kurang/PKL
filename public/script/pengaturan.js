@@ -9,19 +9,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Setup event listeners
 function setupEventListeners() {
-    // Add kategori button
-    document.getElementById('addKategoriBtn').addEventListener('click', function() {
-        openModal('addKategoriModal');
-    });
-
-    // Add kategori form
-    document.getElementById('addKategoriForm').addEventListener('submit', handleAddKategori);
-    
     // Add option form
     document.getElementById('addOptionForm').addEventListener('submit', handleAddOption);
     
+    // Add kategori button
+    // document.getElementById('addKategoriBtn').addEventListener('click', function() {
+    //     openModal('addKategoriModal');
+    // });
+
+    // Add kategori form
+    // document.getElementById('addKategoriForm').addEventListener('submit', handleAddKategori);
+    
     // Edit kategori form
-    document.getElementById('editKategoriForm').addEventListener('submit', handleEditKategori);
+    // document.getElementById('editKategoriForm').addEventListener('submit', handleEditKategori);
 }
 
 // Load all kategori
