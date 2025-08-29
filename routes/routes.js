@@ -7,9 +7,17 @@ const pengabdianRoutes = require("./pengabdianRoute");
 const penelitianRoutes = require("./penelitianRoute");
 const publikasiRoutes = require("./publikasiRoute");
 
-// Unified dashboard routes - mengganti semua individual dashboard routes
-const dashboardUnifiedRoutes = require("./dashboardUnified");
-
+// Dashboard routes for penelitian
+const dashboardPenelitianPNBPRoutes = require("./dashboardRoute/penelitian/pnbp");
+const dashboardPenelitianPusatRoutes = require("./dashboardRoute/penelitian/pusat");
+const dashboardPenelitianMandiriRoutes = require("./dashboardRoute/penelitian/mandiri");
+// Dashboard routes for pengabdian
+const dashboardPengabdianPNBPRoutes = require("./dashboardRoute/pengabdian/pnbp");
+const dashboardPengabdianPusatRoutes = require("./dashboardRoute/pengabdian/pusat");
+// dashboard routes for publikasi
+const dashboardPublikasiBukuRoutes = require("./dashboardRoute/publikasi/buku");
+const dashboardPublikasiJupengRoutes = require("./dashboardRoute/publikasi/jupeng");
+const dashboardPublikasiHAKIRoutes = require("./dashboardRoute/publikasi/haki");
 // dashboard for prodi
 const prodiRoutes = require("./prodiRoute");
 // dashboard for pengaturan
@@ -22,9 +30,14 @@ route.use("/", loginRoutes);
 route.use("/", pengabdianRoutes);
 route.use("/", penelitianRoutes);
 route.use("/", publikasiRoutes);
-
-// Gunakan unified dashboard routes
-route.use("/", dashboardUnifiedRoutes);
+route.use("/", dashboardPenelitianPNBPRoutes);
+route.use("/", dashboardPenelitianPusatRoutes);
+route.use("/", dashboardPenelitianMandiriRoutes);
+route.use("/", dashboardPengabdianPNBPRoutes);
+route.use("/", dashboardPengabdianPusatRoutes);
+route.use("/", dashboardPublikasiBukuRoutes);
+route.use("/", dashboardPublikasiJupengRoutes);
+route.use("/", dashboardPublikasiHAKIRoutes);
 route.use("/", prodiRoutes);
 route.use("/", pengaturanRoutes);
 
