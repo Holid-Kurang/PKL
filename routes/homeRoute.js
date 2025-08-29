@@ -145,12 +145,8 @@ router.get("/", async (req, res) => {
     });
 
     let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
-    prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
-    console.log(prodiOptions);
-    // let hrefProdiOptions = prodiOptions.map(prodi => ({
-    //     name: prodi,
-    //     href: `/prodi/${encodeURIComponent(prodi)}`
-    // }));
+    prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori\
+    
     res.render("index", {
         title: "Home",
         isLogin,
