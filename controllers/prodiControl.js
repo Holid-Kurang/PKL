@@ -206,8 +206,7 @@ exports.getProdiStats = async (req, res) => {
             return res.status(404).render('404page', { 
                 title: 'Program Studi Tidak Ditemukan',
                 url: req.originalUrl,
-                isLogin: req.session.isLogin || false,
-                prodiOptions
+                isLogin: req.session.isLogin || false
             });
         }
         
@@ -218,7 +217,6 @@ exports.getProdiStats = async (req, res) => {
             title: prodiName,
             prodi: prodiName,
             isLogin,
-            prodiOptions,
             ...stats
         });
         

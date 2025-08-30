@@ -95,69 +95,109 @@ async function getProdiData() {
     }
 }
 
+// API endpoint untuk mendapatkan data dashboard
+router.get("/api/dashboard-data", async (req, res) => {
+    try {
+        const [totalHAKI, totalBuku, totalJupeng,
+            totalPNBP, totalPusat, totalMandiri,
+            totalPengabdianPNBP, totalPengabdianPusat, prodiData] = await Promise.all([
+                hakiModel.countDocuments(),
+                bukuModel.countDocuments(),
+                jupengModel.countDocuments(),
+                penelitianPNBPModel.countDocuments(),
+                penelitianPusatModel.countDocuments(),
+                penelitianMandiriModel.countDocuments(),
+                pengabdianPNBPModel.countDocuments(),
+                pengabdianPusatModel.countDocuments(),
+                getProdiData()
+            ]);
+        
+        const publikasiCounts = {
+            "HAKI": totalHAKI,
+            "Buku": totalBuku,
+            "Jurnal Pengabdian": totalJupeng
+        };
+        
+        const penelitianCounts = {
+            "PNBP": totalPNBP,
+            "Pusat": totalPusat,
+            "Mandiri": totalMandiri
+        };
+        
+        const pengabdianCounts = {
+            "PNBP": totalPengabdianPNBP,
+            "Pusat": totalPengabdianPusat
+        };
+
+        const penelitianStats = calculateStats({
+            "PNBP": totalPNBP,
+            "Pusat": totalPusat,
+            "Mandiri": totalMandiri
+        });
+
+        const pengabdianStats = calculateStats({
+            "PNBP": totalPengabdianPNBP,
+            "Pusat": totalPengabdianPusat
+        });
+
+        const publikasiStats = calculateStats({
+            "HAKI": totalHAKI,
+            "Buku": totalBuku,
+            "Jurnal Pengabdian": totalJupeng
+        });
+
+        let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
+        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
+        
+        res.json({
+            success: true,
+            data: {
+                publikasiCounts,
+                penelitianCounts,
+                pengabdianCounts,
+                penelitianStats,
+                pengabdianStats,
+                publikasiStats,
+                prodiData,
+                prodiOptions
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching dashboard data'
+        });
+    }
+});
+
+// API endpoint untuk mendapatkan prodi options saja
+router.get("/api/prodi-options", async (req, res) => {
+    try {
+        let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
+        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
+        
+        res.json({
+            success: true,
+            data: prodiOptions
+        });
+    } catch (error) {
+        console.error('Error fetching prodi options:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching prodi options'
+        });
+    }
+});
+
 // Halaman utama
 router.get("/", async (req, res) => {
     const isLogin = req.session.isLogin || false;
-    const [totalHAKI, totalBuku, totalJupeng,
-        totalPNBP, totalPusat, totalMandiri,
-        totalPengabdianPNBP, totalPengabdianPusat, prodiData] = await Promise.all([
-            hakiModel.countDocuments(),
-            bukuModel.countDocuments(),
-            jupengModel.countDocuments(),
-            penelitianPNBPModel.countDocuments(),
-            penelitianPusatModel.countDocuments(),
-            penelitianMandiriModel.countDocuments(),
-            pengabdianPNBPModel.countDocuments(),
-            pengabdianPusatModel.countDocuments(),
-            getProdiData(),
-            pengabdianPusatModel.countDocuments()
-        ]);
-    const publikasiCounts = {
-        "HAKI": totalHAKI,
-        "Buku": totalBuku,
-        "Jurnal Pengabdian": totalJupeng
-    };
-    const penelitianCounts = {
-        "PNBP": totalPNBP,
-        "Pusat": totalPusat,
-        "Mandiri": totalMandiri
-    };
-    const pengabdianCounts = {
-        "PNBP": totalPengabdianPNBP,
-        "Pusat": totalPengabdianPusat
-    };
-
-    const penelitianStats = calculateStats({
-        "PNBP": totalPNBP,
-        "Pusat": totalPusat,
-        "Mandiri": totalMandiri
-    });
-
-    const pengabdianStats = calculateStats({
-        "PNBP": totalPengabdianPNBP,
-        "Pusat": totalPengabdianPusat
-    });
-
-    const publikasiStats = calculateStats({
-        "HAKI": totalHAKI,
-        "Buku": totalBuku,
-        "Jurnal Pengabdian": totalJupeng
-    });
-
-    let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
-    prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori\
     
     res.render("index", {
         title: "Home",
         isLogin,
-        publikasiCounts,
-        penelitianCounts,
-        pengabdianCounts,
-        penelitianStats,
-        pengabdianStats,
-        publikasiStats,
-        prodiData,
-        prodiOptions
+        prodiOptions: [] // Kirim array kosong untuk menghindari error
     });
 });
 module.exports = router;

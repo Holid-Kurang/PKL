@@ -1,6 +1,182 @@
-const publikasiCounts = window.publikasiCounts;
-const penelitianCounts = window.penelitianCounts;
-const pengabdianCounts = window.pengabdianCounts;
+// Global variables to store data
+let publikasiCounts = {};
+let penelitianCounts = {};
+let pengabdianCounts = {};
+let dashboardData = null;
+
+// Function to fetch dashboard data from API
+async function fetchDashboardData() {
+    try {
+        const response = await fetch('/api/dashboard-data');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Store data globally
+            dashboardData = result.data;
+            publikasiCounts = result.data.publikasiCounts;
+            penelitianCounts = result.data.penelitianCounts;
+            pengabdianCounts = result.data.pengabdianCounts;
+            
+            // Update UI
+            updateStatisticsText();
+            updateProdiTable();
+            initializeCharts();
+            
+            // Hide loading states and show content
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('tableLoadingState').classList.add('hidden');
+            document.getElementById('tableContent').classList.remove('hidden');
+            
+        } else {
+            throw new Error(result.message || 'Failed to fetch data');
+        }
+    } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        showError('Gagal memuat data. Silakan refresh halaman.');
+    }
+}
+
+// Function to update statistics text
+function updateStatisticsText() {
+    const { penelitianStats, pengabdianStats, publikasiStats } = dashboardData;
+    
+    // Update penelitian text
+    document.getElementById('penelitianText').innerHTML = `
+        Dari total <strong>${penelitianStats.total}</strong> penelitian, sumber pendanaan mayoritas berasal dari 
+        <strong>${penelitianStats.topCategory}</strong> yang mencakup <strong>${penelitianStats.topPercentage.toFixed(1)}%</strong> dari keseluruhan.
+        <a href="/penelitian" class="text-blue-600 hover:underline">Lihat detail.</a>
+    `;
+    
+    // Update pengabdian text
+    document.getElementById('pengabdianText').innerHTML = `
+        Sebanyak <strong>${pengabdianStats.total}</strong> kegiatan pengabdian telah dilaksanakan, dengan 
+        kontribusi terbesar datang dari sumber <strong>${pengabdianStats.topCategory}</strong> 
+        sebesar <strong>${pengabdianStats.topPercentage.toFixed(1)}%</strong>.
+        <a href="/pengabdian" class="text-blue-600 hover:underline">Lihat detail.</a>
+    `;
+    
+    // Update publikasi text
+    document.getElementById('publikasiText').innerHTML = `
+        Total <strong>${publikasiStats.total}</strong> karya telah dipublikasikan. Jenis publikasi terbanyak adalah <strong>${publikasiStats.topCategory}</strong>, 
+        mencapai <strong>${publikasiStats.topPercentage.toFixed(1)}%</strong> dari total.
+        <a href="/publikasi" class="text-blue-600 hover:underline">Lihat detail.</a>
+    `;
+}
+
+// Function to update prodi table
+function updateProdiTable() {
+    const { prodiData } = dashboardData;
+    const tbody = document.getElementById('prodiTableBody');
+    
+    // Clear existing content
+    tbody.innerHTML = '';
+    
+    if (prodiData && prodiData.length > 0) {
+        // Add data rows
+        prodiData.forEach(prodi => {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-white';
+            row.innerHTML = `
+                <td class="px-4 py-3 font-medium border border-gray-300">${prodi.name}</td>
+                <td class="px-3 py-2 text-center border border-gray-300">${prodi.penelitian?.pusat || 0}</td>
+                <td class="px-3 py-2 text-center border border-gray-300">${prodi.penelitian?.pnbp || 0}</td>
+                <td class="px-3 py-2 text-center border border-gray-300">${prodi.penelitian?.mandiri || 0}</td>
+                <td class="px-3 py-2 text-center border border-gray-300">${prodi.pengabdian?.pnbp || 0}</td>
+                <td class="px-3 py-2 text-center border border-gray-300">${prodi.pengabdian?.pusat || 0}</td>
+                <td class="px-3 py-2 text-center border border-gray-300">${prodi.publikasi?.haki || 0}</td>
+                <td class="px-3 py-2 text-center border border-gray-300">${prodi.publikasi?.buku || 0}</td>
+                <td class="px-3 py-2 text-center border border-gray-300">${prodi.publikasi?.jupeng || 0}</td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        // Add total row
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'font-semibold bg-white';
+        totalRow.innerHTML = `
+            <td class="px-4 py-3 border border-gray-300">Total</td>
+            <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.penelitian?.pusat || 0), 0)}</td>
+            <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.penelitian?.pnbp || 0), 0)}</td>
+            <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.penelitian?.mandiri || 0), 0)}</td>
+            <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.pengabdian?.pnbp || 0), 0)}</td>
+            <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.pengabdian?.pusat || 0), 0)}</td>
+            <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.publikasi?.haki || 0), 0)}</td>
+            <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.publikasi?.buku || 0), 0)}</td>
+            <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.publikasi?.jupeng || 0), 0)}</td>
+        `;
+        tbody.appendChild(totalRow);
+    } else {
+        // Show no data message
+        const noDataRow = document.createElement('tr');
+        noDataRow.innerHTML = `
+            <td colspan="9" class="px-4 py-8 text-center text-gray-500 border border-gray-300">
+                Data tidak tersedia
+            </td>
+        `;
+        tbody.appendChild(noDataRow);
+    }
+}
+
+// Function to show error message
+function showError(message) {
+    document.getElementById('loadingState').innerHTML = `
+        <div class="text-center text-red-600">
+            <p class="text-lg font-semibold">Error</p>
+            <p>${message}</p>
+            <button onclick="window.location.reload()" class="mt-2 px-4 py-2 bg-veronica text-white rounded hover:bg-veronica-dark">
+                Coba Lagi
+            </button>
+        </div>
+    `;
+    
+    document.getElementById('tableLoadingState').innerHTML = `
+        <div class="text-center text-red-600">
+            <p>Gagal memuat data tabel</p>
+        </div>
+    `;
+}
+
+// Function to initialize charts after data is loaded
+function initializeCharts() {
+    // Fill chart data with actual values
+    chartConfigs.forEach(chartConfig => {
+        const data = getChartData(chartConfig.type);
+        chartConfig.config.data.datasets[0].data = data;
+    });
+    
+    // Initialize charts with loaded data
+    const renderedCharts = {};
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                // Render Chart jika desktop dan belum dirender
+                const chartConfig = chartConfigs.find(c => c.id === entry.target.querySelector('canvas')?.id);
+                if (chartConfig && !renderedCharts[chartConfig.id]) {
+                    const ctx = entry.target.querySelector('canvas').getContext('2d');
+                    renderedCharts[chartConfig.id] = new Chart(ctx, chartConfig.config);
+                }
+            } else {
+                entry.target.classList.remove('active');
+                // Destroy chart jika ada dan sudah dirender
+                const chartConfig = chartConfigs.find(c => c.id === entry.target.querySelector('canvas')?.id);
+                if (chartConfig && renderedCharts[chartConfig.id]) {
+                    renderedCharts[chartConfig.id].destroy();
+                    delete renderedCharts[chartConfig.id];
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
+}
 
 
 const centerTextPlugin = {
@@ -34,19 +210,41 @@ const centerTextPlugin = {
         ctx.fillText(total, centerX, centerY + 15);
     }
 };
+// Function to get chart data dynamically
+function getChartData(chartType) {
+    switch(chartType) {
+        case 'penelitian':
+            return [
+                penelitianCounts["PNBP"] || 0,
+                penelitianCounts["Pusat"] || 0,
+                penelitianCounts["Mandiri"] || 0
+            ];
+        case 'pengabdian':
+            return [
+                pengabdianCounts["PNBP"] || 0,
+                pengabdianCounts["Pusat"] || 0
+            ];
+        case 'publikasi':
+            return [
+                publikasiCounts["HAKI"] || 0,
+                publikasiCounts["Buku"] || 0,
+                publikasiCounts["Jurnal Pengabdian"] || 0
+            ];
+        default:
+            return [];
+    }
+}
+
 const chartConfigs = [
     {
         id: 'penelitianChart',
+        type: 'penelitian',
         config: {
             type: 'doughnut',
             data: {
                 labels: ['PNBP', 'Pusat', 'Mandiri'],
                 datasets: [{
-                    data: [
-                        penelitianCounts["PNBP"],
-                        penelitianCounts["Pusat"],
-                        penelitianCounts["Mandiri"]
-                    ],
+                    data: [],  // Will be filled dynamically
                     hoverOffset: 50,
                     backgroundColor: [
                         '#9342DA',
@@ -62,8 +260,7 @@ const chartConfigs = [
                 }]
             },
             options: {
-                responsive: true, // <-- UBAH INI
-                // <-- TAMBAHKAN INI
+                responsive: true,
                 plugins: {
                     legend: {
                         display: true,
@@ -98,20 +295,18 @@ const chartConfigs = [
                     padding: 10
                 },
             },
-            plugins: [centerTextPlugin] // <-- TAMBAHKAN PLUGIN DI SINI
+            plugins: [centerTextPlugin]
         }
     },
     {
         id: 'pengabdianChart',
+        type: 'pengabdian',
         config: {
             type: 'doughnut',
             data: {
                 labels: ['PNBP', 'Pusat'],
                 datasets: [{
-                    data: [
-                        pengabdianCounts["PNBP"],
-                        pengabdianCounts["Pusat"]
-                    ],
+                    data: [],  // Will be filled dynamically
                     hoverOffset: 50,
                     backgroundColor: [
                         '#9342DA',
@@ -125,8 +320,8 @@ const chartConfigs = [
                 }]
             },
             options: {
-                responsive: true, // <-- UBAH INI
-                maintainAspectRatio: false, // <-- TAMBAHKAN INI
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: true,
@@ -161,21 +356,18 @@ const chartConfigs = [
                     padding: 10
                 },
             },
-            plugins: [centerTextPlugin] // <-- TAMBAHKAN PLUGIN DI SINI
+            plugins: [centerTextPlugin]
         }
     },
     {
         id: 'publikasiChart',
+        type: 'publikasi',
         config: {
             type: 'doughnut',
             data: {
                 labels: ['HAKI', 'Buku', 'Jurnal Pengabdian'],
                 datasets: [{
-                    data: [
-                        publikasiCounts["HAKI"],
-                        publikasiCounts["Buku"],
-                        publikasiCounts["Jurnal Pengabdian"]
-                    ],
+                    data: [],  // Will be filled dynamically
                     hoverOffset: 50,
                     backgroundColor: [
                         '#9342DA',
@@ -191,8 +383,8 @@ const chartConfigs = [
                 }]
             },
             options: {
-                responsive: true, // <-- UBAH INI
-                maintainAspectRatio: false, // <-- TAMBAHKAN INI
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: true,
@@ -227,33 +419,12 @@ const chartConfigs = [
                     padding: 10
                 },
             },
-            plugins: [centerTextPlugin] // <-- TAMBAHKAN PLUGIN DI SINI
+            plugins: [centerTextPlugin]
         }
     }
 ];
 
-const renderedCharts = {};
-// 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            // Render Chart jika desktop dan belum dirender
-            const chartConfig = chartConfigs.find(c => c.id === entry.target.querySelector('canvas')?.id);
-            if (chartConfig && !renderedCharts[chartConfig.id]) {
-                const ctx = entry.target.querySelector('canvas').getContext('2d');
-                renderedCharts[chartConfig.id] = new Chart(ctx, chartConfig.config);
-            }
-        } else {
-            entry.target.classList.remove('active');
-            // Destroy chart jika ada dan sudah dirender
-            const chartConfig = chartConfigs.find(c => c.id === entry.target.querySelector('canvas')?.id);
-            if (chartConfig && renderedCharts[chartConfig.id]) {
-                renderedCharts[chartConfig.id].destroy();
-                delete renderedCharts[chartConfig.id];
-            }
-        }
-    });
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    fetchDashboardData();
 });
-
-document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));

@@ -12,7 +12,7 @@
 </head>
 
 <body class="bg-[#EDF0F1] text-[#232F58]">
-    <%- include('partials/navbar', {isLogin, prodiOptions}) %>
+    <%- include('partials/navbar', {isLogin}) %>
         <div class="my-5 mx-14 md:my-10 md:mx-28">
             <h1 class="font-bold text-[30px] md:text-[40px]">Selamat Datang</h1>
             <div class="flex flex-col gap-6 md:flex-row">
@@ -26,46 +26,57 @@
             </div>
             <h1 class="font-bold text-[25px] md:text-[35px] text-center my-5">Rangkuman Data Penelitian, Pengabdian, dan
                 Publikasi</h1>
-            <div class="flex flex-col justify-center gap-6 md:flex-row md:gap-36">
-                <div
-                    class="w-[30%] flex flex-col shadow-xl bg-white shadow-gray-800/25  rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
-                    <canvas id="penelitianChart" class="w-full h-full "></canvas>
-                </div>
-                <p
-                    class="w-full md:w-[30%]  text-[16px] md:text-[20px] text-justify md:text-left aspect-square content-center animate-on-scroll slide-right-fade-in">
-                    Dari total <strong><%= penelitianStats.total %></strong> penelitian, sumber pendanaan mayoritas berasal dari 
-                    <strong><%= penelitianStats.topCategory %></strong> yang mencakup <strong><%= penelitianStats.topPercentage.toFixed(1) %>%</strong> dari keseluruhan.
-                    <a href="/penelitian" class="text-blue-600 hover:underline">Lihat detail.</a>
-                </p>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="flex items-center justify-center py-20">
+                <div class="w-12 h-12 border-b-2 rounded-full animate-spin border-veronica"></div>
+                <span class="ml-3 text-lg">Memuat data...</span>
             </div>
-            <div class="flex flex-col-reverse justify-center gap-6 md:flex-row md:gap-36">
-                <p class="w-[30%] md:text-[20px]  aspect-square content-center animate-on-scroll slide-left-fade-in">
-                    Sebanyak <strong><%= pengabdianStats.total %></strong> kegiatan pengabdian telah dilaksanakan, dengan 
-                    kontribusi terbesar datang dari sumber <strong><%= pengabdianStats.topCategory %></strong> 
-                    sebesar <strong><%= pengabdianStats.topPercentage.toFixed(1) %>%</strong>.
-                    <a href="/pengabdian" class="text-blue-600 hover:underline">Lihat detail.</a>
-                </p>
-                <div
-                    class="w-[30%] flex flex-col bg-white shadow-xl shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-right-fade-in">
-                    <canvas id="pengabdianChart" class="w-full h-full "></canvas>
+            
+            <!-- Main Content (hidden by default) -->
+            <div id="mainContent" class="hidden">
+                <div class="flex flex-col justify-center gap-6 md:flex-row md:gap-36">
+                    <div
+                        class="w-[30%] flex flex-col shadow-xl bg-white shadow-gray-800/25  rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
+                        <canvas id="penelitianChart" class="w-full h-full "></canvas>
+                    </div>
+                    <p id="penelitianText"
+                        class="w-full md:w-[30%]  text-[16px] md:text-[20px] text-justify md:text-left aspect-square content-center animate-on-scroll slide-right-fade-in">
+                        <!-- Content will be populated by JavaScript -->
+                    </p>
                 </div>
-            </div>
-            <div class="flex flex-col justify-center gap-6 md:flex-row md:gap-36">
-                <div
-                    class="w-[30%] flex flex-col shadow-xl bg-white shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
-                    <canvas id="publikasiChart" class="w-full h-full "></canvas>
+                <div class="flex flex-col-reverse justify-center gap-6 md:flex-row md:gap-36">
+                    <p id="pengabdianText" class="w-[30%] md:text-[20px]  aspect-square content-center animate-on-scroll slide-left-fade-in">
+                        <!-- Content will be populated by JavaScript -->
+                    </p>
+                    <div
+                        class="w-[30%] flex flex-col bg-white shadow-xl shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-right-fade-in">
+                        <canvas id="pengabdianChart" class="w-full h-full "></canvas>
+                    </div>
                 </div>
-                <p class="w-[30%]  md:text-[20px]  aspect-square content-center animate-on-scroll slide-right-fade-in">
-                    Total <strong><%= publikasiStats.total %></strong> karya telah dipublikasikan. Jenis publikasi terbanyak adalah <strong><%= publikasiStats.topCategory %></strong>, 
-                    mencapai <strong><%= publikasiStats.topPercentage.toFixed(1) %>%</strong> dari total.
-                    <a href="/publikasi" class="text-blue-600 hover:underline">Lihat detail.</a>
-                </p>
+                <div class="flex flex-col justify-center gap-6 md:flex-row md:gap-36">
+                    <div
+                        class="w-[30%] flex flex-col shadow-xl bg-white shadow-gray-800/25 rounded-[30px] h-[30%] aspect-square p-5 animate-on-scroll slide-left-fade-in">
+                        <canvas id="publikasiChart" class="w-full h-full "></canvas>
+                    </div>
+                    <p id="publikasiText" class="w-[30%]  md:text-[20px]  aspect-square content-center animate-on-scroll slide-right-fade-in">
+                        <!-- Content will be populated by JavaScript -->
+                    </p>
+                </div>
             </div>
         </div>
         <div class="py-8">
             <div class="mx-14 md:mx-28">
                 <h2 class="font-bold text-[25px] md:text-[35px] text-center mb-8">Data Per Program Studi</h2>
-                <div class="overflow-x-auto">
+                
+                <!-- Loading State for Table -->
+                <div id="tableLoadingState" class="flex items-center justify-center py-20">
+                    <div class="w-8 h-8 border-b-2 rounded-full animate-spin border-veronica"></div>
+                    <span class="ml-3">Memuat data tabel...</span>
+                </div>
+                
+                <!-- Table Content -->
+                <div id="tableContent" class="hidden overflow-x-auto">
                     <table class="w-full text-sm border border-collapse border-gray-300">
                         <thead class="text-white">
                             <tr class="bg-veronica">
@@ -85,56 +96,8 @@
                                 <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Jurnal Pengabdian</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <% if (typeof prodiData !== 'undefined' && prodiData.length > 0) { %>
-                                <% prodiData.forEach(prodi => { %>
-                                    <tr class="hover:bg-white">
-                                        <td class="px-4 py-3 font-medium border border-gray-300"><%= prodi.name %></td>
-                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.penelitian?.pusat || 0 %></td>
-                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.penelitian?.pnbp || 0 %></td>
-                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.penelitian?.mandiri || 0 %></td>
-                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.pengabdian?.pnbp || 0 %></td>
-                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.pengabdian?.pusat || 0 %></td>
-                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.publikasi?.haki || 0 %></td>
-                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.publikasi?.buku || 0 %></td>
-                                        <td class="px-3 py-2 text-center border border-gray-300"><%= prodi.publikasi?.jupeng || 0 %></td>
-                                    </tr>
-                                <% }) %>
-                                <!-- Total row -->
-                                <tr class="font-semibold bg-white">
-                                    <td class="px-4 py-3 border border-gray-300">Total</td>
-                                    <td class="px-3 py-2 text-center border border-gray-300">
-                                        <%= prodiData.reduce((sum, p) => sum + (p.penelitian?.pusat || 0), 0) %>
-                                    </td>
-                                    <td class="px-3 py-2 text-center border border-gray-300">
-                                        <%= prodiData.reduce((sum, p) => sum + (p.penelitian?.pnbp || 0), 0) %>
-                                    </td>
-                                    <td class="px-3 py-2 text-center border border-gray-300">
-                                        <%= prodiData.reduce((sum, p) => sum + (p.penelitian?.mandiri || 0), 0) %>
-                                    </td>
-                                    <td class="px-3 py-2 text-center border border-gray-300">
-                                        <%= prodiData.reduce((sum, p) => sum + (p.pengabdian?.pnbp || 0), 0) %>
-                                    </td>
-                                    <td class="px-3 py-2 text-center border border-gray-300">
-                                        <%= prodiData.reduce((sum, p) => sum + (p.pengabdian?.pusat || 0), 0) %>
-                                    </td>
-                                    <td class="px-3 py-2 text-center border border-gray-300">
-                                        <%= prodiData.reduce((sum, p) => sum + (p.publikasi?.haki || 0), 0) %>
-                                    </td>
-                                    <td class="px-3 py-2 text-center border border-gray-300">
-                                        <%= prodiData.reduce((sum, p) => sum + (p.publikasi?.buku || 0), 0) %>
-                                    </td>
-                                    <td class="px-3 py-2 text-center border border-gray-300">
-                                        <%= prodiData.reduce((sum, p) => sum + (p.publikasi?.jupeng || 0), 0) %>
-                                    </td>
-                                </tr>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="9" class="px-4 py-8 text-center text-gray-500 border border-gray-300">
-                                        Data tidak tersedia
-                                    </td>
-                                </tr>
-                            <% } %>
+                        <tbody id="prodiTableBody">
+                            <!-- Content will be populated by JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -142,13 +105,9 @@
         </div>
     <%- include('partials/footer') %>
     
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            window.publikasiCounts = <%- JSON.stringify(publikasiCounts) %>;
-            window.penelitianCounts = <%- JSON.stringify(penelitianCounts) %>;
-            window.pengabdianCounts = <%- JSON.stringify(pengabdianCounts) %>;
-        </script>
-        <script src="/script/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/script/index.js"></script>
 </body>
 
 </html>

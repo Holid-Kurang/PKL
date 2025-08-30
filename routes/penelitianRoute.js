@@ -222,9 +222,6 @@ router.get("/penelitian", async (req, res) => {
 
         const isLogin = req.session.isLogin || false;
 
-        let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
-        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
-
         // Hasil dari $facet adalah array dengan satu objek, jadi kita ambil elemen pertama [0]
         res.render("penelitian", {
             title: "Penelitian",
@@ -232,8 +229,7 @@ router.get("/penelitian", async (req, res) => {
             pusatData: pusatResults[0],
             pnbpData: pnbpResults[0],
             mandiriData: mandiriResults[0],
-            gabunganData,
-            prodiOptions
+            gabunganData
         });
 
     } catch (error) {
