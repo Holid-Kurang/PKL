@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="<%= currentLang %>">
 
 <head>
     <meta charset="UTF-8">
@@ -9,28 +9,26 @@
     </title>
     <link href="/style/main.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon.png">
+    <script>
+        // Set translations globally for JavaScript
+        window.pageTranslations = <%- pageTranslations %>;
+    </script>
 </head>
 
 <body class="bg-[#EDF0F1] text-[#232F58]">
     <%- include('partials/navbar', {isLogin}) %>
         <div class="my-5 mx-14 md:my-10 md:mx-28">
-            <h1 class="font-bold text-[30px] md:text-[40px]">Selamat Datang</h1>
+            <h1 class="font-bold text-[30px] md:text-[40px]"><%= __('welcome.title') %></h1>
             <div class="flex flex-col gap-6 md:flex-row">
-                <p class="text-[20px] md:text-[25px] text-justify md:text-left">Website ini dirancang untuk memberikan
-                    informasi terkait kegiatan akademik di Fakultas Teknik Universitas Mataram, khususnya dalam bidang
-                    penelitian, pengabdian kepada masyarakat, dan publikasi ilmiah. Melalui website ini, pengguna dapat
-                    dengan mudah mengakses data penelitian yang telah dilaksanakan, program pengabdian yang pernah
-                    dilaksanakan, serta publikasi ilmiah yang diterbitkan oleh dosen di Fakultas Teknik Universitas
-                    Mataram.</p>
+                <p class="text-[20px] md:text-[25px] text-justify md:text-left"><%= __('welcome.description') %></p>
                 <img class="rounded-[30px] w-full md:w-[500px] self-center" src="/assets/gedung-teknik.png" alt="">
             </div>
-            <h1 class="font-bold text-[25px] md:text-[35px] text-center my-5">Rangkuman Data Penelitian, Pengabdian, dan
-                Publikasi</h1>
+            <h1 class="font-bold text-[25px] md:text-[35px] text-center my-5"><%= __('welcome.summaryTitle') %></h1>
             
             <!-- Loading State -->
             <div id="loadingState" class="flex items-center justify-center py-20">
                 <div class="w-12 h-12 border-b-2 rounded-full animate-spin border-veronica"></div>
-                <span class="ml-3 text-lg">Memuat data...</span>
+                <span class="ml-3 text-lg"><%= __('dashboard.loading') %></span>
             </div>
             
             <!-- Main Content (hidden by default) -->
@@ -80,20 +78,20 @@
                     <table class="w-full text-sm border border-collapse border-gray-300">
                         <thead class="text-white">
                             <tr class="bg-veronica">
-                                <th rowspan="2" class="px-4 py-3 font-semibold text-center border border-gray-300">Prodi</th>
-                                <th colspan="3" class="px-4 py-2 font-semibold text-center border border-gray-300">Penelitian</th>
-                                <th colspan="2" class="px-4 py-2 font-semibold text-center border border-gray-300">Pengabdian</th>
-                                <th colspan="3" class="px-4 py-2 font-semibold text-center border border-gray-300">Publikasi</th>
+                                <th rowspan="2" class="px-4 py-3 font-semibold text-center border border-gray-300"><%= __('dashboard.table.programStudi') %></th>
+                                <th colspan="3" class="px-4 py-2 font-semibold text-center border border-gray-300"><%= __('navbar.penelitian') %></th>
+                                <th colspan="2" class="px-4 py-2 font-semibold text-center border border-gray-300"><%= __('navbar.pengabdian') %></th>
+                                <th colspan="3" class="px-4 py-2 font-semibold text-center border border-gray-300"><%= __('navbar.publikasi') %></th>
                             </tr>
                             <tr class="bg-veronica">
-                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Pusat</th>
-                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">PNBP</th>
-                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Mandiri</th>
-                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">PNBP</th>
-                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Pusat</th>
-                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">HAKI</th>
-                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Buku</th>
-                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300">Jurnal Pengabdian</th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300"><%= __('categories.pusat') %></th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300"><%= __('categories.pnbp') %></th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300"><%= __('categories.mandiri') %></th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300"><%= __('categories.pnbp') %></th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300"><%= __('categories.pusat') %></th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300"><%= __('categories.haki') %></th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300"><%= __('categories.buku') %></th>
+                                <th class="px-3 py-2 text-xs font-medium text-center border border-gray-300"><%= __('categories.jupeng') %></th>
                             </tr>
                         </thead>
                         <tbody id="prodiTableBody">

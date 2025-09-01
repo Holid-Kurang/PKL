@@ -1,5 +1,6 @@
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="/style/language-switcher.css">
 </head>
 <header class="sticky top-0 left-0 right-0 z-[1] ">
     <nav>
@@ -8,9 +9,9 @@
             <a href="/" class="absolute flex items-center gap-4 left-4">
                 <img src="/assets/logo-unram.png" alt="Logo unram" class="w-12 md:w-16">
                 <div class="flex flex-col justify-center text-white">
-                    <h3 class="text-base font-bold text-left md:text-lg ">INDEX KINERJA</h3>
-                    <h3 class="text-sm text-left md:text-base ">PENELITIAN, PENGABDIAN DAN PUBLIKASI</h3>
-                    <h3 class="text-sm text-left md:text-base ">Fakultas Teknik, Universitas Mataram</h3>
+                    <h3 class="text-base font-bold text-left md:text-lg "><%= __('navbar.title') %></h3>
+                    <h3 class="text-sm text-left md:text-base "><%= __('navbar.subtitle1') %></h3>
+                    <h3 class="text-sm text-left md:text-base "><%= __('navbar.subtitle2') %></h3>
                 </div>
             </a>
 
@@ -18,21 +19,21 @@
             <div class="items-center hidden space-x-8 md:flex ">
                 <div class="relative py-8 group">
                     <a href="/penelitian" class="relative text-xl font-semibold text-white hover:text-veronica">
-                        Penelitian
+                        <%= __('navbar.penelitian') %>
                         <span
                             class="absolute left-0 w-0 h-1 transition-all bg-veronica -bottom-2 group-hover:w-full"></span>
                     </a>
                 </div>
                 <div class="relative py-8 group">
                     <a href="/pengabdian" class="relative text-xl font-semibold text-white hover:text-veronica">
-                        Pengabdian
+                        <%= __('navbar.pengabdian') %>
                         <span
                             class="absolute left-0 w-0 h-1 transition-all bg-veronica -bottom-2 group-hover:w-full"></span>
                     </a>
                 </div>
                 <div class="relative py-8 group">
                     <a href="/publikasi" class="relative text-xl font-semibold text-white hover:text-veronica">
-                        Publikasi
+                        <%= __('navbar.publikasi') %>
                         <span
                             class="absolute left-0 w-0 h-1 transition-all bg-veronica -bottom-2 group-hover:w-full"></span>
                     </a>
@@ -40,7 +41,7 @@
                 <div class="relative py-8 group">
                     <div
                         class="relative flex items-center text-xl font-semibold text-white hover:text-veronica hover:cursor-default">
-                        Program Studi
+                        <%= __('navbar.programStudi') %>
                         <svg class="ml-2 group-hover:fill-veronica" width="24" height="24" viewBox="0 0 24 24"
                             fill="white" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -52,12 +53,19 @@
                     <%- include('dropdown') %>
                 </div>
             </div>
-            <% if (!isLogin) { %>
-                <a href="/login"
-                    class="absolute self-center px-6 py-2 text-xl font-semibold text-white rounded-lg bg-veronica hover:bg-veronica-600 right-4">Masuk</a>
-            <% } else { %>
-                <div class="absolute right-4">
-                    <div class="relative ">
+            <!-- Language Switcher dan Login/User Menu -->
+            <div class="absolute flex items-center gap-4 right-4">
+                <!-- Language Switcher -->
+                <div id="language-switcher" class="relative language-switcher">
+                    <!-- inner in script -->
+                </div> 
+
+                <!-- Login/User Menu -->
+                <% if (!isLogin) { %>
+                    <a href="/login"
+                        class="px-6 py-2 text-xl font-semibold text-white rounded-lg bg-veronica hover:bg-veronica-600"><%= __('navbar.login') %></a>
+                <% } else { %>
+                    <div class="relative">
                         <button id="settingMenu" class="flex items-center group">
                             <svg width="32" height="32" viewBox="0 0 24 24" class=" group-hover:fill-veronica"
                                 xmlns="http://www.w3.org/2000/svg" fill="white">
@@ -85,17 +93,19 @@
                             </svg>
                         </button>
                         <div
-                            class="absolute right-0  mt-11  shadow-[0px_10px_20px_5px] shadow-black/25 rounded-2xl bg-white hidden">
+                            class="absolute right-0 hidden mt-3 bg-white border-2 border-purple-200 shadow-lg rounded-2xl">
                             <a href="/dashboard/penelitian/pnbp"
-                                class="block px-4 py-2 font-semibold text-center hover:bg-veronica hover:text-white rounded-t-2xl ">Dashboard</a>
+                                class="block px-4 py-2 font-semibold text-center hover:bg-veronica hover:text-white rounded-t-2xl "><%= __('navbar.dashboard') %></a>
+                            <div class="border-t border-purple-100"></div>
                             <button id="logoutBtn"
-                                class="self-stretch block w-full px-4 py-2 font-semibold text-center hover:bg-veronica hover:text-white rounded-b-2xl">Keluar</button>
+                                class="self-stretch block w-full px-4 py-2 font-semibold text-center hover:bg-veronica hover:text-white rounded-b-2xl"><%= __('navbar.logout') %></button>
                         </div>
                     </div>
-                </div>
-            <% } %>
+                <% } %>
+            </div>
         </div>
     </nav>
 </header>
-<!-- JavaScript untuk Toggle Menu Mobile -->
+<!-- JavaScript untuk Navbar dan Language Switcher -->
 <script src="/script/navbar.js"></script>
+<script src="/script/language-switcher.js"></script>

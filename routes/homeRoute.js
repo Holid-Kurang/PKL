@@ -193,11 +193,13 @@ router.get("/api/prodi-options", async (req, res) => {
 // Halaman utama
 router.get("/", async (req, res) => {
     const isLogin = req.session.isLogin || false;
+    const { languages } = require('../config/lang');
+    const currentLang = req.language || 'id';
     
     res.render("index", {
         title: "Home",
         isLogin,
-        prodiOptions: [] // Kirim array kosong untuk menghindari error
+        pageTranslations: JSON.stringify(languages[currentLang])
     });
 });
 module.exports = router;

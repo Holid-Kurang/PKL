@@ -2,11 +2,14 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const session = require("express-session");
+const cookieParser = require('cookie-parser');
 const routes = require("./routes/routes");
 const rateLimit = require('express-rate-limit');
 const methodOverride = require('method-override');
 const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
+const i18n = require('./middlewares/i18n');
+const languageRoute = require('./routes/languageRoute');
 require('dotenv').config();
 
 connectDB(); // Connect to MongoDB
@@ -18,6 +21,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public"))); // Set folder public untuk file statis
 app.use(express.json()); // Middleware untuk parsing JSON
 app.use(express.urlencoded({ extended: false })); // Middleware untuk parsing x-www-form-urlencoded
+app.use(cookieParser()); // Middleware untuk parsing cookies
 app.use(methodOverride('_method'));
 app.use(mongoSanitize());
 app.use(rateLimit({
@@ -37,18 +41,20 @@ app.use(session({
         sameSite: 'lax' // 5. Melindungi dari serangan CSRF
     },
 })); // Middleware untuk session
+
+// Middleware internationalization
+app.use(i18n);
+
+// Routes
+app.use('/api', languageRoute);
 app.use("/", routes); // Gunakan routes yang sudah dibuat
+
 app.use( async (req, res, next) => {
-    // Ambil semua prodi dari database
-    const kategoriOptionModel = require('./models/kategoriOptionModel');
-    let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
-    prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
     // Mengatur status 404 dan merender halaman 404 kustom
     res.status(404).render('404page', {
-        title: 'Halaman Tidak Ditemukan',
+        title: "404 Not Found",
         url: req.originalUrl, // Mengirim URL yang coba diakses ke view
         isLogin: req.session.isLogin || false, // Mengirim status login ke view
-        prodiOptions
     });
 });
 // Jalankan server

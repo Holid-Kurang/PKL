@@ -3,36 +3,50 @@ let publikasiCounts = {};
 let penelitianCounts = {};
 let pengabdianCounts = {};
 let dashboardData = null;
+let translations = {};
+translations = window.pageTranslations;
+
+// Function to get translation
+function getTranslation(key) {
+    const keys = key.split('.');
+    let value = translations;
+    
+    for (const k of keys) {
+        value = value ? value[k] : undefined;
+    }
+    
+    return value || key;
+}
 
 // Function to fetch dashboard data from API
 async function fetchDashboardData() {
     try {
         const response = await fetch('/api/dashboard-data');
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             // Store data globally
             dashboardData = result.data;
             publikasiCounts = result.data.publikasiCounts;
             penelitianCounts = result.data.penelitianCounts;
             pengabdianCounts = result.data.pengabdianCounts;
-            
+
             // Update UI
             updateStatisticsText();
             updateProdiTable();
             initializeCharts();
-            
+
             // Hide loading states and show content
             document.getElementById('loadingState').classList.add('hidden');
             document.getElementById('mainContent').classList.remove('hidden');
             document.getElementById('tableLoadingState').classList.add('hidden');
             document.getElementById('tableContent').classList.remove('hidden');
-            
+
         } else {
             throw new Error(result.message || 'Failed to fetch data');
         }
@@ -45,27 +59,33 @@ async function fetchDashboardData() {
 // Function to update statistics text
 function updateStatisticsText() {
     const { penelitianStats, pengabdianStats, publikasiStats } = dashboardData;
-    
+
     // Update penelitian text
     document.getElementById('penelitianText').innerHTML = `
-        Dari total <strong>${penelitianStats.total}</strong> penelitian, sumber pendanaan mayoritas berasal dari 
-        <strong>${penelitianStats.topCategory}</strong> yang mencakup <strong>${penelitianStats.topPercentage.toFixed(1)}%</strong> dari keseluruhan.
-        <a href="/penelitian" class="text-blue-600 hover:underline">Lihat detail.</a>
+        ${getTranslation('dashboard.penelitianText.prefix')} <strong>${penelitianStats.total}</strong> ${getTranslation('dashboard.penelitianText.middle')} 
+        <strong>${penelitianStats.topCategory}</strong> ${getTranslation('dashboard.penelitianText.suffix')} <strong>${penelitianStats.topPercentage.toFixed(1)}%</strong> ${getTranslation('dashboard.penelitianText.percent')}
+        <a href="/penelitian" class="text-blue-600" style="text-decoration: none;" 
+           onmouseover="this.style.textDecoration='underline'" 
+           onmouseout="this.style.textDecoration='none'">${getTranslation('dashboard.seeDetail')}.</a>
     `;
-    
+
     // Update pengabdian text
     document.getElementById('pengabdianText').innerHTML = `
-        Sebanyak <strong>${pengabdianStats.total}</strong> kegiatan pengabdian telah dilaksanakan, dengan 
-        kontribusi terbesar datang dari sumber <strong>${pengabdianStats.topCategory}</strong> 
-        sebesar <strong>${pengabdianStats.topPercentage.toFixed(1)}%</strong>.
-        <a href="/pengabdian" class="text-blue-600 hover:underline">Lihat detail.</a>
+        ${getTranslation('dashboard.pengabdianText.prefix')} <strong>${pengabdianStats.total}</strong> ${getTranslation('dashboard.pengabdianText.middle')} 
+        <strong>${pengabdianStats.topCategory}</strong> 
+        ${getTranslation('dashboard.pengabdianText.suffix')} <strong>${pengabdianStats.topPercentage.toFixed(1)}%</strong>.
+        <a href="/pengabdian" class="text-blue-600" style="text-decoration: none;" 
+           onmouseover="this.style.textDecoration='underline'" 
+           onmouseout="this.style.textDecoration='none'">${getTranslation('dashboard.seeDetail')}.</a>
     `;
-    
+
     // Update publikasi text
     document.getElementById('publikasiText').innerHTML = `
-        Total <strong>${publikasiStats.total}</strong> karya telah dipublikasikan. Jenis publikasi terbanyak adalah <strong>${publikasiStats.topCategory}</strong>, 
-        mencapai <strong>${publikasiStats.topPercentage.toFixed(1)}%</strong> dari total.
-        <a href="/publikasi" class="text-blue-600 hover:underline">Lihat detail.</a>
+        ${getTranslation('dashboard.publikasiText.prefix')} <strong>${publikasiStats.total}</strong> ${getTranslation('dashboard.publikasiText.middle')} <strong>${publikasiStats.topCategory}</strong>, 
+        ${getTranslation('dashboard.publikasiText.suffix')} <strong>${publikasiStats.topPercentage.toFixed(1)}%</strong> ${getTranslation('dashboard.publikasiText.percent')}
+        <a href="/publikasi" class="text-blue-600" style="text-decoration: none;" 
+           onmouseover="this.style.textDecoration='underline'" 
+           onmouseout="this.style.textDecoration='none'">${getTranslation('dashboard.seeDetail')}.</a>
     `;
 }
 
@@ -73,15 +93,15 @@ function updateStatisticsText() {
 function updateProdiTable() {
     const { prodiData } = dashboardData;
     const tbody = document.getElementById('prodiTableBody');
-    
+
     // Clear existing content
     tbody.innerHTML = '';
-    
+
     if (prodiData && prodiData.length > 0) {
         // Add data rows
         prodiData.forEach(prodi => {
             const row = document.createElement('tr');
-            row.className = 'hover:bg-white';
+            row.classList.add('hover:bg-white');
             row.innerHTML = `
                 <td class="px-4 py-3 font-medium border border-gray-300">${prodi.name}</td>
                 <td class="px-3 py-2 text-center border border-gray-300">${prodi.penelitian?.pusat || 0}</td>
@@ -95,12 +115,12 @@ function updateProdiTable() {
             `;
             tbody.appendChild(row);
         });
-        
+
         // Add total row
         const totalRow = document.createElement('tr');
         totalRow.className = 'font-semibold bg-white';
         totalRow.innerHTML = `
-            <td class="px-4 py-3 border border-gray-300">Total</td>
+            <td class="px-4 py-3 border border-gray-300">${getTranslation('dashboard.table.total')}</td>
             <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.penelitian?.pusat || 0), 0)}</td>
             <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.penelitian?.pnbp || 0), 0)}</td>
             <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.penelitian?.mandiri || 0), 0)}</td>
@@ -116,7 +136,7 @@ function updateProdiTable() {
         const noDataRow = document.createElement('tr');
         noDataRow.innerHTML = `
             <td colspan="9" class="px-4 py-8 text-center text-gray-500 border border-gray-300">
-                Data tidak tersedia
+                ${getTranslation('dashboard.noData')}
             </td>
         `;
         tbody.appendChild(noDataRow);
@@ -127,17 +147,17 @@ function updateProdiTable() {
 function showError(message) {
     document.getElementById('loadingState').innerHTML = `
         <div class="text-center text-red-600">
-            <p class="text-lg font-semibold">Error</p>
+            <p class="text-lg font-semibold">${getTranslation('dashboard.error')}</p>
             <p>${message}</p>
             <button onclick="window.location.reload()" class="mt-2 px-4 py-2 bg-veronica text-white rounded hover:bg-veronica-dark">
-                Coba Lagi
+                ${getTranslation('dashboard.refresh')}
             </button>
         </div>
     `;
-    
+
     document.getElementById('tableLoadingState').innerHTML = `
         <div class="text-center text-red-600">
-            <p>Gagal memuat data tabel</p>
+            <p>${getTranslation('dashboard.error')}</p>
         </div>
     `;
 }
@@ -149,10 +169,10 @@ function initializeCharts() {
         const data = getChartData(chartConfig.type);
         chartConfig.config.data.datasets[0].data = data;
     });
-    
+
     // Initialize charts with loaded data
     const renderedCharts = {};
-    
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -201,7 +221,7 @@ const centerTextPlugin = {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         // Gambar teks "Total" sedikit di atas tengah
-        ctx.fillText('Total', centerX, centerY - 15);
+        ctx.fillText(getTranslation('dashboard.total'), centerX, centerY - 15);
 
         // Pengaturan Font untuk Angka Total
         ctx.font = 'bold 36px Arial';
@@ -212,7 +232,7 @@ const centerTextPlugin = {
 };
 // Function to get chart data dynamically
 function getChartData(chartType) {
-    switch(chartType) {
+    switch (chartType) {
         case 'penelitian':
             return [
                 penelitianCounts["PNBP"] || 0,
@@ -242,7 +262,7 @@ const chartConfigs = [
         config: {
             type: 'doughnut',
             data: {
-                labels: ['PNBP', 'Pusat', 'Mandiri'],
+                labels: [translations.categories.pnbp, translations.categories.pusat, translations.categories.mandiri],
                 datasets: [{
                     data: [],  // Will be filled dynamically
                     hoverOffset: 50,
@@ -271,7 +291,7 @@ const chartConfigs = [
                     },
                     title: {
                         display: true,
-                        text: 'Penelitian',
+                        text: translations.dashboard.charts.penelitian,
                         font: {
                             size: 30,
                             weight: 'lighter'
@@ -304,7 +324,7 @@ const chartConfigs = [
         config: {
             type: 'doughnut',
             data: {
-                labels: ['PNBP', 'Pusat'],
+                labels: [translations.categories.pnbp, translations.categories.pusat],
                 datasets: [{
                     data: [],  // Will be filled dynamically
                     hoverOffset: 50,
@@ -332,7 +352,7 @@ const chartConfigs = [
                     },
                     title: {
                         display: true,
-                        text: 'Pengabdian',
+                        text: translations.dashboard.charts.pengabdian,
                         font: {
                             size: 30,
                             weight: 'lighter'
@@ -365,7 +385,7 @@ const chartConfigs = [
         config: {
             type: 'doughnut',
             data: {
-                labels: ['HAKI', 'Buku', 'Jurnal Pengabdian'],
+                labels: [translations.categories.haki, translations.categories.buku, translations.categories.jupeng],
                 datasets: [{
                     data: [],  // Will be filled dynamically
                     hoverOffset: 50,
@@ -395,7 +415,7 @@ const chartConfigs = [
                     },
                     title: {
                         display: true,
-                        text: 'Publikasi',
+                        text: translations.dashboard.charts.publikasi,
                         font: {
                             size: 30,
                             weight: 'lighter'
@@ -425,6 +445,6 @@ const chartConfigs = [
 ];
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     fetchDashboardData();
 });

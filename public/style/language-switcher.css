@@ -1,0 +1,19 @@
+/* Flag Icons Styles */
+.flag-icon {
+    width: 20px;
+    height: 15px;
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.flag-icon-id {
+    background-image: linear-gradient(to bottom, #FF0000 50%, #FFFFFF 50%);
+}
+
+.flag-icon-us {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjE2IiBmaWxsPSIjQjIyMjM0Ii8+CjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSIxLjIzIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHk9IjIuNDYiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxLjIzIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHk9IjQuOTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxLjIzIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHk9IjcuMzgiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxLjIzIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHk9IjkuODQiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxLjIzIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHk9IjEyLjMiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxLjIzIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHk9IjE0Ljc3IiB3aWR0aD0iMjQiIGhlaWdodD0iMS4yMyIgZmlsbD0iI0ZGRkZGRiIvPgo8cmVjdCB3aWR0aD0iOS44NCIgaGVpZ2h0PSI4LjYxIiBmaWxsPSIjM0MzQjZFIi8+Cjwvc3ZnPgo=');
+}
