@@ -101,7 +101,7 @@
         <div id="chart-container">
             <!-- Grafik Buku -->
             <div id="buku-section" class="chart-section">
-                <h1 class="text-4xl font-bold text-center text-indigo">Buku</h1>
+                <h1 class="text-4xl font-bold text-center text-indigo"><%= __('categories.buku') %></h1>
                 <div class="grid grid-cols-2 grid-rows-1 gap-8 px-32 py-2 h-[70vh]">
                     <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                         <canvas id="bukuPerTahun" class="block w-full h-full"></canvas>
@@ -114,7 +114,7 @@
 
             <!-- Grafik HAKI -->
             <div id="haki-section" class="chart-section" style="display: none;">
-                <h1 class="text-4xl font-bold text-center text-indigo">HAKI</h1>
+                <h1 class="text-4xl font-bold text-center text-indigo"><%= __('categories.haki') %></h1>
                 <div class="grid grid-cols-2 grid-rows-2 gap-8 px-32 py-2 h-[100vh]">
                     <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                         <canvas id="hakiPerJenis" class="block w-full h-full"></canvas>
@@ -130,7 +130,7 @@
 
             <!-- Grafik Jurnal Pengabdian -->
             <div id="jupeng-section" class="chart-section" style="display: none;">
-                <h1 class="text-4xl font-bold text-center text-indigo">Jurnal Pengabdian</h1>
+                <h1 class="text-4xl font-bold text-center text-indigo"><%= __('categories.jupeng') %></h1>
                 <div class="grid grid-cols-2 grid-rows-1 gap-8 px-32 py-2 h-[70vh]">
                     <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                         <canvas id="jupengPerTahun" class="block w-full h-full"></canvas>

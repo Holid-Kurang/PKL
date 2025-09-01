@@ -98,7 +98,7 @@
                         <img src="/assets/paid.svg" alt="" >
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Total Biaya</h3>
+                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('penelitianPage.totalBiaya') %></h3>
                         <p class="text-2xl font-bold text-gray-900">
                             <%= new Intl.NumberFormat('id-ID', { 
                             style: 'currency', 
@@ -107,7 +107,7 @@
                             maximumFractionDigits: 0
                             }).format(gabunganData.totalBiayaKeseluruhan || 0) %>
                         </p>
-                        <p class="text-sm text-gray-600">TAHUN <%= gabunganData.tahunAktif %></p>
+                        <p class="text-sm text-gray-600"><%= __('penelitianPage.tahun') %> <%= gabunganData.tahunAktif %></p>
                     </div>
                 </div>
             </div>

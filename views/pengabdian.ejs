@@ -87,7 +87,7 @@
                         <img src="/assets/paid.svg" alt="" >
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Total Biaya</h3>
+                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('pengabdianPage.totalBiaya') %></h3>
                         <p class="text-2xl font-bold text-gray-900">
                             <%= new Intl.NumberFormat('id-ID', { 
                             style: 'currency', 
@@ -96,7 +96,7 @@
                             maximumFractionDigits: 0
                             }).format(gabunganData.totalBiayaKeseluruhan || 0) %>
                         </p>
-                        <p class="text-sm text-gray-600">TAHUN <%= gabunganData.tahunAktif %></p>
+                        <p class="text-sm text-gray-600"><%= __('pengabdianPage.tahun') %> <%= gabunganData.tahunAktif %></p>
                     </div>
                 </div>
             </div>
@@ -105,10 +105,10 @@
     <!-- Dropdown untuk memilih jenis penelitian -->
     <div class="py-6 ">
         <div class="text-center">
-            <label for="jenispenelitian" class="block mb-4 text-2xl font-bold text-indigo">Pilih Pengabdian</label>
+            <label for="jenispenelitian" class="block mb-4 text-2xl font-bold text-indigo"><%= __('pengabdianPage.subtitle') %></label>
             <select id="jenispenelitian" class="px-6 py-3 text-lg font-medium transition-all duration-200 bg-white border-2 border-indigo-300 rounded-lg penelitian-select text-indigo focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
-                <option value="pusat">Pusat</option>
-                <option value="pnbp">PNBP</option>
+                <option value="pusat"><%= __('categories.pusat') %></option>
+                <option value="pnbp"><%= __('categories.pnbp') %></option>
             </select>
         </div>
     </div>
@@ -117,7 +117,7 @@
     <div id="chart-container" >
         <!-- Grafik Pusat -->
         <div id="pusat-section" class="chart-section">
-            <h1 class="text-4xl font-bold text-center text-indigo">Pusat</h1>
+            <h1 class="text-4xl font-bold text-center text-indigo"><%= __('categories.pusat') %></h1>
             <div class="grid grid-cols-3 grid-rows-1 gap-8 px-32 py-2 h-[50vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                     <canvas id="pusatPerTahun" class="block w-full h-full"></canvas>
@@ -133,7 +133,7 @@
         
         <!-- Grafik PNBP -->
         <div id="pnbp-section" class="chart-section" style="display: none;">
-            <h1 class="text-4xl font-bold text-center text-indigo">PNBP</h1>
+            <h1 class="text-4xl font-bold text-center text-indigo"><%= __('categories.pnbp') %></h1>
             <div class="grid grid-cols-2 grid-rows-4 gap-8 px-32 py-2 h-[200vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                     <canvas id="pnbpPerTahun" class="block w-full h-full"></canvas>
