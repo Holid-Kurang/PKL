@@ -4,7 +4,6 @@ const router = express.Router();
 const hakiModel = require("../models/publikasi/HAKIModel");
 const bukuModel = require("../models/publikasi/bukuModel");
 const jupengModel = require("../models/publikasi/jupengModel");
-const kategoriOptionModel = require('../models/kategoriOptionModel');
 
 router.get("/publikasi", async (req, res) => {
     try {
@@ -113,18 +112,35 @@ router.get("/publikasi", async (req, res) => {
         });
 
         // 3. Jenis publikasi terpopuler tahun ini
+        const isLogin = req.session.isLogin || false;
+        const { languages } = require('../config/lang');
+        const currentLang = req.language || 'id';
+
+        const jenisPublikasiLabels = {
+            'id': {
+            'Jurnal Pengabdian': 'Jurnal Pengabdian',
+            'HAKI': 'HAKI',
+            'Buku': 'Buku'
+            },
+            'en': {
+            'Jurnal Pengabdian': 'Community Service Journal',
+            'HAKI': 'Intellectual Property Rights',
+            'Buku': 'Book'
+            }
+        };
+
         const jenisPublikasiTahunIni = {
             'Jurnal Pengabdian': jupengTahunIni,
             'HAKI': hakiTahunIni,
             'Buku': bukuTahunIni
         };
 
-        let jenisPublikasiTerpopuler = 'Tidak ada data';
+        let jenisPublikasiTerpopuler = currentLang === 'en' ? 'No data available' : 'Tidak ada data';
         let jumlahJenisTerpopuler = 0;
         Object.entries(jenisPublikasiTahunIni).forEach(([jenis, jumlah]) => {
             if (jumlah > jumlahJenisTerpopuler) {
-                jenisPublikasiTerpopuler = jenis;
-                jumlahJenisTerpopuler = jumlah;
+            jenisPublikasiTerpopuler = jenisPublikasiLabels[currentLang][jenis] || jenis;
+            jumlahJenisTerpopuler = jumlah;
             }
         });
 
@@ -133,7 +149,7 @@ router.get("/publikasi", async (req, res) => {
         const totalHaki = hakiData[0].jumlahPerTahun.reduce((sum, item) => sum + item.jumlahHKI, 0);
         const totalBuku = bukuData[0].jumlahPerTahun.reduce((sum, item) => sum + item.jumlahBuku, 0);
         const totalPublikasiKeseluruhan = totalJupeng + totalHaki + totalBuku;
-
+        
         // Buat objek gabunganData
         const gabunganData = {
             totalPublikasiTahunIni,
@@ -144,7 +160,6 @@ router.get("/publikasi", async (req, res) => {
             jumlahJenisTerpopuler,
             totalPublikasiKeseluruhan
         };
-        const isLogin = req.session.isLogin || false;
 
         // Hasil dari $facet adalah array dengan satu objek, jadi kita ambil elemen pertama [0]
         res.render("publikasi", {
@@ -153,7 +168,8 @@ router.get("/publikasi", async (req, res) => {
             jupengData: jupengData[0],
             hakiData: hakiData[0],
             bukuData: bukuData[0],
-            gabunganData
+            gabunganData,
+            pageTranslations: JSON.stringify(languages[currentLang])
         });
 
     } catch (error) {

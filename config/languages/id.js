@@ -29,7 +29,7 @@ module.exports = {
         refresh: "Coba Lagi",
         seeDetail: "Lihat detail",
         total: "Total",
-        
+
         // Statistics Text
         penelitianText: {
             prefix: "Dari total",
@@ -52,15 +52,16 @@ module.exports = {
         // Chart titles
         charts: {
             penelitian: "Penelitian",
-            pengabdian: "Pengabdian", 
+            pengabdian: "Pengabdian",
             publikasi: "Publikasi"
         },
 
         // Table headers
         table: {
+            title: "Data Per Program Studi",
             programStudi: "Program Studi",
             penelitianPusat: "Penelitian Pusat",
-            penelitianPNBP: "Penelitian PNBP", 
+            penelitianPNBP: "Penelitian PNBP",
             penelitianMandiri: "Penelitian Mandiri",
             pengabdianPNBP: "Pengabdian PNBP",
             pengabdianPusat: "Pengabdian Pusat",
@@ -80,7 +81,7 @@ module.exports = {
         contact: "Hubungi Kami",
         home: "Beranda",
         email: "Email",
-        phone: "Telepon", 
+        phone: "Telepon",
         address: "Alamat",
         addressText: "Jl. Majapahit No.62, Gomong, Kec. Selaparang, Kota Mataram, Nusa Tenggara Bar. 83125",
         copyright: "Fakultas Teknik, Universitas Mataram. Semua Hak Cipta Dilindungi."
@@ -89,16 +90,15 @@ module.exports = {
     // Categories
     categories: {
         pusat: "Pusat",
-        pnbp: "PNBP", 
+        pnbp: "PNBP",
         mandiri: "Mandiri",
         haki: "HAKI",
         buku: "Buku",
         jupeng: "Jurnal Pengabdian"
-    }
+    },
 
     // Penelitian page
-    ,
-    penelitian: {
+    penelitianPage: {
         title: "Penelitian tahun ini",
         subtitle: "Pilih Penelitian",
         noData: "Tidak ada data",
@@ -107,9 +107,96 @@ module.exports = {
         rataBiaya: "RATA-RATA BIAYA",
         totalBiaya: "TOTAL BIAYA",
         tahun: "TAHUN",
-        penelitianCount: "penelitian"
-    }
+        penelitianCount: "penelitian",
+
+        charts: {
+            pusat: {
+                pusatPerTahun: "Jumlah Penelitian per Tahun",
+                pusatPerProdi: "Jumlah Penelitian per Program Studi",
+                pusatDanaPerTahun: "Jumlah Dana Penelitian Pusat per Tahun",
+                pusatDanaPerProdi: "Jumlah Dana Penelitian Pusat per Prodi",
+                pusatAvgDanaPerTahun: "Rata-Rata Dana Penelitian Pusat per Tahun",
+                pusatAvgDanaPerProdi: "Rata-Rata Dana Penelitian Pusat per Prodi",
+            },
+            pnbp: {
+                pnbpPerTahun: "Jumlah Penelitian PNBP per Tahun",
+                pnbpPerProdi: "Jumlah Penelitian PNBP per Prodi",
+                pnbpDanaPerTahun: "Jumlah Dana Penelitian PNBP per Tahun",
+                pnbpDanaPerProdi: "Jumlah Dana Penelitian PNBP per Prodi",
+                pnbpAvgDanaPerTahun: "Rata-Rata Dana Penelitian PNBP per Tahun",
+                pnbpAvgDanaPerProdi: "Rata-Rata Dana Penelitian PNBP per Prodi",
+                pnbpAvgNilaiPerTahun: "Rata-Rata Nilai Penelitian PNBP per Tahun",
+                pnbpAvgNilaiPerProdi: "Rata-Rata Nilai Penelitian PNBP per Prodi",
+            },
+            mandiri: {
+                mandiriPerTahun: "Jumlah Penelitian Mandiri per Tahun",
+                mandiriPerProdi: "Jumlah Penelitian Mandiri per Prodi",
+                mandiriDanaPerTahun: "Jumlah Dana Penelitian Mandiri per Tahun",
+                mandiriDanaPerProdi: "Jumlah Dana Penelitian Mandiri per Prodi",
+                mandiriAvgDanaPerTahun: "Rata-Rata Dana Penelitian Mandiri per Tahun",
+                mandiriAvgDanaPerProdi: "Rata-Rata Dana Penelitian Mandiri per Prodi"
+            }
+        }
+    },
 
     // Pengabdian page
+    pengabdianPage: {
+        title: "Pengabdian tahun ini",
+        subtitle: "Pilih Pengabdian",
+        noData: "Tidak ada data",
+        totalPengabdian: "TOTAL PENGABDIAAN",
+        proditerakhir: "PRODI TERAKTIF TAHUN",
+        rataBiaya: "RATA-RATA BIAYA",
+        totalBiaya: "TOTAL BIAYA",
+        tahun: "TAHUN",
+        pengabdianCount: "pengabdian",
+
+        charts: {
+            pusat: {
+                pusatPerTahun: "Jumlah Pengabdian Pusat per Tahun",
+                pusatDanaPerTahun: "Jumlah Dana Pengabdian Pusat per Tahun",
+                pusatAvgDanaPerTahun: "Rata-Rata Dana Pengabdian Pusat per Tahun"
+            },
+            pnbp: {
+                pnbpPerTahun: "Jumlah Pengabdian PNBP per Tahun",
+                pnbpPerProdi: "Jumlah Pengabdian PNBP per Prodi",
+                pnbpDanaPerTahun: "Jumlah Dana Pengabdian PNBP per Tahun",
+                pnbpDanaPerProdi: "Jumlah Dana Pengabdian PNBP per Prodi",
+                pnbpAvgDanaPerTahun: "Rata-Rata Dana Pengabdian PNBP per Tahun",
+                pnbpAvgDanaPerProdi: "Rata-Rata Dana Pengabdian PNBP per Prodi",
+                pnbpAvgNilaiPerTahun: "Rata-Rata Nilai Pengabdian PNBP per Tahun",
+                pnbpAvgNilaiPerProdi: "Rata-Rata Nilai Pengabdian PNBP per Prodi"
+            }
+        }
+    },
+
     // Publikasi page
+    publikasiPage: {
+        title: "Publikasi tahun ini",
+        subtitle: "Pilih Publikasi",
+        noData: "Tidak ada data",
+        totalPublikasi: "TOTAL PUBLIKASI TAHUN INI",
+        prodiPalingProduktif: "PRODI PALING PRODUKTIF",
+        jenisPublikasiTerpopuler: "JENIS PUBLIKASI TERPOPULER",
+        totalPublikasiKeseluruhan: "TOTAL PUBLIKASI KESELURUHAN",
+        tahun: "TAHUN",
+        publikasiCount: "publikasi",
+        semuaTahun: "SEMUA TAHUN",
+        
+        charts: {
+            buku: {
+                bukuPerTahun: "Jumlah Buku per Tahun",
+                bukuPerProdi: "Jumlah Buku per Program Studi"
+            },
+            haki: {
+                hakiPerJenis: "Jumlah HAKI per Jenis",
+                hakiPerProdi: "Jumlah HAKI per Program Studi",
+                hakiPerTahun: "Jumlah HAKI per Tahun"
+            },
+            jupeng: {
+                jupengPerTahun: "Jumlah Jurnal Pengabdian per Tahun",
+                jupengPerProdi: "Jumlah Jurnal Pengabdian per Program Studi"
+            }
+        }
+    }
 };

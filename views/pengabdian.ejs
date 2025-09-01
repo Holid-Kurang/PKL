@@ -9,12 +9,31 @@
     </title>
     <link href="/style/main.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon.png">
+    <script>
+        window.pageTranslations = <%- pageTranslations %>;
+        window.pusatData = {
+            jumlahPerTahun: <%- JSON.stringify(pusatData.jumlahPerTahun) %>,
+            jumlahDanaPerTahun: <%- JSON.stringify(pusatData.jumlahDanaPerTahun) %>,
+            avgDanaPerTahun: <%- JSON.stringify(pusatData.avgDanaPerTahun) %>,
+        };
+
+        window.pnbpData = {
+            jumlahPerTahun: <%- JSON.stringify(pnbpData.jumlahPerTahun) %>,
+            jumlahPerProdi: <%- JSON.stringify(pnbpData.jumlahPerProdi) %>,
+            jumlahDanaPerTahun: <%- JSON.stringify(pnbpData.jumlahDanaPerTahun) %>,
+            jumlahDanaPerProdi: <%- JSON.stringify(pnbpData.jumlahDanaPerProdi) %>,
+            avgDanaPerTahun: <%- JSON.stringify(pnbpData.avgDanaPerTahun) %>,
+            avgDanaPerProdi: <%- JSON.stringify(pnbpData.avgDanaPerProdi) %>,
+            avgNilaiPerTahun: <%- JSON.stringify(pnbpData.avgNilaiPerTahun) %>,
+            avgNilaiPerProdi: <%- JSON.stringify(pnbpData.avgNilaiPerProdi) %>
+        };
+    </script>
 </head>
 
 <body class="text-center bg-[#EDF0F1] ">
     <%- include('partials/navbar', {isLogin}) %>
     
-        <h1 class="pt-5 text-4xl font-bold text-center text-indigo">Pengabdian tahun ini</h1>
+        <h1 class="pt-5 text-4xl font-bold text-center text-indigo"><%= __('pengabdianPage.title') %></h1>
         <div class="grid grid-cols-2 gap-6 p-5 px-96">
             <div class="p-8 bg-white shadow-lg rounded-xl">
                 <div class="flex items-center justify-between gap-4">
@@ -22,9 +41,9 @@
                         <img src="/assets/school.svg" alt="">
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Prodi Teraktif Tahun <%= gabunganData.tahunAktif %></h3>
-                        <p class="text-2xl font-bold text-gray-900"><%= gabunganData.prodiTeraktif || 'Tidak ada data' %></p>
-                        <p class="text-sm text-gray-600"><%= gabunganData.prodiCounts && gabunganData.prodiCounts[gabunganData.prodiTeraktif] ? gabunganData.prodiCounts[gabunganData.prodiTeraktif] : 0 %> pengabdian</p>
+                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('pengabdianPage.proditerakhir') %> <%= gabunganData.tahunAktif %></h3>
+                        <p class="text-2xl font-bold text-gray-900"><%= gabunganData.prodiTeraktif || __('pengabdianPage.noData') %></p>
+                        <p class="text-sm text-gray-600"><%= gabunganData.prodiCounts && gabunganData.prodiCounts[gabunganData.prodiTeraktif] ? gabunganData.prodiCounts[gabunganData.prodiTeraktif] : 0 %> <%= __('pengabdianPage.pengabdianCount') %></p>
                     </div>
                 </div>
             </div>
@@ -35,9 +54,9 @@
                         <img src="/assets/science.svg" alt="" >
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Total Pengabdian</h3>
-                        <p class="text-2xl font-bold text-gray-900"><%= gabunganData.pengabdianTahunAktif || 0 %></p>
-                        <p class="text-sm text-gray-600">TAHUN <%= gabunganData.tahunAktif %></p>
+                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('pengabdianPage.totalPengabdian') %></h3>
+                        <p class="text-2xl font-bold text-gray-900"><%= gabunganData.penelitianTahunAktif || 0 %></p>
+                        <p class="text-sm text-gray-600"><%= __('pengabdianPage.tahun') %> <%= gabunganData.tahunAktif %></p>
                     </div>
                 </div>
             </div>
@@ -48,16 +67,16 @@
                         <img src="/assets/paid.svg" alt="" >
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Rata-rata Dana</h3>
+                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('pengabdianPage.rataBiaya') %></h3>
                         <p class="text-2xl font-bold text-gray-900">
                             <%= new Intl.NumberFormat('id-ID', { 
                             style: 'currency', 
                             currency: 'IDR',
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
-                            }).format(gabunganData.rataRataDanaGabungan || 0) %>
+                            }).format(gabunganData.rataRataBiayaGabungan || 0) %>
                         </p>
-                        <p class="text-sm text-gray-600">TAHUN <%= gabunganData.tahunAktif %></p>
+                        <p class="text-sm text-gray-600"><%= __('pengabdianPage.tahun') %> <%= gabunganData.tahunAktif %></p>
                     </div>
                 </div>
             </div>
@@ -68,21 +87,19 @@
                         <img src="/assets/paid.svg" alt="" >
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Total Dana</h3>
+                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Total Biaya</h3>
                         <p class="text-2xl font-bold text-gray-900">
                             <%= new Intl.NumberFormat('id-ID', { 
                             style: 'currency', 
                             currency: 'IDR',
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
-                            }).format(gabunganData.totalDanaKeseluruhan || 0) %>
+                            }).format(gabunganData.totalBiayaKeseluruhan || 0) %>
                         </p>
                         <p class="text-sm text-gray-600">TAHUN <%= gabunganData.tahunAktif %></p>
                     </div>
                 </div>
             </div>
-            
-            
         </div>
 
     <!-- Dropdown untuk memilih jenis penelitian -->
@@ -147,24 +164,6 @@
     </div>
     <%- include('partials/footer') %>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        window.pusatData = {
-            jumlahPerTahun: <%- JSON.stringify(pusatData.jumlahPerTahun) %>,
-            jumlahDanaPerTahun: <%- JSON.stringify(pusatData.jumlahDanaPerTahun) %>,
-            avgDanaPerTahun: <%- JSON.stringify(pusatData.avgDanaPerTahun) %>,
-        };
-
-        window.pnbpData = {
-            jumlahPerTahun: <%- JSON.stringify(pnbpData.jumlahPerTahun) %>,
-            jumlahPerProdi: <%- JSON.stringify(pnbpData.jumlahPerProdi) %>,
-            jumlahDanaPerTahun: <%- JSON.stringify(pnbpData.jumlahDanaPerTahun) %>,
-            jumlahDanaPerProdi: <%- JSON.stringify(pnbpData.jumlahDanaPerProdi) %>,
-            avgDanaPerTahun: <%- JSON.stringify(pnbpData.avgDanaPerTahun) %>,
-            avgDanaPerProdi: <%- JSON.stringify(pnbpData.avgDanaPerProdi) %>,
-            avgNilaiPerTahun: <%- JSON.stringify(pnbpData.avgNilaiPerTahun) %>,
-            avgNilaiPerProdi: <%- JSON.stringify(pnbpData.avgNilaiPerProdi) %>
-        };
-    </script>
     <script src="/script/pengabdian.js"></script>
 </body>
 

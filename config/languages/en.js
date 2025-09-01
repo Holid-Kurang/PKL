@@ -29,7 +29,7 @@ module.exports = {
         refresh: "Try Again",
         seeDetail: "See details",
         total: "Total",
-        
+
         // Statistics Text
         penelitianText: {
             prefix: "Out of",
@@ -58,10 +58,11 @@ module.exports = {
 
         // Table headers
         table: {
+            title: "Data Per Study Program",
             programStudi: "Study Program",
             penelitianPusat: "Central Research",
             penelitianPNBP: "PNBP Research",
-            penelitianMandiri: "Independent Research", 
+            penelitianMandiri: "Independent Research",
             pengabdianPNBP: "PNBP Community Service",
             pengabdianPusat: "Central Community Service",
             publikasiHAKI: "Intellectual Property",
@@ -81,7 +82,7 @@ module.exports = {
         home: "Home",
         email: "Email",
         phone: "Phone",
-        address: "Address", 
+        address: "Address",
         addressText: "Jl. Majapahit No.62, Gomong, Kec. Selaparang, Kota Mataram, Nusa Tenggara Bar. 83125",
         copyright: "Faculty of Engineering, University of Mataram. All Rights Reserved."
     },
@@ -90,9 +91,111 @@ module.exports = {
     categories: {
         pusat: "Central",
         pnbp: "PNBP",
-        mandiri: "Independent", 
+        mandiri: "Independent",
         haki: "IP",
         buku: "Book",
-        jupeng: "Service Journal"
+        jupeng: "Community Service Journal"
+    },
+
+    // Research page
+    penelitianPage: {
+        title: "Research this year",
+        subtitle: "Select Research",
+        noData: "No data available",
+        totalPenelitian: "TOTAL RESEARCH",
+        proditerakhir: "MOST ACTIVE STUDY PROGRAM",
+        rataBiaya: "AVERAGE COST",
+        totalBiaya: "TOTAL COST",
+        tahun: "YEAR",
+        penelitianCount: "research",
+
+        charts: {
+            pusat: {
+                pusatPerTahun: "Central Research Count per Year",
+                pusatPerProdi: "Central Research Count per Study Program",
+                pusatDanaPerTahun: "Central Research Funding per Year",
+                pusatDanaPerProdi: "Central Research Funding per Study Program",
+                pusatAvgDanaPerTahun: "Average Central Research Funding per Year",
+                pusatAvgDanaPerProdi: "Average Central Research Funding per Study Program",
+            },
+            pnbp: {
+                pnbpPerTahun: "PNBP Research Count per Year",
+                pnbpPerProdi: "PNBP Research Count per Study Program",
+                pnbpDanaPerTahun: "PNBP Research Funding per Year",
+                pnbpDanaPerProdi: "PNBP Research Funding per Study Program",
+                pnbpAvgDanaPerTahun: "Average PNBP Research Funding per Year",
+                pnbpAvgDanaPerProdi: "Average PNBP Research Funding per Study Program",
+                pnbpAvgNilaiPerTahun: "Average PNBP Research Value per Year",
+                pnbpAvgNilaiPerProdi: "Average PNBP Research Value per Study Program",
+            },
+            mandiri: {
+                mandiriPerTahun: "Independent Research Count per Year",
+                mandiriPerProdi: "Independent Research Count per Study Program",
+                mandiriDanaPerTahun: "Independent Research Funding per Year",
+                mandiriDanaPerProdi: "Independent Research Funding per Study Program",
+                mandiriAvgDanaPerTahun: "Average Independent Research Funding per Year",
+                mandiriAvgDanaPerProdi: "Average Independent Research Funding per Study Program"
+            }
+        }
+    },
+
+    // Community Service page
+    pengabdianPage: {
+        title: "Community service this year",
+        subtitle: "Select Community Service",
+        noData: "No data available",
+        totalPengabdian: "TOTAL COMMUNITY SERVICE",
+        proditerakhir: "MOST ACTIVE STUDY PROGRAM",
+        rataBiaya: "AVERAGE COST",
+        totalBiaya: "TOTAL COST",
+        tahun: "YEAR",
+        pengabdianCount: "community service",
+        charts: {
+            pusat: {
+                pusatPerTahun: "Central Community Service Count per Year",
+                pusatDanaPerTahun: "Central Community Service Funding per Year",
+                pusatAvgDanaPerTahun: "Average Central Community Service Funding per Year"
+            },
+            pnbp: {
+                pnbpPerTahun: "PNBP Community Service Count per Year",
+                pnbpPerProdi: "PNBP Community Service Count per Study Program",
+                pnbpDanaPerTahun: "PNBP Community Service Funding per Year",
+                pnbpDanaPerProdi: "PNBP Community Service Funding per Study Program",
+                pnbpAvgDanaPerTahun: "Average PNBP Community Service Funding per Year",
+                pnbpAvgDanaPerProdi: "Average PNBP Community Service Funding per Study Program",
+                pnbpAvgNilaiPerTahun: "Average PNBP Community Service Value per Year",
+                pnbpAvgNilaiPerProdi: "Average PNBP Community Service Value per Study Program"
+            }
+        }
+    },
+
+    // Publication page
+    publikasiPage: {
+        title: "Publications this year",
+        subtitle: "Select Publication",
+        noData: "No data available",
+        totalPublikasi: "TOTAL PUBLICATIONS THIS YEAR",
+        proditerakhir: "MOST ACTIVE STUDY PROGRAM",
+        jenisPublikasiTerpopuler: "MOST POPULAR PUBLICATION TYPE",
+        totalPublikasiKeseluruhan: "TOTAL OVERALL PUBLICATIONS",
+        tahun: "YEAR",
+        publikasiCount: "publications",
+        semuaTahun: "ALL YEARS",
+
+        charts: {
+            buku: {
+                bukuPerTahun: "Book Count per Year",
+                bukuPerProdi: "Book Count per Study Program"
+            },
+            haki: {
+                hakiPerJenis: "Intellectual Property Count per Type",
+                hakiPerProdi: "Intellectual Property Count per Study Program",
+                hakiPerTahun: "Intellectual Property Count per Year"
+            },
+            jupeng: {
+                jupengPerTahun: "Community Service Journal Count per Year",
+                jupengPerProdi: "Community Service Journal Count per Study Program"
+            }
+        }
     }
 };

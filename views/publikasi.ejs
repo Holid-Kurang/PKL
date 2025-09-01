@@ -9,13 +9,29 @@
     </title>
     <link href="/style/main.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon.png">
-    <style>
-    </style>
+    <script>
+        window.pageTranslations = <%- pageTranslations %>;
+        window.jupengData = {
+            jumlahPerTahun: <%- JSON.stringify(jupengData.jumlahPerTahun) %>,
+            jumlahPerProdi: <%- JSON.stringify(jupengData.jumlahPerProdi) %>
+        };
+        
+        window.hakiData = {
+            jumlahPerTahun: <%- JSON.stringify(hakiData.jumlahPerTahun) %>,
+            jumlahPerJenis: <%- JSON.stringify(hakiData.jumlahPerJenis) %>,
+            jumlahPerProdi: <%- JSON.stringify(hakiData.jumlahPerProdi) %>
+        };
+
+        window.bukuData = {
+            jumlahPerTahun: <%- JSON.stringify(bukuData.jumlahPerTahun) %>,
+            jumlahPerProdi: <%- JSON.stringify(bukuData.jumlahPerProdi) %>
+        };
+    </script>
 </head>
 
 <body class="text-center bg-[#EDF0F1] ">
     <%- include('partials/navbar', {isLogin}) %>
-        <h1 class="pt-5 text-4xl font-bold text-center text-indigo">Publikasi tahun ini</h1>
+        <h1 class="pt-5 text-4xl font-bold text-center text-indigo"><%= __('publikasiPage.title') %></h1>
         <div class="grid grid-cols-2 gap-6 p-5 px-96">
             <div class="p-8 bg-white shadow-lg rounded-xl">
             <div class="flex items-center justify-between gap-4">
@@ -23,9 +39,9 @@
                 <img src="/assets/document.svg" alt="">
                 </div>
                 <div>
-                <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Total Publikasi Tahun Ini</h3>
+                <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('publikasiPage.totalPublikasi') %></h3>
                 <p class="text-2xl font-bold text-gray-900"><%= gabunganData.totalPublikasiTahunIni || 0 %></p>
-                <p class="text-sm text-gray-600">TAHUN <%= gabunganData.tahunAktif %></p>
+                <p class="text-sm text-gray-600"><%= __('publikasiPage.tahun') %> <%= gabunganData.tahunAktif %></p>
                 </div>
             </div>
             </div>
@@ -36,9 +52,9 @@
                 <img src="/assets/school.svg" alt="" >
                 </div>
                 <div>
-                <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Prodi Paling Produktif <%= gabunganData.tahunAktif %></h3>
+                <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('publikasiPage.proditerakhir') %> <%= gabunganData.tahunAktif %></h3>
                 <p class="text-2xl font-bold text-gray-900"><%= gabunganData.prodiPalingProduktif || 'Tidak ada data' %></p>
-                <p class="text-sm text-gray-600"><%= gabunganData.jumlahProdiTerproduktif || 0 %> publikasi</p>
+                <p class="text-sm text-gray-600"><%= gabunganData.jumlahProdiTerproduktif || 0 %> <%= __('publikasiPage.publikasiCount') %></p>
                 </div>
             </div>
             </div>
@@ -49,9 +65,9 @@
                 <img src="/assets/star.svg" alt="" >
                 </div>
                 <div>
-                <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Jenis Publikasi Terpopuler <%= gabunganData.tahunAktif %></h3>
+                <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('publikasiPage.jenisPublikasiTerpopuler') %> <%= gabunganData.tahunAktif %></h3>
                 <p class="text-2xl font-bold text-gray-900"><%= gabunganData.jenisPublikasiTerpopuler || 'Tidak ada data' %></p>
-                <p class="text-sm text-gray-600"><%= gabunganData.jumlahJenisTerpopuler || 0 %> publikasi</p>
+                <p class="text-sm text-gray-600"><%= gabunganData.jumlahJenisTerpopuler || 0 %> <%= __('publikasiPage.publikasiCount') %></p>
                 </div>
             </div>
             </div>
@@ -62,9 +78,9 @@
                 <img src="/assets/archive.svg" alt="" >
                 </div>
                 <div>
-                <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Total Publikasi Keseluruhan</h3>
+                <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('publikasiPage.totalPublikasiKeseluruhan') %></h3>
                 <p class="text-2xl font-bold text-gray-900"><%= gabunganData.totalPublikasiKeseluruhan || 0 %></p>
-                <p class="text-sm text-gray-600">SEMUA TAHUN</p>
+                <p class="text-sm text-gray-600"><%= __('publikasiPage.semuaTahun') %></p>
                 </div>
             </div>
             </div>
@@ -72,11 +88,11 @@
         <!-- Dropdown untuk memilih jenis penelitian -->
         <div class="py-6 ">
             <div class="text-center">
-                <label for="jenispenelitian" class="block mb-4 text-2xl font-bold text-indigo">Pilih Publikasi</label>
+                <label for="jenispenelitian" class="block mb-4 text-2xl font-bold text-indigo"><%= __('publikasiPage.subtitle') %></label>
                 <select id="jenispenelitian" class="px-6 py-3 text-lg font-medium transition-all duration-200 bg-white border-2 border-indigo-300 rounded-lg penelitian-select text-indigo focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
-                    <option value="buku">Buku</option>
-                    <option value="haki">HAKI</option>
-                    <option value="jupeng">Jurnal Pengabdian</option>
+                    <option value="buku"><%= __('categories.buku') %></option>
+                    <option value="haki"><%= __('categories.haki') %></option>
+                    <option value="jupeng"><%= __('categories.jupeng') %></option>
                 </select>
             </div>
         </div>
@@ -128,23 +144,6 @@
     <%- include('partials/footer') %>
     
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            window.jupengData = {
-                jumlahPerTahun: <%- JSON.stringify(jupengData.jumlahPerTahun) %>,
-                jumlahPerProdi: <%- JSON.stringify(jupengData.jumlahPerProdi) %>
-            };
-            
-            window.hakiData = {
-                jumlahPerTahun: <%- JSON.stringify(hakiData.jumlahPerTahun) %>,
-                jumlahPerJenis: <%- JSON.stringify(hakiData.jumlahPerJenis) %>,
-                jumlahPerProdi: <%- JSON.stringify(hakiData.jumlahPerProdi) %>
-            };
-
-            window.bukuData = {
-                jumlahPerTahun: <%- JSON.stringify(bukuData.jumlahPerTahun) %>,
-                jumlahPerProdi: <%- JSON.stringify(bukuData.jumlahPerProdi) %>
-            };
-        </script>
         <script src="/script/publikasi.js"></script>
 </body>
 

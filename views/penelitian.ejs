@@ -9,11 +9,42 @@
     </title>
     <link href="/style/main.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon.png">
+    <script>
+        window.pageTranslations = <%- pageTranslations %>;
+        window.pusatData = {
+            jumlahPerTahun: <%- JSON.stringify(pusatData.jumlahPerTahun) %>,
+            jumlahPerProdi: <%- JSON.stringify(pusatData.jumlahPerProdi) %>,
+            jumlahDanaPerTahun: <%- JSON.stringify(pusatData.jumlahDanaPerTahun) %>,
+            jumlahDanaPerProdi: <%- JSON.stringify(pusatData.jumlahDanaPerProdi) %>,
+            avgDanaPerTahun: <%- JSON.stringify(pusatData.avgDanaPerTahun) %>,
+            avgDanaPerProdi: <%- JSON.stringify(pusatData.avgDanaPerProdi) %>
+        };
+
+        window.pnbpData = {
+            jumlahPerTahun: <%- JSON.stringify(pnbpData.jumlahPerTahun) %>,
+            jumlahPerProdi: <%- JSON.stringify(pnbpData.jumlahPerProdi) %>,
+            jumlahDanaPerTahun: <%- JSON.stringify(pnbpData.jumlahDanaPerTahun) %>,
+            jumlahDanaPerProdi: <%- JSON.stringify(pnbpData.jumlahDanaPerProdi) %>,
+            avgDanaPerTahun: <%- JSON.stringify(pnbpData.avgDanaPerTahun) %>,
+            avgDanaPerProdi: <%- JSON.stringify(pnbpData.avgDanaPerProdi) %>,
+            avgNilaiPerTahun: <%- JSON.stringify(pnbpData.avgNilaiPerTahun) %>,
+            avgNilaiPerProdi: <%- JSON.stringify(pnbpData.avgNilaiPerProdi) %>
+        };
+
+        window.mandiriData = {
+            jumlahPerTahun: <%- JSON.stringify(mandiriData.jumlahPerTahun) %>,
+            jumlahPerProdi: <%- JSON.stringify(mandiriData.jumlahPerProdi) %>,
+            jumlahDanaPerTahun: <%- JSON.stringify(mandiriData.jumlahDanaPerTahun) %>,
+            jumlahDanaPerProdi: <%- JSON.stringify(mandiriData.jumlahDanaPerProdi) %>,
+            avgDanaPerTahun: <%- JSON.stringify(mandiriData.avgDanaPerTahun) %>,
+            avgDanaPerProdi: <%- JSON.stringify(mandiriData.avgDanaPerProdi) %>
+        };
+    </script>
 </head>
 
 <body class="text-center bg-[#EDF0F1] ">
     <%- include('partials/navbar', {isLogin}) %>
-        <h1 class="pt-5 text-4xl font-bold text-center text-indigo">Penelitian tahun ini</h1>
+        <h1 class="pt-5 text-4xl font-bold text-center text-indigo"><%= __('penelitianPage.title') %></h1>
         <div class="grid grid-cols-2 gap-6 p-5 px-96">
             <div class="p-8 bg-white shadow-lg rounded-xl">
                 <div class="flex items-center justify-between gap-4">
@@ -21,9 +52,9 @@
                         <img src="/assets/school.svg" alt="">
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Prodi Teraktif Tahun <%= gabunganData.tahunAktif %></h3>
-                        <p class="text-2xl font-bold text-gray-900"><%= gabunganData.prodiTeraktif || 'Tidak ada data' %></p>
-                        <p class="text-sm text-gray-600"><%= gabunganData.prodiCounts && gabunganData.prodiCounts[gabunganData.prodiTeraktif] ? gabunganData.prodiCounts[gabunganData.prodiTeraktif] : 0 %> penelitian</p>
+                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('penelitianPage.proditerakhir') %> <%= gabunganData.tahunAktif %></h3>
+                        <p class="text-2xl font-bold text-gray-900"><%= gabunganData.prodiTeraktif || __('penelitianPage.noData') %></p>
+                        <p class="text-sm text-gray-600"><%= gabunganData.prodiCounts && gabunganData.prodiCounts[gabunganData.prodiTeraktif] ? gabunganData.prodiCounts[gabunganData.prodiTeraktif] : 0 %> <%= __('penelitianPage.penelitianCount') %></p>
                     </div>
                 </div>
             </div>
@@ -34,9 +65,9 @@
                         <img src="/assets/science.svg" alt="" >
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Total Penelitian</h3>
+                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('penelitianPage.totalPenelitian') %></h3>
                         <p class="text-2xl font-bold text-gray-900"><%= gabunganData.penelitianTahunAktif || 0 %></p>
-                        <p class="text-sm text-gray-600">TAHUN <%= gabunganData.tahunAktif %></p>
+                        <p class="text-sm text-gray-600"><%= __('penelitianPage.tahun') %> <%= gabunganData.tahunAktif %></p>
                     </div>
                 </div>
             </div>
@@ -47,7 +78,7 @@
                         <img src="/assets/paid.svg" alt="" >
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">Rata-rata Biaya</h3>
+                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= __('penelitianPage.rataBiaya') %></h3>
                         <p class="text-2xl font-bold text-gray-900">
                             <%= new Intl.NumberFormat('id-ID', { 
                             style: 'currency', 
@@ -56,7 +87,7 @@
                             maximumFractionDigits: 0
                             }).format(gabunganData.rataRataBiayaGabungan || 0) %>
                         </p>
-                        <p class="text-sm text-gray-600">TAHUN <%= gabunganData.tahunAktif %></p>
+                        <p class="text-sm text-gray-600"><%= __('penelitianPage.tahun') %> <%= gabunganData.tahunAktif %></p>
                     </div>
                 </div>
             </div>
@@ -85,11 +116,11 @@
         <!-- Dropdown untuk memilih jenis penelitian -->
         <div class="py-6 ">
             <div class="text-center">
-                <label for="jenispenelitian" class="block mb-4 text-2xl font-bold text-indigo">Pilih Penelitian</label>
+                <label for="jenispenelitian" class="block mb-4 text-2xl font-bold text-indigo"><%= __('penelitianPage.subtitle') %></label>
                 <select id="jenispenelitian" class="px-6 py-3 text-lg font-medium transition-all duration-200 bg-white border-2 border-indigo-300 rounded-lg penelitian-select text-indigo focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
-                    <option value="pusat">Pusat</option>
-                    <option value="pnbp">PNBP</option>
-                    <option value="mandiri">Mandiri</option>
+                    <option value="pusat"><%= __('categories.pusat') %></option>
+                    <option value="pnbp"><%= __('categories.pnbp') %></option>
+                    <option value="mandiri"><%= __('categories.mandiri') %></option>
                 </select>
             </div>
         </div>
@@ -98,7 +129,7 @@
         <div id="chart-container" >
             <!-- Grafik Pusat -->
             <div id="pusat-section" class="chart-section">
-            <h1 class="text-4xl font-bold text-center text-indigo">Pusat</h1>
+            <h1 class="text-4xl font-bold text-center text-indigo"><%= __('categories.pusat') %></h1>
             <div class="grid grid-cols-2 grid-rows-3 gap-8 px-32 py-2 h-[150vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                 <canvas id="pusatPerTahun" class="block w-full h-full "></canvas>
@@ -123,7 +154,7 @@
             
             <!-- Grafik PNBP -->
             <div id="pnbp-section" class="chart-section" style="display: none;">
-            <h1 class="text-4xl font-bold text-center text-indigo">PNBP</h1>
+            <h1 class="text-4xl font-bold text-center text-indigo"><%= __('categories.pnbp') %></h1>
             <div class="grid grid-cols-2 grid-rows-4 gap-8 px-32 py-2 h-[200vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                 <canvas id="pnbpPerTahun" class="block w-full h-full"></canvas>
@@ -154,7 +185,7 @@
             
             <!-- Grafik Mandiri -->
             <div id="mandiri-section" class="chart-section" style="display: none;">
-            <h1 class="text-4xl font-bold text-center text-indigo">Mandiri</h1>
+            <h1 class="text-4xl font-bold text-center text-indigo"><%= __('categories.mandiri') %></h1>
             <div class="grid grid-cols-2 grid-rows-3 gap-8 px-32 py-2 h-[100vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
                 <canvas id="mandiriPerTahun" class="block w-full h-full"></canvas>
@@ -180,36 +211,6 @@
     <%- include('partials/footer') %>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    window.pusatData = {
-        jumlahPerTahun: <%- JSON.stringify(pusatData.jumlahPerTahun) %>,
-        jumlahPerProdi: <%- JSON.stringify(pusatData.jumlahPerProdi) %>,
-        jumlahDanaPerTahun: <%- JSON.stringify(pusatData.jumlahDanaPerTahun) %>,
-        jumlahDanaPerProdi: <%- JSON.stringify(pusatData.jumlahDanaPerProdi) %>,
-        avgDanaPerTahun: <%- JSON.stringify(pusatData.avgDanaPerTahun) %>,
-        avgDanaPerProdi: <%- JSON.stringify(pusatData.avgDanaPerProdi) %>
-    };
-
-    window.pnbpData = {
-        jumlahPerTahun: <%- JSON.stringify(pnbpData.jumlahPerTahun) %>,
-        jumlahPerProdi: <%- JSON.stringify(pnbpData.jumlahPerProdi) %>,
-        jumlahDanaPerTahun: <%- JSON.stringify(pnbpData.jumlahDanaPerTahun) %>,
-        jumlahDanaPerProdi: <%- JSON.stringify(pnbpData.jumlahDanaPerProdi) %>,
-        avgDanaPerTahun: <%- JSON.stringify(pnbpData.avgDanaPerTahun) %>,
-        avgDanaPerProdi: <%- JSON.stringify(pnbpData.avgDanaPerProdi) %>,
-        avgNilaiPerTahun: <%- JSON.stringify(pnbpData.avgNilaiPerTahun) %>,
-        avgNilaiPerProdi: <%- JSON.stringify(pnbpData.avgNilaiPerProdi) %>
-    };
-
-    window.mandiriData = {
-        jumlahPerTahun: <%- JSON.stringify(mandiriData.jumlahPerTahun) %>,
-        jumlahPerProdi: <%- JSON.stringify(mandiriData.jumlahPerProdi) %>,
-        jumlahDanaPerTahun: <%- JSON.stringify(mandiriData.jumlahDanaPerTahun) %>,
-        jumlahDanaPerProdi: <%- JSON.stringify(mandiriData.jumlahDanaPerProdi) %>,
-        avgDanaPerTahun: <%- JSON.stringify(mandiriData.avgDanaPerTahun) %>,
-        avgDanaPerProdi: <%- JSON.stringify(mandiriData.avgDanaPerProdi) %>
-    };
-    </script>
     <script src="/script/penelitian.js"></script>
 </body>
 

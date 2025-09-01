@@ -156,39 +156,21 @@ router.get("/pengabdian", async (req, res) => {
                             { $group: { _id: "$Prodi", avg: { $avg: "$Nilai" } } },
                             { $sort: { _id: 1 } }
                         ],
-                        // "jumlahPerSkema": [
-                        //     { $group: { _id: "$SKEMA", total: { $sum: 1 } } },
-                        //     { $sort: { _id: 1 } }
-                        // ],
-                        // "jumlahDanaPerSkema": [
-                        //     { $group: { _id: "$SKEMA", total: { $sum: "$Biaya Disetujui" } } },
-                        //     { $sort: { _id: 1 } }
-                        // ],
-                        // "avgDanaPerSkema": [
-                        //     { $group: { _id: "$SKEMA", avg: { $avg: "$Biaya Disetujui" } } },
-                        //     { $sort: { _id: 1 } }
-                        // ],
-                        // "avgNilaiPerSkema": [
-                        //     { $group: { _id: "$SKEMA", avg: { $avg: "$Nilai rata-rata" } } },
-                        //     { $sort: { _id: 1 } }
-                        // ],
-                        // "jumlahPerSkemaPerTahun": [
-                        //     { $group: { _id: { skema: "$SKEMA", tahun: "$Tahun" }, total: { $sum: 1 } } },
-                        //     { $sort: { _id: 1 } }
-                        // ]
                     }
                 }
             ]),
         ]);
         const isLogin = req.session.isLogin || false;
-
+        const { languages } = require('../config/lang');
+        const currentLang = req.language || 'id';
         // Hasil dari $facet adalah array dengan satu objek, jadi kita ambil elemen pertama [0]
         res.render("pengabdian", {
             title: "Pengabdian",
             isLogin,
             pusatData: pusatResults[0],
             pnbpData: pnbpResults[0],
-            gabunganData
+            gabunganData,
+            pageTranslations: JSON.stringify(languages[currentLang])
         });
 
     } catch (error) {

@@ -18,8 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const pusatData = window.pusatData || {};
     const pnbpData = window.pnbpData || {};
     const mandiriData = window.mandiriData || {};
+    const translations = window.pageTranslations || {};
     // Tambahkan pnbpData, mandiriData jika ingin sekaligus
-
+    
     const chartInstances = {};
 
     const chartConfigurations = [
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pusatData.jumlahPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Penelitian per Tahun',
+                        label: translations.penelitianPage.charts.pusat.pusatPerTahun,
                         data: pusatData.jumlahPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -54,12 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
-                                label: context => context.parsed.y + ' penelitian'
+                                label: context => context.parsed.y + " " + translations.penelitianPage.penelitianCount
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Penelitian Pusat per Tahun',
+                            text: translations.penelitianPage.charts.pusat.pusatPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pusatData.jumlahPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Penelitian per Program Studi',
+                        label: translations.penelitianPage.charts.pusat.pusatPerProdi,
                         data: pusatData.jumlahPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -104,12 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + ' penelitian'
+                                label: context => context.parsed + " " + translations.penelitianPage.penelitianCount
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Penelitian Pusat per Program Studi',
+                            text: translations.penelitianPage.charts.pusat.pusatPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -129,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pusatData.jumlahDanaPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Dana Penelitian Pusat per Tahun',
+                        label: translations.penelitianPage.charts.pusat.pusatDanaPerTahun,
                         data: pusatData.jumlahDanaPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -157,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Penelitian Pusat per Tahun',
+                            text: translations.penelitianPage.charts.pusat.pusatDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -184,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pusatData.jumlahDanaPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Dana Penelitian Pusat per Program Studi',
+                        label: translations.penelitianPage.charts.pusat.pusatDanaPerProdi,
                         data: pusatData.jumlahDanaPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -210,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Penelitian Pusat per Program Studi',
+                            text: translations.penelitianPage.charts.pusat.pusatDanaPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -230,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pusatData.avgDanaPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Dana Penelitian Pusat per Tahun',
+                        label: translations.penelitianPage.charts.pusat.pusatAvgDanaPerTahun,
                         data: pusatData.avgDanaPerTahun.map(item => item.avg),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -258,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Penelitian Pusat per Tahun',
+                            text: translations.penelitianPage.charts.pusat.pusatAvgDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -285,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pusatData.avgDanaPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Dana Penelitian Pusat per Program Studi',
+                        label: translations.penelitianPage.charts.pusat.pusatAvgDanaPerProdi,
                         data: pusatData.avgDanaPerProdi.map(item => item.avg),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -311,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Penelitian Pusat per Program Studi',
+                            text: translations.penelitianPage.charts.pusat.pusatAvgDanaPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -333,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.jumlahPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Penelitian PNBP per Tahun',
+                        label: translations.penelitianPage.charts.pnbp.pnbpPerTahun,
                         data: pnbpData.jumlahPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -356,12 +357,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
-                                label: context => context.parsed.y + ' penelitian'
+                                label: context => context.parsed.y + " " + translations.penelitianPage.penelitianCount
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Penelitian PNBP per Tahun',
+                            text: translations.penelitianPage.charts.pnbp.pnbpPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -385,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.jumlahPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Penelitian PNBP per Program Studi',
+                        label: translations.penelitianPage.charts.pnbp.pnbpPerProdi,
                         data: pnbpData.jumlahPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -406,12 +407,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + ' penelitian'
+                                label: context => context.parsed + " " + translations.penelitianPage.penelitianCount
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Penelitian PNBP per Program Studi',
+                            text: translations.penelitianPage.charts.pnbp.pnbpPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -431,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.jumlahDanaPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Dana Penelitian PNBP per Tahun',
+                        label: translations.penelitianPage.charts.pnbp.pnbpDanaPerTahun,
                         data: pnbpData.jumlahDanaPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -459,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Penelitian PNBP per Tahun',
+                            text: translations.penelitianPage.charts.pnbp.pnbpDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -486,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.jumlahDanaPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Dana Penelitian PNBP per Program Studi',
+                        label: translations.penelitianPage.charts.pnbp.pnbpDanaPerProdi,
                         data: pnbpData.jumlahDanaPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -512,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Penelitian PNBP per Program Studi',
+                            text: translations.penelitianPage.charts.pnbp.pnbpDanaPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -532,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.avgDanaPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Dana Penelitian PNBP per Tahun',
+                        label: translations.penelitianPage.charts.pnbp.pnbpAvgDanaPerTahun,
                         data: pnbpData.avgDanaPerTahun.map(item => item.avg),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -560,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Penelitian PNBP per Tahun',
+                            text: translations.penelitianPage.charts.pnbp.pnbpAvgDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -587,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.avgDanaPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Dana Penelitian PNBP per Program Studi',
+                        label: translations.penelitianPage.charts.pnbp.pnbpAvgDanaPerProdi,
                         data: pnbpData.avgDanaPerProdi.map(item => item.avg),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -613,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Penelitian PNBP per Program Studi',
+                            text: translations.penelitianPage.charts.pnbp.pnbpAvgDanaPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -633,7 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.avgNilaiPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Nilai Penelitian PNBP per Tahun',
+                        label: translations.penelitianPage.charts.pnbp.pnbpAvgNilaiPerTahun,
                         data: pnbpData.avgNilaiPerTahun.map(item => item.avg),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -661,7 +662,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Nilai Penelitian PNBP per Tahun',
+                            text: translations.penelitianPage.charts.pnbp.pnbpAvgNilaiPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -688,7 +689,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: pnbpData.avgNilaiPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Nilai Penelitian PNBP per Program Studi',
+                        label: translations.penelitianPage.charts.pnbp.pnbpAvgNilaiPerProdi,
                         data: pnbpData.avgNilaiPerProdi.map(item => item.avg),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -714,7 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Nilai Penelitian PNBP per Program Studi',
+                            text: translations.penelitianPage.charts.pnbp.pnbpAvgNilaiPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -736,7 +737,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: mandiriData.jumlahPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Penelitian Mandiri per Tahun',
+                        label: translations.penelitianPage.charts.mandiri.mandiriPerTahun,
                         data: mandiriData.jumlahPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -759,12 +760,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
-                                label: context => context.parsed.y + ' penelitian'
+                                label: context => context.parsed.y + " " + translations.penelitianPage.penelitianCount
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Penelitian Mandiri per Tahun',
+                            text: translations.penelitianPage.charts.mandiri.mandiriPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -788,7 +789,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: mandiriData.jumlahPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Penelitian Mandiri per Program Studi',
+                        label: translations.penelitianPage.charts.mandiri.mandiriPerProdi,
                         data: mandiriData.jumlahPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -809,12 +810,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + ' penelitian'
+                                label: context => context.parsed + " " + translations.penelitianPage.penelitianCount
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Penelitian Mandiri per Program Studi',
+                            text: translations.penelitianPage.charts.mandiri.mandiriPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -834,7 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: mandiriData.jumlahDanaPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Dana Penelitian Mandiri per Tahun',
+                        label: translations.penelitianPage.charts.mandiri.mandiriDanaPerTahun,
                         data: mandiriData.jumlahDanaPerTahun.map(item => item.total),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -862,7 +863,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Penelitian Mandiri per Tahun',
+                            text: translations.penelitianPage.charts.mandiri.mandiriDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -889,7 +890,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: mandiriData.jumlahDanaPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Jumlah Dana Penelitian Mandiri per Program Studi',
+                        label: translations.penelitianPage.charts.mandiri.mandiriDanaPerProdi,
                         data: mandiriData.jumlahDanaPerProdi.map(item => item.total),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -915,7 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Penelitian Mandiri per Program Studi',
+                            text: translations.penelitianPage.charts.mandiri.mandiriDanaPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -935,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: mandiriData.avgDanaPerTahun.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Dana Penelitian Mandiri per Tahun',
+                        label: translations.penelitianPage.charts.mandiri.mandiriAvgDanaPerTahun,
                         data: mandiriData.avgDanaPerTahun.map(item => item.avg),
                         backgroundColor: '#9342DA',
                         borderColor: '#232F58',
@@ -963,7 +964,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Penelitian Mandiri per Tahun',
+                            text: translations.penelitianPage.charts.mandiri.mandiriAvgDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -990,7 +991,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: mandiriData.avgDanaPerProdi.map(item => item._id),
                     datasets: [{
-                        label: 'Rata-rata Dana Penelitian Mandiri per Program Studi',
+                        label: translations.penelitianPage.charts.mandiri.mandiriAvgDanaPerProdi,
                         data: mandiriData.avgDanaPerProdi.map(item => item.avg),
                         backgroundColor: [
                             '#9342DA', '#ffd700', '#ff1b1c', '#41e2ba', '#00bfff', '#0000ff', '#00ff7f'
@@ -1016,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Penelitian Mandiri per Program Studi',
+                            text: translations.penelitianPage.charts.mandiri.mandiriAvgDanaPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },

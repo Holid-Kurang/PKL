@@ -1852,11 +1852,6 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
-.text-black {
-  --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity, 1));
-}
-
 .underline {
   text-decoration-line: underline;
 }
@@ -2134,11 +2129,6 @@ video {
 .hover\:bg-indigo:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(64 0 96 / var(--tw-bg-opacity, 1));
-}
-
-.hover\:bg-purple-50:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(250 245 255 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:bg-red-50:hover {
