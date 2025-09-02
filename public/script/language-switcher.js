@@ -1,6 +1,6 @@
 class LanguageSwitcher {
     constructor() {
-        this.currentLang = document.documentElement.lang || 'id';
+        this.currentLang = '';
         this.init();
     }
     
@@ -52,6 +52,7 @@ class LanguageSwitcher {
             } else if (e.target.closest('.language-option')) {
                 e.preventDefault();
                 const lang = e.target.closest('.language-option').dataset.lang;
+                console.log(e.target.closest('.language-option').dataset);
                 this.changeLanguage(lang);
             } else {
                 if (dropdown) {

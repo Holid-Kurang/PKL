@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
-                                label: context => context.parsed.y + " " + translations.penelitianPage.penelitianCount
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
+                                label: context => context.parsed.y + " " + translations.dashboard.charts.penelitian
                             }
                         },
                         title: {
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + " " + translations.penelitianPage.penelitianCount
+                                label: context => context.parsed + " " + translations.dashboard.charts.penelitian
                             }
                         },
                         title: {
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => context.parsed.y.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
                             }
                         },
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => context.parsed.y.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
                             }
                         },
@@ -356,8 +356,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
-                                label: context => context.parsed.y + " " + translations.penelitianPage.penelitianCount
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
+                                label: context => context.parsed.y + " " + translations.dashboard.charts.penelitian
                             }
                         },
                         title: {
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + " " + translations.penelitianPage.penelitianCount
+                                label: context => context.parsed + " " + translations.dashboard.charts.penelitian
                             }
                         },
                         title: {
@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => context.parsed.y.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
                             }
                         },
@@ -555,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => context.parsed.y.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
                             }
                         },
@@ -656,7 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => Number(context.parsed.y).toFixed(2)
                             }
                         },
@@ -759,8 +759,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
-                                label: context => context.parsed.y + " " + translations.penelitianPage.penelitianCount
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
+                                label: context => context.parsed.y + " " + translations.dashboard.charts.penelitian
                             }
                         },
                         title: {
@@ -810,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + " " + translations.penelitianPage.penelitianCount
+                                label: context => context.parsed + " " + translations.dashboard.charts.penelitian
                             }
                         },
                         title: {
@@ -857,7 +857,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => context.parsed.y.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
                             }
                         },
@@ -958,7 +958,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => context.parsed.y.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
                             }
                         },

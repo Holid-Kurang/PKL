@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ambil semua data yang sudah disiapkan di EJS
     const pusatData = window.pusatData || {};
     const pnbpData = window.pnbpData || {};
+    const translations = window.pageTranslations || {};
 
     // Objek untuk menyimpan instance chart yang sudah dirender
     const chartInstances = {};
@@ -54,13 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
-                                label: context => context.parsed.y + ' pengabdian'
+                                title: tooltipItems => translations.pengabdianPage.tahun + " " + tooltipItems[0].label,
+                                label: context => context.parsed.y + " " + translations.dashboard.charts.pengabdian
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Pengabdian Pusat per Tahun',
+                            text: translations.pengabdianPage.charts.pusat.pusatPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -106,13 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.pengabdianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => 'Rp. ' + context.parsed.y.toLocaleString()
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Pengabdian Pusat per Tahun',
+                            text: translations.pengabdianPage.charts.pusat.pusatDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -158,13 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.pengabdianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => 'Rp. ' + context.parsed.y.toLocaleString()
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Pengabdian Pusat per Tahun',
+                            text: translations.pengabdianPage.charts.pusat.pusatAvgDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -212,13 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.pengabdianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => context.parsed.y + ' Pengabdian'
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Pengabdian PNBP per Tahun',
+                            text: translations.pengabdianPage.charts.pnbp.pnbpPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -263,12 +264,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + ' pengabdian'
+                                label: context => context.parsed + " " + translations.dashboard.charts.pengabdian
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Pengabdian PNBP per Program Studi',
+                            text: translations.pengabdianPage.charts.pnbp.pnbpPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -310,13 +311,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.pengabdianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => context.parsed.y.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Pengabdian PNBP per Tahun',
+                            text: translations.pengabdianPage.charts.pnbp.pnbpDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -368,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Jumlah Dana Pengabdian PNBP per Program Studi',
+                            text: translations.pengabdianPage.charts.pnbp.pnbpDanaPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -410,13 +411,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.pengabdianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => context.parsed.y.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Pengabdian PNBP per Tahun',
+                            text: translations.pengabdianPage.charts.pnbp.pnbpAvgDanaPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -468,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Dana Pengabdian PNBP per Program Studi',
+                            text: translations.pengabdianPage.charts.pnbp.pnbpAvgDanaPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -510,13 +511,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             bodyFont: { size: 14 },
                             footerFont: { weight: 'normal' },
                             callbacks: {
-                                title: tooltipItems => 'Tahun ' + tooltipItems[0].label,
+                                title: tooltipItems => translations.pengabdianPage.tahun + " " + tooltipItems[0].label,
                                 label: context => Number(context.parsed.y).toFixed(2)
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Nilai Pengabdian PNBP per Tahun',
+                            text: translations.pengabdianPage.charts.pnbp.pnbpAvgNilaiPerTahun,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },
@@ -569,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: 'Rata-rata Nilai Pengabdian PNBP per Program Studi',
+                            text: translations.pengabdianPage.charts.pnbp.pnbpAvgNilaiPerProdi,
                             font: { size: 20, weight: 'lighter' },
                             color: '#232F58',
                         },

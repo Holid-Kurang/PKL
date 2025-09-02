@@ -15,9 +15,8 @@ module.exports = {
         pengabdian: "Pengabdian",
         publikasi: "Publikasi",
         programStudi: "Program Studi",
-        login: "Masuk",
         dashboard: "Dashboard",
-        logout: "Keluar"
+        pengaturan: "Pengaturan"
     },
 
     // Dashboard
@@ -95,6 +94,16 @@ module.exports = {
         haki: "HAKI",
         buku: "Buku",
         jupeng: "Jurnal Pengabdian"
+    },
+
+    auth: {
+        user: "Nama Pengguna",
+        password: "Kata Sandi",
+        button: "Masuk",
+        forgotPassword: "Lupa Kata Sandi?",
+        login: "Masuk",
+        logout: "Keluar",
+        kembali: "Kembali"
     },
 
     // Penelitian page

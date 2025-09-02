@@ -3,13 +3,13 @@ const app = express();
 const path = require("path");
 const session = require("express-session");
 const cookieParser = require('cookie-parser');
-const routes = require("./routes/routes");
+const routes = require("./src/routes/routes");
 const rateLimit = require('express-rate-limit');
 const methodOverride = require('method-override');
 const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
-const i18n = require('./middlewares/i18n');
-const languageRoute = require('./routes/languageRoute');
+const i18n = require('./src/middlewares/i18n');
+const languageRoute = require('./src/routes/languageRoute');
 require('dotenv').config();
 
 connectDB(); // Connect to MongoDB

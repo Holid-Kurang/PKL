@@ -161,7 +161,7 @@ router.get("/pengabdian", async (req, res) => {
             ]),
         ]);
         const isLogin = req.session.isLogin || false;
-        const { languages } = require('../config/lang');
+        const { languages } = require('../../config/lang');
         const currentLang = req.language || 'id';
         // Hasil dari $facet adalah array dengan satu objek, jadi kita ambil elemen pertama [0]
         res.render("pengabdian", {

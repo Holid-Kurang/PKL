@@ -11,12 +11,15 @@
                 class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
                 <span class="flex items-center">
                     <span class="mr-3 material-icons-outlined">science</span>
-                    Penelitian
+                    <%= translate('navbar.penelitian') %>
                 </span>
                 <span class="transition-transform material-icons-outlined" id="penelitianIcon">expand_more</span>
             </button>
             <!-- include partial dropdown sidebar item -->
-            <%- include('dropdown-sidebar-item', { id: 'penelitianMenu', items: [ { href: '/dashboard/penelitian/pnbp', text: 'PNBP' }, { href: '/dashboard/penelitian/pusat', text: 'Pusat' }, { href: '/dashboard/penelitian/mandiri', text: 'Mandiri' } ] }) %>
+            <%- include('dropdown-sidebar-item', { id: 'penelitianMenu', items: [ 
+            { href: '/dashboard/penelitian/pnbp', text: translate('categories.pnbp') }, 
+            { href: '/dashboard/penelitian/pusat', text: translate('categories.pusat') }, 
+            { href: '/dashboard/penelitian/mandiri', text: translate('categories.mandiri') } ] }) %>
         </div>
 
         <!-- Item Menu Pengabdian (dengan dropdown) -->
@@ -25,12 +28,14 @@
                 class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
                 <span class="flex items-center">
                     <span class="mr-3 material-icons-outlined">local_library</span>
-                    Pengabdian
+                    <%= translate('navbar.pengabdian') %>
                 </span>
                 <span class="transition-transform material-icons-outlined" id="pengabdianIcon">expand_more</span>
             </button>
             <!-- include partial dropdown sidebar item -->
-            <%- include('dropdown-sidebar-item', { id: 'pengabdianMenu', items: [ { href: '/dashboard/pengabdian/pnbp', text: 'PNBP' }, { href: '/dashboard/pengabdian/pusat', text: 'Pusat' } ] }) %>
+            <%- include('dropdown-sidebar-item', { id: 'pengabdianMenu', items: [ 
+            { href: '/dashboard/pengabdian/pnbp', text: translate('categories.pnbp') }, 
+            { href: '/dashboard/pengabdian/pusat', text: translate('categories.pusat') } ] }) %>
         </div>
 
         <!-- Item Menu Publikasi (dengan dropdown) -->
@@ -39,12 +44,15 @@
                 class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
                 <span class="flex items-center">
                     <span class="mr-3 material-icons-outlined">groups</span>
-                    Publikasi
+                    <%= translate('navbar.publikasi') %>
                 </span>
                 <span class="transition-transform material-icons-outlined" id="publikasiIcon">expand_more</span>
             </button>
             <!-- include partial dropdown sidebar item -->
-            <%- include('dropdown-sidebar-item', { id: 'publikasiMenu', items: [ { href: '/dashboard/publikasi/buku', text: 'Buku' }, { href: '/dashboard/publikasi/haki', text: 'HAKI' }, { href: '/dashboard/publikasi/jupeng', text: 'Jurnal Pengabdian' } ] }) %>
+            <%- include('dropdown-sidebar-item', { id: 'publikasiMenu', items: [ 
+            { href: '/dashboard/publikasi/buku', text: translate('categories.buku') }, 
+            { href: '/dashboard/publikasi/haki', text: translate('categories.haki') }, 
+            { href: '/dashboard/publikasi/jupeng', text: translate('categories.jupeng') } ] }) %>
         </div>
 
         <div>
@@ -52,7 +60,7 @@
                 class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
                 <span class="flex items-center">
                     <span class="mr-3 material-icons-outlined">settings</span>
-                    Pengaturan
+                    <%= translate('navbar.pengaturan') %>
                 </span>
             </a>
         </div>
@@ -62,11 +70,11 @@
             <span class="mr-3 material-icons-outlined">
                 home
             </span>
-            Kembali
+            <%= translate('auth.kembali') %>
         </a>
         <a href="/dashboard/logout" class="flex items-center px-4 py-3 transition-colors rounded-lg hover:bg-white/10">
             <span class="mr-3 material-icons-outlined">logout</span>
-            Keluar
+            <%= translate('auth.logout') %>
         </a>
     </div>
 </aside>

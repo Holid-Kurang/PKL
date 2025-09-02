@@ -15,9 +15,8 @@ module.exports = {
         pengabdian: "Community Service",
         publikasi: "Publication",
         programStudi: "Study Program",
-        login: "Login",
         dashboard: "Dashboard",
-        logout: "Logout"
+        pengaturan: "Settings"
     },
 
     // Dashboard
@@ -95,6 +94,16 @@ module.exports = {
         haki: "IP",
         buku: "Book",
         jupeng: "Community Service Journal"
+    },
+
+    auth: {
+        user: "Username",
+        password: "Password",
+        button: "Login",
+        forgotPassword: "Forgot Password?",
+        login: "Login",
+        logout: "Logout",
+        kembali: "Back"
     },
 
     // Research page

@@ -9,9 +9,9 @@
             <a href="/" class="absolute flex items-center gap-4 left-4">
                 <img src="/assets/logo-unram.png" alt="Logo unram" class="w-12 md:w-16">
                 <div class="flex flex-col justify-center text-white">
-                    <h3 class="text-base font-bold text-left md:text-lg "><%= __('navbar.title') %></h3>
-                    <h3 class="text-sm text-left md:text-base "><%= __('navbar.subtitle1') %></h3>
-                    <h3 class="text-sm text-left md:text-base "><%= __('navbar.subtitle2') %></h3>
+                    <h3 class="text-base font-bold text-left md:text-lg "><%= translate('navbar.title') %></h3>
+                    <h3 class="text-sm text-left md:text-base "><%= translate('navbar.subtitle1') %></h3>
+                    <h3 class="text-sm text-left md:text-base "><%= translate('navbar.subtitle2') %></h3>
                 </div>
             </a>
 
@@ -19,21 +19,21 @@
             <div class="items-center hidden space-x-8 md:flex ">
                 <div class="relative py-8 group">
                     <a href="/penelitian" class="relative text-xl font-semibold text-white hover:text-veronica">
-                        <%= __('navbar.penelitian') %>
+                        <%= translate('navbar.penelitian') %>
                         <span
                             class="absolute left-0 w-0 h-1 transition-all bg-veronica -bottom-2 group-hover:w-full"></span>
                     </a>
                 </div>
                 <div class="relative py-8 group">
                     <a href="/pengabdian" class="relative text-xl font-semibold text-white hover:text-veronica">
-                        <%= __('navbar.pengabdian') %>
+                        <%= translate('navbar.pengabdian') %>
                         <span
                             class="absolute left-0 w-0 h-1 transition-all bg-veronica -bottom-2 group-hover:w-full"></span>
                     </a>
                 </div>
                 <div class="relative py-8 group">
                     <a href="/publikasi" class="relative text-xl font-semibold text-white hover:text-veronica">
-                        <%= __('navbar.publikasi') %>
+                        <%= translate('navbar.publikasi') %>
                         <span
                             class="absolute left-0 w-0 h-1 transition-all bg-veronica -bottom-2 group-hover:w-full"></span>
                     </a>
@@ -41,7 +41,7 @@
                 <div class="relative py-8 group">
                     <div
                         class="relative flex items-center text-xl font-semibold text-white hover:text-veronica hover:cursor-default">
-                        <%= __('navbar.programStudi') %>
+                        <%= translate('navbar.programStudi') %>
                         <svg class="ml-2 group-hover:fill-veronica" width="24" height="24" viewBox="0 0 24 24"
                             fill="white" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -63,7 +63,7 @@
                 <!-- Login/User Menu -->
                 <% if (!isLogin) { %>
                     <a href="/login"
-                        class="px-6 py-2 text-xl font-semibold text-white rounded-lg bg-veronica hover:bg-veronica-600"><%= __('navbar.login') %></a>
+                        class="px-6 py-2 text-xl font-semibold text-white rounded-lg bg-veronica hover:bg-veronica-600"><%= translate('auth.login') %></a>
                 <% } else { %>
                     <div class="relative">
                         <button id="settingMenu" class="flex items-center group">
@@ -95,10 +95,10 @@
                         <div
                             class="absolute right-0 hidden mt-3 bg-white border-2 border-purple-200 shadow-lg rounded-2xl">
                             <a href="/dashboard/penelitian/pnbp"
-                                class="block px-4 py-2 font-semibold text-center hover:bg-veronica hover:text-white rounded-t-2xl "><%= __('navbar.dashboard') %></a>
+                                class="block px-4 py-2 font-semibold text-center hover:bg-veronica hover:text-white rounded-t-2xl "><%= translate('navbar.dashboard') %></a>
                             <div class="border-t border-purple-100"></div>
                             <button id="logoutBtn"
-                                class="self-stretch block w-full px-4 py-2 font-semibold text-center hover:bg-veronica hover:text-white rounded-b-2xl"><%= __('navbar.logout') %></button>
+                                class="self-stretch block w-full px-4 py-2 font-semibold text-center hover:bg-veronica hover:text-white rounded-b-2xl"><%= translate('auth.logout') %></button>
                         </div>
                     </div>
                 <% } %>

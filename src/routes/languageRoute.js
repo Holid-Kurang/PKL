@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { availableLanguages } = require('../config/lang');
+const { availableLanguages } = require('../../config/lang');
 
 // Route untuk mengubah bahasa
 router.post('/change-language', (req, res) => {

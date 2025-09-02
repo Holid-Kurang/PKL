@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const jupengData = window.jupengData || {};
     const hakiData = window.hakiData || {};
     const bukuData = window.bukuData || {};
+    const translations = window.pageTranslations || {};
 
     // Objek untuk menyimpan instance chart yang sudah dirender
     const chartInstances = {};
@@ -40,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => 'Tahun ' + tooltipItems[0].label, label: (context) => context.parsed.y + ' Buku' } },
-                        title: { display: true, text: 'Jumlah Buku per Tahun', font: { size: 20, weight: 'lighter' }, color: '#232F58' }, legend: { display: false }
+                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => translations.publikasiPage.tahun + " " + tooltipItems[0].label, label: (context) => context.parsed.y + " " + translations.categories.buku } },
+                        title: { display: true, text: translations.publikasiPage.charts.buku.bukuPerTahun, font: { size: 20, weight: 'lighter' }, color: '#232F58' }, legend: { display: false }
                     },
                     layout: { padding: 20 },
                     scales: { y: { beginAtZero: true, ticks: { stepSize: 15 }, grid: { display: false } }, x: { grid: { display: false } } }
@@ -63,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
-                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + ' Buku' } },
-                        title: { display: true, text: 'Jumlah Buku per Program Studi', font: { size: 20, weight: 'lighter' }, color: '#232F58' },
+                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + " " + translations.categories.buku } },
+                        title: { display: true, text: translations.publikasiPage.charts.buku.bukuPerProdi, font: { size: 20, weight: 'lighter' }, color: '#232F58' },
                         legend: { display: true, position: 'bottom', labels: { font: { size: 12 } } }
                     },
                     layout: { padding: 20 }
@@ -87,8 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
-                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + ' HAKI' } },
-                        title: { display: true, text: 'Jumlah HAKI per Jenis', font: { size: 20, weight: 'lighter' }, color: '#232F58' },
+                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + " " + translations.categories.haki } },
+                        title: { display: true, text: translations.publikasiPage.charts.haki.hakiPerJenis, font: { size: 20, weight: 'lighter' }, color: '#232F58' },
                         legend: { display: true, position: 'left', labels: { font: { size: 12 } } }
                     },
                     layout: { padding: 20 }
@@ -110,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
-                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + ' HAKI' } },
-                        title: { display: true, text: 'Jumlah HAKI per Program Studi', font: { size: 20, weight: 'lighter' }, color: '#232F58' },
+                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + " " + translations.categories.haki } },
+                        title: { display: true, text: translations.publikasiPage.charts.haki.hakiPerProdi, font: { size: 20, weight: 'lighter' }, color: '#232F58' },
                         legend: { display: true, position: 'right', labels: { font: { size: 12 } } }
                     },
                     layout: { padding: 20 }
@@ -133,8 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => 'Tahun ' + tooltipItems[0].label, label: (context) => context.parsed.y + ' HAKI' } },
-                        title: { display: true, text: 'Tren HAKI per Tahun', font: { size: 20, weight: 'lighter' }, color: '#232F58' }, legend: { display: false }
+                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => translations.publikasiPage.tahun + " " + tooltipItems[0].label, label: (context) => context.parsed.y + " " + translations.categories.haki } },
+                        title: { display: true, text: translations.publikasiPage.charts.haki.hakiPerTahun, font: { size: 20, weight: 'lighter' }, color: '#232F58' }, legend: { display: false }
                     },
                     layout: { padding: 20 },
                     scales: { y: { beginAtZero: true, ticks: { stepSize: 25 }, grid: { display: false } }, x: { grid: { display: false } } }
@@ -157,8 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => 'Tahun ' + tooltipItems[0].label, label: (context) => context.parsed.y + ' publikasi' } },
-                        title: { display: true, text: 'Jumlah Jurnal Pengabdian per Tahun', font: { size: 20, weight: 'lighter' }, color: '#232F58' }, legend: { display: false }
+                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => translations.publikasiPage.tahun + " " + tooltipItems[0].label, label: (context) => context.parsed.y + " " + translations.dashboard.charts.publikasi } },
+                        title: { display: true, text: translations.publikasiPage.charts.jupeng.jupengPerTahun, font: { size: 20, weight: 'lighter' }, color: '#232F58' }, legend: { display: false }
                     },
                     layout: { padding: 20 },
                     scales: { y: { beginAtZero: true, ticks: { stepSize: 25 }, grid: { display: false } }, x: { grid: { display: false } } }
@@ -180,8 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
-                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + ' publikasi' } },
-                        title: { display: true, text: 'Jumlah Jurnal Pengabdian per Program Studi', font: { size: 20, weight: 'lighter' }, color: '#232F58' },
+                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + " " + translations.dashboard.charts.publikasi } },
+                        title: { display: true, text: translations.publikasiPage.charts.jupeng.jupengPerProdi, font: { size: 20, weight: 'lighter' }, color: '#232F58' },
                         legend: { display: true, position: 'bottom', labels: { font: { size: 12 } } }
                     },
                     layout: { padding: 20 }

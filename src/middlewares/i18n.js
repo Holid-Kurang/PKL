@@ -1,4 +1,4 @@
-const { languages, getTranslation, defaultLanguage } = require('../config/lang');
+const { languages, getTranslation, defaultLanguage } = require('../../config/lang');
 
 const i18n = (req, res, next) => {
     // Ambil bahasa dari session, cookie, atau default
@@ -8,7 +8,7 @@ const i18n = (req, res, next) => {
     const validLang = languages[lang] ? lang : defaultLanguage;
     
     // Set helper function untuk template
-    res.locals.__ = (key) => {
+    res.locals.translate = (key) => {
         return getTranslation(validLang, key);
     };
     

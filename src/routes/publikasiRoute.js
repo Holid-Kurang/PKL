@@ -113,7 +113,7 @@ router.get("/publikasi", async (req, res) => {
 
         // 3. Jenis publikasi terpopuler tahun ini
         const isLogin = req.session.isLogin || false;
-        const { languages } = require('../config/lang');
+        const { languages } = require('../../config/lang');
         const currentLang = req.language || 'id';
 
         const jenisPublikasiLabels = {
