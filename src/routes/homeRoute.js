@@ -44,44 +44,44 @@ async function getProdiData() {
             pengabdianPNBP, pengabdianPusat,
             haki, buku, jupeng] = await Promise.all([
                 penelitianPNBPModel.find({}, 'Prodi'),
-                penelitianPusatModel.find({}, 'PRODI'),
+                penelitianPusatModel.find({}, 'Prodi'),
                 penelitianMandiriModel.find({}, 'Prodi'),
                 pengabdianPNBPModel.find({}, 'Prodi'),
-                pengabdianPusatModel.find({}, 'PRODI'),
-                hakiModel.find({}, '_prodi_nama'),
-                bukuModel.find({}, '_prodi_nama'),
-                jupengModel.find({}, '_prodi_nama')
+                pengabdianPusatModel.find({}, 'Prodi'),
+                hakiModel.find({}, 'Prodi'),
+                bukuModel.find({}, 'Prodi'),
+                jupengModel.find({}, 'Prodi')
             ]);
 
         // Kumpulkan semua program studi unik
         const prodiSet = new Set();
 
         penelitianPNBP.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
-        penelitianPusat.forEach(item => item.PRODI && prodiSet.add(item.PRODI));
+        penelitianPusat.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
         penelitianMandiri.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
         pengabdianPNBP.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
-        pengabdianPusat.forEach(item => item.PRODI && prodiSet.add(item.PRODI));
-        haki.forEach(item => item._prodi_nama && prodiSet.add(item._prodi_nama));
-        buku.forEach(item => item._prodi_nama && prodiSet.add(item._prodi_nama));
-        jupeng.forEach(item => item._prodi_nama && prodiSet.add(item._prodi_nama));
+        pengabdianPusat.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
+        haki.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
+        buku.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
+        jupeng.forEach(item => item.Prodi && prodiSet.add(item.Prodi));
 
         // Buat array data per prodi
         const prodiData = Array.from(prodiSet).map(prodi => {
             return {
                 name: prodi,
                 penelitian: {
-                    pusat: penelitianPusat.filter(item => item.PRODI === prodi).length,
+                    pusat: penelitianPusat.filter(item => item.Prodi === prodi).length,
                     pnbp: penelitianPNBP.filter(item => item.Prodi === prodi).length,
                     mandiri: penelitianMandiri.filter(item => item.Prodi === prodi).length
                 },
                 pengabdian: {
                     pnbp: pengabdianPNBP.filter(item => item.Prodi === prodi).length,
-                    pusat: pengabdianPusat.filter(item => item.PRODI === prodi).length
+                    pusat: pengabdianPusat.filter(item => item.Prodi === prodi).length
                 },
                 publikasi: {
-                    haki: haki.filter(item => item._prodi_nama === prodi).length,
-                    buku: buku.filter(item => item._prodi_nama === prodi).length,
-                    jupeng: jupeng.filter(item => item._prodi_nama === prodi).length
+                    haki: haki.filter(item => item.Prodi === prodi).length,
+                    buku: buku.filter(item => item.Prodi === prodi).length,
+                    jupeng: jupeng.filter(item => item.Prodi === prodi).length
                 }
             };
         });
@@ -111,19 +111,19 @@ router.get("/api/dashboard-data", async (req, res) => {
                 pengabdianPusatModel.countDocuments(),
                 getProdiData()
             ]);
-        
+
         const publikasiCounts = {
             "HAKI": totalHAKI,
             "Buku": totalBuku,
             "Jurnal Pengabdian": totalJupeng
         };
-        
+
         const penelitianCounts = {
             "PNBP": totalPNBP,
             "Pusat": totalPusat,
             "Mandiri": totalMandiri
         };
-        
+
         const pengabdianCounts = {
             "PNBP": totalPengabdianPNBP,
             "Pusat": totalPengabdianPusat
@@ -148,7 +148,7 @@ router.get("/api/dashboard-data", async (req, res) => {
 
         let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
         prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
-        
+
         res.json({
             success: true,
             data: {
@@ -176,7 +176,7 @@ router.get("/api/prodi-options", async (req, res) => {
     try {
         let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
         prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
-        
+
         res.json({
             success: true,
             data: prodiOptions
@@ -195,7 +195,7 @@ router.get("/", async (req, res) => {
     const isLogin = req.session.isLogin || false;
     const { languages } = require('../../config/lang');
     const currentLang = req.language || 'id';
-    
+
     res.render("index", {
         title: "Home",
         isLogin,

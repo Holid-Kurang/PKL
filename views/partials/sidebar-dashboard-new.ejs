@@ -1,0 +1,105 @@
+<aside class="flex flex-col flex-shrink-0 w-64 text-white bg-indigo">
+    <div class="flex items-center justify-center h-20 text-2xl font-bold border-b border-white/20">
+        <span class="mr-3 material-icons-outlined">dashboard</span>
+        Dashboard
+    </div>
+    <nav class="flex-1 px-4 py-6 space-y-2">
+        <!-- Penelitian Menu -->
+        <div>
+            <button onclick="toggleMenu('penelitianMenu')"
+                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
+                <span class="flex items-center">
+                    <span class="mr-3 material-icons-outlined">science</span>
+                    <%= translate('navbar.penelitian') %>
+                </span>
+                <span class="transition-transform material-icons-outlined" id="penelitianIcon">expand_more</span>
+            </button>
+            <div class="mx-6 mt-2 rounded submenu bg-veronica" id="penelitianMenu">
+                <button onclick="loadDashboardCategory('penelitian-pnbp')" 
+                   class="block w-full px-8 py-2 text-sm text-center transition-colors rounded-lg sidebar-item hover:bg-white/10">
+                    <%= translate('categories.pnbp') %>
+                </button>
+                <button onclick="loadDashboardCategory('penelitian-pusat')" 
+                   class="block w-full px-8 py-2 text-sm text-center transition-colors rounded-lg sidebar-item hover:bg-white/10">
+                    <%= translate('categories.pusat') %>
+                </button>
+                <button onclick="loadDashboardCategory('penelitian-mandiri')" 
+                   class="block w-full px-8 py-2 text-sm text-center transition-colors rounded-lg sidebar-item hover:bg-white/10">
+                    <%= translate('categories.mandiri') %>
+                </button>
+            </div>
+        </div>
+
+        <!-- Pengabdian Menu -->
+        <div>
+            <button onclick="toggleMenu('pengabdianMenu')"
+                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
+                <span class="flex items-center">
+                    <span class="mr-3 material-icons-outlined">local_library</span>
+                    <%= translate('navbar.pengabdian') %>
+                </span>
+                <span class="transition-transform material-icons-outlined" id="pengabdianIcon">expand_more</span>
+            </button>
+            <div class="mx-6 mt-2 rounded submenu bg-veronica" id="pengabdianMenu">
+                <button onclick="loadDashboardCategory('pengabdian-pnbp')" 
+                   class="block w-full px-8 py-2 text-sm text-center transition-colors rounded-lg sidebar-item hover:bg-white/10">
+                    <%= translate('categories.pnbp') %>
+                </button>
+                <button onclick="loadDashboardCategory('pengabdian-pusat')" 
+                   class="block w-full px-8 py-2 text-sm text-center transition-colors rounded-lg sidebar-item hover:bg-white/10">
+                    <%= translate('categories.pusat') %>
+                </button>
+            </div>
+        </div>
+
+        <!-- Publikasi Menu -->
+        <div>
+            <button onclick="toggleMenu('publikasiMenu')"
+                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
+                <span class="flex items-center">
+                    <span class="mr-3 material-icons-outlined">groups</span>
+                    <%= translate('navbar.publikasi') %>
+                </span>
+                <span class="transition-transform material-icons-outlined" id="publikasiIcon">expand_more</span>
+            </button>
+            <div class="mx-6 mt-2 rounded submenu bg-veronica" id="publikasiMenu">
+                <button onclick="loadDashboardCategory('publikasi-buku')" 
+                   class="block w-full px-8 py-2 text-sm text-center transition-colors rounded-lg sidebar-item hover:bg-white/10">
+                    <%= translate('categories.buku') %>
+                </button>
+                <button onclick="loadDashboardCategory('publikasi-haki')" 
+                   class="block w-full px-8 py-2 text-sm text-center transition-colors rounded-lg sidebar-item hover:bg-white/10">
+                    <%= translate('categories.haki') %>
+                </button>
+                <button onclick="loadDashboardCategory('publikasi-jupeng')" 
+                   class="block w-full px-8 py-2 text-sm text-center transition-colors rounded-lg sidebar-item hover:bg-white/10">
+                    <%= translate('categories.jupeng') %>
+                </button>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div>
+            <button onclick="loadSettings()" 
+                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg sidebar-item bg-white/20">
+                <span class="flex items-center">
+                    <span class="mr-3 material-icons-outlined">settings</span>
+                    <%= translate('navbar.pengaturan') %>
+                </span>
+            </a>
+        </div>
+    </nav>
+    
+    <div class="px-4 py-6 border-t border-white/20">
+        <a href="/" class="flex items-center px-4 py-3 transition-colors rounded-lg hover:bg-white/10">
+            <span class="mr-3 material-icons-outlined">home</span>
+            <%= translate('auth.kembali') %>
+        </a>
+        <a href="/dashboard/logout" class="flex items-center px-4 py-3 transition-colors rounded-lg hover:bg-white/10">
+            <span class="mr-3 material-icons-outlined">logout</span>
+            <%= translate('auth.logout') %>
+        </a>
+    </div>
+</aside>
+
+<script src="/script/sidebar-dashboard.js"></script>

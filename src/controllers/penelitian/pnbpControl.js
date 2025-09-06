@@ -8,10 +8,10 @@ exports.getAllData = async (req, res) => {
         // --- Menangani Parameter untuk Pencarian dan Pagination ---
         const searchQuery = req.query.search || '';
         const page = parseInt(req.query.page) || 1;
-        
+
         // Mengambil limit dari query, dengan nilai default 50 jika tidak ada
-        const limit = parseInt(req.query.limit) || 50; 
-        
+        const limit = parseInt(req.query.limit) || 50;
+
         const skip = (page - 1) * limit;
 
         // --- Membuat Filter Pencarian (jika ada) ---
@@ -21,9 +21,7 @@ exports.getAllData = async (req, res) => {
             filter = {
                 $or: [
                     { Judul: regex },
-                    { Ketua: regex },
-                    { Prodi: regex }, // Pastikan nama field di model adalah 'PRODI'
-                    { SKEMA: regex }
+                    { Prodi: regex },
                 ]
             };
         }
@@ -64,7 +62,7 @@ exports.createData = async (req, res) => {
             Judul = '-', SKEMA = '-', Prodi = '-', Ketua = '-',
             Biaya = 0, Tahun = 0, Nilai = 0
         } = req.body;
-        
+
         // Handle Anggota array from form data
         let Anggota = req.body['Anggota[]'] || [];
         // Ensure Anggota is always an array, even if it contains only one element
@@ -77,7 +75,7 @@ exports.createData = async (req, res) => {
             SKEMA: SKEMA || '-',
             Prodi: Prodi || '-',
             Ketua: Ketua || '-',
-            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [], 
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [],
             Biaya: Biaya || 0,
             Tahun: Tahun || 0,
             Nilai: Nilai || 0
@@ -124,7 +122,7 @@ exports.updateData = async (req, res) => {
         if (!Array.isArray(Anggota)) {
             Anggota = [Anggota];
         }
-        
+
         const updatedData = {
             Judul: Judul || '-',
             SKEMA: SKEMA || '-',

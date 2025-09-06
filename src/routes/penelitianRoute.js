@@ -50,7 +50,7 @@ router.get("/penelitian", async (req, res) => {
             Promise.all([
                 pusatModel.aggregate([
                     { $match: { TAHUN: currentYear } },
-                    { $group: { _id: "$PRODI", count: { $sum: 1 } } }
+                    { $group: { _id: "$Prodi", count: { $sum: 1 } } }
                 ]),
                 pnbpModel.aggregate([
                     { $match: { Tahun: currentYear } },
@@ -124,7 +124,7 @@ router.get("/penelitian", async (req, res) => {
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahPerProdi": [
-                            { $group: { _id: "$PRODI", total: { $sum: 1 } } },
+                            { $group: { _id: "$Prodi", total: { $sum: 1 } } },
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahDanaPerTahun": [
@@ -132,7 +132,7 @@ router.get("/penelitian", async (req, res) => {
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahDanaPerProdi": [
-                            { $group: { _id: "$PRODI", total: { $sum: "$BIAYA" } } },
+                            { $group: { _id: "$Prodi", total: { $sum: "$BIAYA" } } },
                             { $sort: { _id: 1 } }
                         ],
                         "avgDanaPerTahun": [
@@ -140,7 +140,7 @@ router.get("/penelitian", async (req, res) => {
                             { $sort: { _id: 1 } }
                         ],
                         "avgDanaPerProdi": [
-                            { $group: { _id: "$PRODI", avg: { $avg: "$BIAYA" } } },
+                            { $group: { _id: "$Prodi", avg: { $avg: "$BIAYA" } } },
                             { $sort: { _id: 1 } }
                         ]
                     }

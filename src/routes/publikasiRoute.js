@@ -21,7 +21,7 @@ router.get("/publikasi", async (req, res) => {
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahPerProdi": [
-                            { $group: { _id: "$_prodi_nama", count: { $sum: 1 } } },
+                            { $group: { _id: "$Prodi", count: { $sum: 1 } } },
                             { $sort: { _id: 1 } }
                         ]
                     }
@@ -40,7 +40,7 @@ router.get("/publikasi", async (req, res) => {
                             { $group: { _id: "$hki_jenis", jumlahHKI: { $sum: 1 } } }
                         ],
                         "jumlahPerProdi": [
-                            { $group: { _id: "$_prodi_nama", jumlahHKI: { $sum: 1 } } },
+                            { $group: { _id: "$Prodi", jumlahHKI: { $sum: 1 } } },
                             { $sort: { _id: 1 } }
                         ]
                     }
@@ -56,7 +56,7 @@ router.get("/publikasi", async (req, res) => {
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahPerProdi": [
-                            { $group: { _id: "$_prodi_nama", jumlahBuku: { $sum: 1 } } },
+                            { $group: { _id: "$Prodi", jumlahBuku: { $sum: 1 } } },
                             { $sort: { _id: 1 } }
                         ]
                     }
@@ -79,19 +79,19 @@ router.get("/publikasi", async (req, res) => {
         // Tambahkan data dari jupeng tahun ini
         const jupengProdiTahunIni = await jupengModel.aggregate([
             { $match: { jurnal_tahun: tahunSekarang } },
-            { $group: { _id: "$_prodi_nama", count: { $sum: 1 } } }
+            { $group: { _id: "$Prodi", count: { $sum: 1 } } }
         ]);
 
         // Tambahkan data dari haki tahun ini
         const hakiProdiTahunIni = await hakiModel.aggregate([
             { $match: { hki_tahun: tahunSekarang } },
-            { $group: { _id: "$_prodi_nama", count: { $sum: 1 } } }
+            { $group: { _id: "$Prodi", count: { $sum: 1 } } }
         ]);
 
         // Tambahkan data dari buku tahun ini
         const bukuProdiTahunIni = await bukuModel.aggregate([
             { $match: { buku_tahun: tahunSekarang } },
-            { $group: { _id: "$_prodi_nama", count: { $sum: 1 } } }
+            { $group: { _id: "$Prodi", count: { $sum: 1 } } }
         ]);
 
         // Gabungkan semua data prodi
@@ -118,14 +118,14 @@ router.get("/publikasi", async (req, res) => {
 
         const jenisPublikasiLabels = {
             'id': {
-            'Jurnal Pengabdian': 'Jurnal Pengabdian',
-            'HAKI': 'HAKI',
-            'Buku': 'Buku'
+                'Jurnal Pengabdian': 'Jurnal Pengabdian',
+                'HAKI': 'HAKI',
+                'Buku': 'Buku'
             },
             'en': {
-            'Jurnal Pengabdian': 'Community Service Journal',
-            'HAKI': 'Intellectual Property Rights',
-            'Buku': 'Book'
+                'Jurnal Pengabdian': 'Community Service Journal',
+                'HAKI': 'Intellectual Property Rights',
+                'Buku': 'Book'
             }
         };
 
@@ -139,8 +139,8 @@ router.get("/publikasi", async (req, res) => {
         let jumlahJenisTerpopuler = 0;
         Object.entries(jenisPublikasiTahunIni).forEach(([jenis, jumlah]) => {
             if (jumlah > jumlahJenisTerpopuler) {
-            jenisPublikasiTerpopuler = jenisPublikasiLabels[currentLang][jenis] || jenis;
-            jumlahJenisTerpopuler = jumlah;
+                jenisPublikasiTerpopuler = jenisPublikasiLabels[currentLang][jenis] || jenis;
+                jumlahJenisTerpopuler = jumlah;
             }
         });
 
@@ -149,7 +149,7 @@ router.get("/publikasi", async (req, res) => {
         const totalHaki = hakiData[0].jumlahPerTahun.reduce((sum, item) => sum + item.jumlahHKI, 0);
         const totalBuku = bukuData[0].jumlahPerTahun.reduce((sum, item) => sum + item.jumlahBuku, 0);
         const totalPublikasiKeseluruhan = totalJupeng + totalHaki + totalBuku;
-        
+
         // Buat objek gabunganData
         const gabunganData = {
             totalPublikasiTahunIni,

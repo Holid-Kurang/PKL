@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const HAKISchema = new mongoose.Schema({
-    hki_judul: {
+    Judul: {
         type: String,
         required: true
     },
@@ -29,7 +29,7 @@ const HAKISchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    _prodi_nama: {
+    Prodi: {
         type: String,
         required: true
     }

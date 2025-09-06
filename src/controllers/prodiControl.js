@@ -24,17 +24,17 @@ const getProdiStats = async (prodiName) => {
                 {
                     $facet: {
                         "jumlahPerTahun": [
-                            { $match: { PRODI: prodiName } },
+                            { $match: { Prodi: prodiName } },
                             { $group: { _id: "$TAHUN", total: { $sum: 1 } } },
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahDanaPerTahun": [
-                            { $match: { PRODI: prodiName } },
+                            { $match: { Prodi: prodiName } },
                             { $group: { _id: "$TAHUN", total: { $sum: "$BIAYA" } } },
                             { $sort: { _id: 1 } }
                         ],
                         "avgDanaPerTahun": [
-                            { $match: { PRODI: prodiName } },
+                            { $match: { Prodi: prodiName } },
                             { $group: { _id: "$TAHUN", avg: { $avg: "$BIAYA" } } },
                             { $sort: { _id: 1 } }
                         ],
@@ -122,7 +122,7 @@ const getProdiStats = async (prodiName) => {
                 {
                     $facet: {
                         "jumlahPerTahun": [
-                            { $match: { _prodi_nama: prodiName } },
+                            { $match: { Prodi: prodiName } },
                             { $group: { _id: "$buku_tahun", jumlahBuku: { $sum: 1 } } },
                             { $sort: { _id: 1 } }
                         ]
@@ -134,7 +134,7 @@ const getProdiStats = async (prodiName) => {
                 {
                     $facet: {
                         "jumlahPerTahun": [
-                            { $match: { _prodi_nama: prodiName } },
+                            { $match: { Prodi: prodiName } },
                             { $group: { _id: "$jurnal_tahun", totalPublikasi: { $sum: 1 } } },
                             { $sort: { _id: 1 } }
                         ]
@@ -146,12 +146,12 @@ const getProdiStats = async (prodiName) => {
                 {
                     $facet: {
                         "jumlahPerTahun": [
-                            { $match: { _prodi_nama: prodiName } },
+                            { $match: { Prodi: prodiName } },
                             { $group: { _id: "$hki_tahun", jumlahHKI: { $sum: 1 } } },
                             { $sort: { _id: 1 } }
                         ],
                         "jumlahPerJenis": [
-                            { $match: { _prodi_nama: prodiName } },
+                            { $match: { Prodi: prodiName } },
                             { $group: { _id: "$hki_jenis", jumlahHKI: { $sum: 1 } } }
                         ]
                     }
@@ -192,34 +192,34 @@ const createProdiSlug = (prodiName) => {
 exports.getProdiStats = async (req, res) => {
     try {
         const prodiSlug = req.params.prodi;
-        
+
         // Ambil semua prodi dari database
         let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
         prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
-        
+
         // Cari prodi yang sesuai dengan slug
-        const prodiName = prodiOptions.find(prodi => 
+        const prodiName = prodiOptions.find(prodi =>
             createProdiSlug(prodi) === prodiSlug
         );
-        
+
         if (!prodiName) {
-            return res.status(404).render('404page', { 
+            return res.status(404).render('404page', {
                 title: 'Program Studi Tidak Ditemukan',
                 url: req.originalUrl,
                 isLogin: req.session.isLogin || false
             });
         }
-        
+
         const stats = await getProdiStats(prodiName);
         const isLogin = req.session.isLogin || false;
-        
+
         res.render("prodi", {
             title: prodiName,
             prodi: prodiName,
             isLogin,
             ...stats
         });
-        
+
     } catch (error) {
         console.error('Error in getProdiStats:', error);
         res.status(500).send('Gagal memuat data program studi');

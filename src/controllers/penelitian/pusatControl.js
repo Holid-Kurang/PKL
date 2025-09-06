@@ -8,10 +8,10 @@ exports.getAllData = async (req, res) => {
         // --- Menangani Parameter untuk Pencarian dan Pagination ---
         const searchQuery = req.query.search || '';
         const page = parseInt(req.query.page) || 1;
-        
+
         // Mengambil limit dari query, dengan nilai default 50 jika tidak ada
-        const limit = parseInt(req.query.limit) || 50; 
-        
+        const limit = parseInt(req.query.limit) || 50;
+
         const skip = (page - 1) * limit;
 
         // --- Membuat Filter Pencarian (jika ada) ---
@@ -20,10 +20,8 @@ exports.getAllData = async (req, res) => {
             const regex = new RegExp(searchQuery, 'i'); // 'i' untuk case-insensitive
             filter = {
                 $or: [
-                    { JUDUL: regex },
-                    { NAMA: regex },
-                    { PRODI: regex }, // Pastikan nama field di model adalah 'PRODI'
-                    { SKEMA: regex }
+                    { Judul: regex },
+                    { Prodi: regex },
                 ]
             };
         }
@@ -39,7 +37,7 @@ exports.getAllData = async (req, res) => {
 
         let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
         prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
-        
+
         // --- Merender Halaman ---
         res.render('dashboard/penelitian/dash-pusat', {
             data,
@@ -67,8 +65,8 @@ exports.createData = async (req, res) => {
             NAMA = '-',
             NIP = '-',
             NIDN = '-',
-            PRODI = '-',
-            JUDUL = '-',
+            Prodi = '-',
+            Judul = '-',
             BIAYA = 0
         } = req.body;
 
@@ -83,11 +81,11 @@ exports.createData = async (req, res) => {
             TAHUN: TAHUN || 0,
             SKEMA: SKEMA || '-',
             NAMA: NAMA || '-',
-            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [], 
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [],
             NIP: NIP || '-',
             NIDN: NIDN || '-',
-            PRODI: PRODI || '-',
-            JUDUL: JUDUL || '-',
+            Prodi: Prodi || '-',
+            Judul: Judul || '-',
             BIAYA: BIAYA || 0
         });
 
@@ -127,8 +125,8 @@ exports.updateData = async (req, res) => {
             NAMA,
             NIP,
             NIDN,
-            PRODI,
-            JUDUL,
+            Prodi,
+            Judul,
             BIAYA
         } = req.body;
 
@@ -146,8 +144,8 @@ exports.updateData = async (req, res) => {
             Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [],
             NIP: NIP || '-',
             NIDN: NIDN || '-',
-            PRODI: PRODI || '-',
-            JUDUL: JUDUL || '-',
+            Prodi: Prodi || '-',
+            Judul: Judul || '-',
             BIAYA: BIAYA || 0
         };
 
@@ -174,7 +172,7 @@ exports.exportData = async (req, res) => {
         // Define header row
         worksheet.addRow([
             'TAHUN', 'SKEMA', 'NAMA', 'Anggota',
-            'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
+            'NIP', 'NIDN', 'Prodi', 'Judul', 'BIAYA'
         ]);
 
         // Add data rows
@@ -186,8 +184,8 @@ exports.exportData = async (req, res) => {
                 item.Anggota ? item.Anggota.join(', ') : '-',
                 item.NIP,
                 item.NIDN,
-                item.PRODI,
-                item.JUDUL,
+                item.Prodi,
+                item.Judul,
                 item.BIAYA
             ]);
         });
@@ -224,7 +222,7 @@ exports.importData = async (req, res) => {
         // Ambil header kolom dari baris pertama
         const expectedHeaders = [
             'TAHUN', 'SKEMA', 'NAMA', 'Anggota',
-            'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
+            'NIP', 'NIDN', 'Prodi', 'Judul', 'BIAYA'
         ];
         const headers = [];
         worksheet.getRow(1).eachCell(cell => headers.push(cell.value));
@@ -241,7 +239,7 @@ exports.importData = async (req, res) => {
             if (rowNumber === 1) return; // skip header
             const [
                 TAHUN, SKEMA, NAMA, Anggota,
-                NIP, NIDN, PRODI, JUDUL, BIAYA
+                NIP, NIDN, Prodi, Judul, BIAYA
             ] = row.values.slice(1); // slice(1) karena row.values[0] undefined
 
             // Parse anggota string menjadi array, handling titles with commas
@@ -259,8 +257,8 @@ exports.importData = async (req, res) => {
                 Anggota: anggotaArray,
                 NIP: NIP || '-',
                 NIDN: NIDN || '-',
-                PRODI: PRODI || '-',
-                JUDUL: JUDUL || '-',
+                Prodi: Prodi || '-',
+                Judul: Judul || '-',
                 BIAYA: parseFloat(BIAYA) || 0
             });
         });
@@ -284,7 +282,7 @@ exports.downloadTemplate = async (req, res) => {
         // Define header row
         worksheet.addRow([
             'TAHUN', 'SKEMA', 'NAMA', 'Anggota',
-            'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
+            'NIP', 'NIDN', 'Prodi', 'Judul', 'BIAYA'
         ]);
 
         // Add example data row
@@ -308,8 +306,8 @@ exports.downloadTemplate = async (req, res) => {
             { width: 40 }, // Anggota
             { width: 20 }, // NIP
             { width: 15 }, // NIDN
-            { width: 25 }, // PRODI
-            { width: 50 }, // JUDUL
+            { width: 25 }, // Prodi
+            { width: 50 }, // Judul
             { width: 15 }  // BIAYA
         ];
 

@@ -9,7 +9,6 @@ const methodOverride = require('method-override');
 const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 const i18n = require('./src/middlewares/i18n');
-const languageRoute = require('./src/routes/languageRoute');
 require('dotenv').config();
 
 connectDB(); // Connect to MongoDB
@@ -26,7 +25,7 @@ app.use(methodOverride('_method'));
 app.use(mongoSanitize());
 app.use(rateLimit({
     windowMs: 15 * 60 * 1000, // 15 menit
-    max: 100, // Batasi setiap IP hingga 100 permintaan per 15 menit
+    max: 5000, // Batasi setiap IP hingga 5000 permintaan per 15 menit
     standardHeaders: true,
     legacyHeaders: false,
 }));
@@ -46,7 +45,6 @@ app.use(session({
 app.use(i18n);
 
 // Routes
-app.use('/api', languageRoute);
 app.use("/", routes); // Gunakan routes yang sudah dibuat
 
 app.use( async (req, res, next) => {

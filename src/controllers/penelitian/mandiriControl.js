@@ -8,10 +8,10 @@ exports.getAllData = async (req, res) => {
         // --- Menangani Parameter untuk Pencarian dan Pagination ---
         const searchQuery = req.query.search || '';
         const page = parseInt(req.query.page) || 1;
-        
+
         // Mengambil limit dari query, dengan nilai default 50 jika tidak ada
-        const limit = parseInt(req.query.limit) || 50; 
-        
+        const limit = parseInt(req.query.limit) || 50;
+
         const skip = (page - 1) * limit;
 
         // --- Membuat Filter Pencarian (jika ada) ---
@@ -21,9 +21,7 @@ exports.getAllData = async (req, res) => {
             filter = {
                 $or: [
                     { Judul: regex },
-                    { Ketua: regex },
-                    { Prodi: regex }, // Pastikan nama field di model adalah 'PRODI'
-                    { Skema: regex }
+                    { Prodi: regex },
                 ]
             };
         }
@@ -39,7 +37,7 @@ exports.getAllData = async (req, res) => {
 
         let prodiOptions = await kategoriOptionModel.find({ kategori: 'Program Studi' });
         prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : []; // Ambil opsi prodi dari kategori
-            
+
         // --- Merender Halaman ---
         res.render('dashboard/penelitian/dash-mandiri', {
             data,
@@ -80,7 +78,7 @@ exports.createData = async (req, res) => {
         const newData = new mandiriModel({
             tahun: tahun || 0,
             Ketua: Ketua || '-',
-            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [], 
+            Anggota: Array.isArray(Anggota) ? Anggota.filter(item => item && item.trim() !== '') : [],
             Skema: Skema || '-',
             Judul: Judul || '-',
             Prodi: Prodi || '-',

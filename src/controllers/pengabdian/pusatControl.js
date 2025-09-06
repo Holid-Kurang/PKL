@@ -20,8 +20,7 @@ exports.getAllData = async (req, res) => {
             filter = {
                 $or: [
                     { Judul: regex },
-                    { Nama: regex },
-                    { SKEMA: regex }
+                    { Prodi: regex },
                 ]
             };
         }

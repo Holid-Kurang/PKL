@@ -32,13 +32,13 @@ function openEditModal(itemString) {
     form.action = `/dashboard/publikasi/haki/update/${item._id}`;
 
     // Isi setiap field dalam form edit dengan data dari item
-    document.getElementById('edit_hki_judul').value = item.hki_judul || '';
+    document.getElementById('edit_Judul').value = item.Judul || '';
     document.getElementById('edit_hki_jenis').value = item.hki_jenis || '';
     document.getElementById('edit_hki_bulan').value = item.hki_bulan || '';
     document.getElementById('edit_hki_tahun').value = item.hki_tahun || '';
     document.getElementById('edit_pengguna_kode').value = item.pengguna_kode || '';
     document.getElementById('edit__pengguna_nama').value = item._pengguna_nama || '';
-    document.getElementById('edit__prodi_nama').value = item._prodi_nama || '';
+    document.getElementById('edit_Prodi').value = item.Prodi || '';
 
     // Untuk file, tampilkan link jika ada file lama
     const fileLinkDiv = document.getElementById('edit_hki_file');
@@ -75,13 +75,13 @@ document.addEventListener('DOMContentLoaded', function () {
 function validateForm(event) {
     let valid = true;
     const requiredFields = [
-        'hki_judul',
+        'Judul',
         'hki_jenis',
         'hki_bulan',
         'hki_tahun',
         'pengguna_kode',
         '_pengguna_nama',
-        '_prodi_nama'
+        'Prodi'
     ];
     requiredFields.forEach(function (field) {
         const input = document.getElementById(field);
@@ -100,14 +100,14 @@ function validateForm(event) {
 }
 
 // General keyboard event handler for all modals
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     // Check if any modal is open
     const modals = ['addDataModal', 'editDataModal', 'deleteDataModal', 'importDataModal'];
     const openModal = modals.find(modalId => {
         const modal = document.getElementById(modalId);
         return modal && !modal.classList.contains('hidden');
     });
-    
+
     if (openModal) {
         if (event.key === 'Escape') {
             closeModal(openModal);
@@ -131,16 +131,16 @@ let currentSortDirection = 'asc';
 // Fungsi untuk sorting tabel
 function sortTable(column) {
     const table = document.querySelector('table tbody');
-    const rows = Array.from(table.querySelectorAll('tr')).filter(row => 
+    const rows = Array.from(table.querySelectorAll('tr')).filter(row =>
         !row.querySelector('td[colspan]') // Exclude "no data" row
     );
-    
+
     // Reset semua ikon sort
     document.querySelectorAll('.sort-icon').forEach(icon => {
         icon.textContent = 'unfold_more';
         icon.classList.remove('text-blue-600');
     });
-    
+
     // Determine sort direction
     if (currentSortColumn === column) {
         currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
@@ -148,32 +148,32 @@ function sortTable(column) {
         currentSortDirection = 'asc';
         currentSortColumn = column;
     }
-    
+
     // Update sort icon
     const sortIcon = document.getElementById(`sort-${column}`);
     if (sortIcon) {
         sortIcon.textContent = currentSortDirection === 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
         sortIcon.classList.add('text-blue-600');
     }
-    
+
     // Get column index for sorting (adjusted for publikasi HAKI table structure)
     const columnMap = {
-        'hki_judul': 1,
+        'Judul': 1,
         'hki_jenis': 2,
         'hki_bulan': 4,
         'hki_tahun': 5,
         'pengguna_kode': 6,
         '_pengguna_nama': 7,
-        '_prodi_nama': 8
+        'Prodi': 8
     };
-    
+
     const columnIndex = columnMap[column];
-    
+
     // Sort rows
     rows.sort((a, b) => {
         let aValue = a.cells[columnIndex].textContent.trim();
         let bValue = b.cells[columnIndex].textContent.trim();
-        
+
         // Handle numeric columns
         if (column === 'hki_tahun') {
             aValue = parseFloat(aValue) || 0;
@@ -183,17 +183,17 @@ function sortTable(column) {
             aValue = aValue.toLowerCase();
             bValue = bValue.toLowerCase();
         }
-        
+
         let comparison = 0;
         if (aValue > bValue) {
             comparison = 1;
         } else if (aValue < bValue) {
             comparison = -1;
         }
-        
+
         return currentSortDirection === 'asc' ? comparison : -comparison;
     });
-    
+
     // Update row numbers and reappend sorted rows
     rows.forEach((row, index) => {
         row.cells[0].textContent = index + 1; // Update row number

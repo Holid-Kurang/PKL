@@ -32,7 +32,7 @@ function openEditModal(itemString) {
     form.action = `/dashboard/publikasi/buku/update/${item._id}`;
 
     // Isi setiap field dalam form edit dengan data dari item
-    document.getElementById('edit_buku_judul').value = item.buku_judul || '';
+    document.getElementById('edit_Judul').value = item.Judul || '';
     document.getElementById('edit_buku_isbn').value = item.buku_isbn || '';
     document.getElementById('edit_buku_jumlah_halaman').value = item.buku_jumlah_halaman || '';
     document.getElementById('edit_buku_penerbit').value = item.buku_penerbit || '';
@@ -41,7 +41,7 @@ function openEditModal(itemString) {
     document.getElementById('edit_pengguna_kode').value = item.pengguna_kode || '';
     document.getElementById('edit__pengguna_jenis').value = item._pengguna_jenis || '';
     document.getElementById('edit__pengguna_nama').value = item._pengguna_nama || '';
-    document.getElementById('edit__prodi_nama').value = item._prodi_nama || '';
+    document.getElementById('edit_Prodi').value = item.Prodi || '';
 
     // Tampilkan modal edit
     openModal('editDataModal');
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function validateForm(event) {
     let valid = true;
     const requiredFields = [
-        'buku_judul',
+        'Judul',
         'buku_isbn',
         'buku_jumlah_halaman',
         'buku_penerbit',
@@ -77,7 +77,7 @@ function validateForm(event) {
         'pengguna_kode',
         '_pengguna_jenis',
         '_pengguna_nama',
-        '_prodi_nama'
+        'Prodi'
     ];
     requiredFields.forEach(function (field) {
         const input = document.getElementById(field);
@@ -96,14 +96,14 @@ function validateForm(event) {
 }
 
 // General keyboard event handler for all modals
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     // Check if any modal is open
     const modals = ['addDataModal', 'editDataModal', 'deleteDataModal', 'importDataModal'];
     const openModal = modals.find(modalId => {
         const modal = document.getElementById(modalId);
         return modal && !modal.classList.contains('hidden');
     });
-    
+
     if (openModal) {
         if (event.key === 'Escape') {
             closeModal(openModal);
@@ -127,16 +127,16 @@ let currentSortDirection = 'asc';
 // Fungsi untuk sorting tabel
 function sortTable(column) {
     const table = document.querySelector('table tbody');
-    const rows = Array.from(table.querySelectorAll('tr')).filter(row => 
+    const rows = Array.from(table.querySelectorAll('tr')).filter(row =>
         !row.querySelector('td[colspan]') // Exclude "no data" row
     );
-    
+
     // Reset semua ikon sort
     document.querySelectorAll('.sort-icon').forEach(icon => {
         icon.textContent = 'unfold_more';
         icon.classList.remove('text-blue-600');
     });
-    
+
     // Determine sort direction
     if (currentSortColumn === column) {
         currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
@@ -144,17 +144,17 @@ function sortTable(column) {
         currentSortDirection = 'asc';
         currentSortColumn = column;
     }
-    
+
     // Update sort icon
     const sortIcon = document.getElementById(`sort-${column}`);
     if (sortIcon) {
         sortIcon.textContent = currentSortDirection === 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
         sortIcon.classList.add('text-blue-600');
     }
-    
+
     // Get column index for sorting (adjusted for publikasi Buku table structure)
     const columnMap = {
-        'buku_judul': 1,
+        'Judul': 1,
         'buku_isbn': 2,
         'buku_jumlah_halaman': 3,
         'buku_penerbit': 4,
@@ -162,16 +162,16 @@ function sortTable(column) {
         'pengguna_kode': 7,
         '_pengguna_jenis': 8,
         '_pengguna_nama': 9,
-        '_prodi_nama': 10
+        'Prodi': 10
     };
-    
+
     const columnIndex = columnMap[column];
-    
+
     // Sort rows
     rows.sort((a, b) => {
         let aValue = a.cells[columnIndex].textContent.trim();
         let bValue = b.cells[columnIndex].textContent.trim();
-        
+
         // Handle numeric columns
         if (column === 'buku_jumlah_halaman' || column === 'buku_tahun') {
             aValue = parseFloat(aValue) || 0;
@@ -181,17 +181,17 @@ function sortTable(column) {
             aValue = aValue.toLowerCase();
             bValue = bValue.toLowerCase();
         }
-        
+
         let comparison = 0;
         if (aValue > bValue) {
             comparison = 1;
         } else if (aValue < bValue) {
             comparison = -1;
         }
-        
+
         return currentSortDirection === 'asc' ? comparison : -comparison;
     });
-    
+
     // Update row numbers and reappend sorted rows
     rows.forEach((row, index) => {
         row.cells[0].textContent = index + 1; // Update row number

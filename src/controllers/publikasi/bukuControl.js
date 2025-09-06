@@ -19,9 +19,8 @@ exports.getAllData = async (req, res) => {
             const regex = new RegExp(searchQuery, 'i'); // 'i' untuk case-insensitive
             filter = {
                 $or: [
-                    { buku_judul: regex },
-                    { _pengguna_nama: regex },
-                    { _prodi_nama: regex },
+                    { Judul: regex },
+                    { Prodi: regex },
                 ]
             };
         }
@@ -60,7 +59,7 @@ exports.createData = async (req, res) => {
     try {
         // Replace empty fields with '-'
         const {
-            buku_judul = '-',
+            Judul = '-',
             buku_isbn = '-',
             buku_jumlah_halaman = 0,
             buku_penerbit = '-',
@@ -69,10 +68,10 @@ exports.createData = async (req, res) => {
             pengguna_kode = '-',
             _pengguna_jenis = '-',
             _pengguna_nama = '-',
-            _prodi_nama = '-'
+            Prodi = '-'
         } = req.body;
         const newData = new bukuModel({
-            buku_judul: buku_judul || '-',
+            Judul: Judul || '-',
             buku_isbn: buku_isbn || '-',
             buku_jumlah_halaman: buku_jumlah_halaman || 0,
             buku_penerbit: buku_penerbit || '-',
@@ -81,7 +80,7 @@ exports.createData = async (req, res) => {
             pengguna_kode: pengguna_kode || '-',
             _pengguna_jenis: _pengguna_jenis || '-',
             _pengguna_nama: _pengguna_nama || '-',
-            _prodi_nama: _prodi_nama || '-'
+            Prodi: Prodi || '-'
         });
         await newData.save();
         res.redirect('/dashboard/publikasi/buku');
@@ -115,7 +114,7 @@ exports.updateData = async (req, res) => {
     try {
         const id = req.params.id;
         const {
-            buku_judul = '-',
+            Judul = '-',
             buku_isbn = '-',
             buku_jumlah_halaman = 0,
             buku_penerbit = '-',
@@ -124,10 +123,10 @@ exports.updateData = async (req, res) => {
             pengguna_kode = '-',
             _pengguna_jenis = '-',
             _pengguna_nama = '-',
-            _prodi_nama = '-'
+            Prodi = '-'
         } = req.body;
         const updatedData = {
-            buku_judul: buku_judul || '-',
+            Judul: Judul || '-',
             buku_isbn: buku_isbn || '-',
             buku_jumlah_halaman: buku_jumlah_halaman || 0,
             buku_penerbit: buku_penerbit || '-',
@@ -136,7 +135,7 @@ exports.updateData = async (req, res) => {
             pengguna_kode: pengguna_kode || '-',
             _pengguna_jenis: _pengguna_jenis || '-',
             _pengguna_nama: _pengguna_nama || '-',
-            _prodi_nama: _prodi_nama || '-'
+            Prodi: Prodi || '-'
         };
         await bukuModel.findByIdAndUpdate(id, updatedData);
         // get the current search query url from the request then redirect to the same page after update 
@@ -167,7 +166,7 @@ exports.exportData = async (req, res) => {
         // Add data rows
         data.forEach(item => {
             worksheet.addRow([
-                item.buku_judul || '-',
+                item.Judul || '-',
                 item.buku_isbn || '-',
                 item.buku_jumlah_halaman || 0,
                 item.buku_penerbit || '-',
@@ -176,7 +175,7 @@ exports.exportData = async (req, res) => {
                 item.pengguna_kode || '-',
                 item._pengguna_jenis || '-',
                 item._pengguna_nama || '-',
-                item._prodi_nama || '-'
+                item.Prodi || '-'
             ]);
         });
 
@@ -209,8 +208,8 @@ exports.importData = async (req, res) => {
         const headers = headerRow.values.slice(1); // values[0] is null
 
         const expectedHeaders = [
-            'buku_judul', 'buku_isbn', 'buku_jumlah_halaman', 'buku_penerbit', 'buku_file',
-            'buku_tahun', 'pengguna_kode', '_pengguna_jenis', '_pengguna_nama', '_prodi_nama'
+            'Judul', 'buku_isbn', 'buku_jumlah_halaman', 'buku_penerbit', 'buku_file',
+            'buku_tahun', 'pengguna_kode', '_pengguna_jenis', '_pengguna_nama', 'Prodi'
         ];
 
         // Cek apakah header sesuai urutan dan nama
@@ -224,12 +223,12 @@ exports.importData = async (req, res) => {
         worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
             if (rowNumber === 1) return; // skip header
             const [
-                buku_judul, buku_isbn, buku_jumlah_halaman, buku_penerbit, buku_file,
-                buku_tahun, pengguna_kode, _pengguna_jenis, _pengguna_nama, _prodi_nama
+                Judul, buku_isbn, buku_jumlah_halaman, buku_penerbit, buku_file,
+                buku_tahun, pengguna_kode, _pengguna_jenis, _pengguna_nama, Prodi
             ] = row.values.slice(1); // values[0] is null
 
             dataToInsert.push({
-                buku_judul: buku_judul || '-',
+                Judul: Judul || '-',
                 buku_isbn: buku_isbn || '-',
                 buku_jumlah_halaman: parseInt(buku_jumlah_halaman) || 0,
                 buku_penerbit: buku_penerbit || '-',
@@ -238,7 +237,7 @@ exports.importData = async (req, res) => {
                 pengguna_kode: pengguna_kode || '-',
                 _pengguna_jenis: _pengguna_jenis || '-',
                 _pengguna_nama: _pengguna_nama || '-',
-                _prodi_nama: _prodi_nama || '-'
+                Prodi: Prodi || '-'
             });
         });
 

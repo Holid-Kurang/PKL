@@ -19,10 +19,8 @@ exports.getAllData = async (req, res) => {
             const regex = new RegExp(searchQuery, 'i'); // 'i' untuk case-insensitive
             filter = {
                 $or: [
-                    { hki_judul: regex },
-                    { _pengguna_nama: regex },
-                    { _prodi_nama: regex }, // Pastikan nama field di model adalah 'PRODI'
-                    { hki_jenis: regex }
+                    { Judul: regex },
+                    { Prodi: regex },
                 ]
             };
         }
@@ -66,25 +64,25 @@ exports.createData = async (req, res) => {
     try {
         // Replace empty fields with '-'
         const {
-            hki_judul = '-',
+            Judul = '-',
             hki_jenis = '-',
             hki_file = '-',
             hki_bulan = '-',
             hki_tahun = 0,
             pengguna_kode = '-',
             _pengguna_nama = '-',
-            _prodi_nama = '-'
+            Prodi = '-'
         } = req.body;
         console.log(req.body);
         const newData = new hakiModel({
-            hki_judul: hki_judul || '-',
+            Judul: Judul || '-',
             hki_jenis: hki_jenis || '-',
             hki_file: hki_file || '-',
             hki_bulan: hki_bulan || '-',
             hki_tahun: hki_tahun || 0,
             pengguna_kode: pengguna_kode || '-',
             _pengguna_nama: _pengguna_nama || '-',
-            _prodi_nama: _prodi_nama || '-'
+            Prodi: Prodi || '-'
         });
 
         await newData.save();
@@ -119,25 +117,25 @@ exports.updateData = async (req, res) => {
     try {
         const id = req.params.id;
         const {
-            hki_judul = '-',
+            Judul = '-',
             hki_jenis = '-',
             hki_file = '-',
             hki_bulan = '-',
             hki_tahun = 0,
             pengguna_kode = '-',
             _pengguna_nama = '-',
-            _prodi_nama = '-'
+            Prodi = '-'
         } = req.body;
         console.log(req.body);
         const updatedData = {
-            hki_judul: hki_judul || '-',
+            Judul: Judul || '-',
             hki_jenis: hki_jenis || '-',
             hki_file: hki_file || '-',
             hki_bulan: hki_bulan || '-',
             hki_tahun: hki_tahun || 0,
             pengguna_kode: pengguna_kode || '-',
             _pengguna_nama: _pengguna_nama || '-',
-            _prodi_nama: _prodi_nama || '-'
+            Prodi: Prodi || '-'
         };
 
         await hakiModel.findByIdAndUpdate(id, updatedData);
@@ -169,14 +167,14 @@ exports.exportData = async (req, res) => {
         // Add data rows
         data.forEach(item => {
             worksheet.addRow([
-                item.hki_judul || '-',
+                item.Judul || '-',
                 item.hki_jenis || '-',
                 item.hki_file || '-',
                 item.hki_bulan || '-',
                 item.hki_tahun || 0,
                 item.pengguna_kode || '-',
                 item._pengguna_nama || '-',
-                item._prodi_nama || '-'
+                item.Prodi || '-'
             ]);
         });
 
@@ -213,8 +211,8 @@ exports.importData = async (req, res) => {
         const headers = headerRow.values.slice(1); // values[0] is null
 
         const expectedHeaders = [
-            'hki_judul', 'hki_jenis', 'hki_file', 'hki_bulan', 'hki_tahun',
-            'pengguna_kode', '_pengguna_nama', '_prodi_nama'
+            'Judul', 'hki_jenis', 'hki_file', 'hki_bulan', 'hki_tahun',
+            'pengguna_kode', '_pengguna_nama', 'Prodi'
         ];
 
         // Cek apakah header sesuai urutan dan nama

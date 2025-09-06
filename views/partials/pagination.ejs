@@ -1,0 +1,327 @@
+<div id="pagination" class="flex flex-col items-center justify-between px-5 py-4 bg-white border-t sm:flex-row">
+    <!-- Info Menampilkan data -->
+    <div id="infoDataDisplay" class="mb-4 text-sm text-gray-700 sm:mb-0">
+    </div>
+
+    <!-- Pagination buttons -->
+    <!-- akan muncul jika totalPages > 1 -->
+    <div id="paginationButtons" class="flex items-center space-x-1">
+        <!-- Previous button -->
+        <button id="prevButton"
+            class="relative inline-flex items-center px-2 py-2 text-gray-400 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 ">
+            <span class="sr-only">Previous</span>
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd" />
+            </svg>
+        </button>
+
+        <!-- Container untuk page numbers -->
+        <div id="pageNumbers" class="flex items-center space-x-1">
+            <!-- Page numbers akan diisi oleh JavaScript -->
+        </div>
+
+        <!-- Next button -->
+        <button id="nextButton"
+            class="relative inline-flex items-center px-2 py-2 text-gray-400 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 ">
+            <span class="sr-only">Next</span>
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd" />
+            </svg>
+        </button>
+    </div>
+</div>
+
+<script>
+    // Variabel global untuk pagination
+    let currentPage = 1;
+    const limit = 50; // Jumlah item per halaman
+    let totalPages = 1;
+    let totalItems = 0;
+
+    // Fungsi untuk menghitung dan memperbarui pagination
+    function updatePagination() {
+        const data = window.dashboardData || [];
+        totalItems = data.length;
+        totalPages = Math.ceil(totalItems / limit);
+
+        // Pastikan currentPage tidak melebihi totalPages
+        if (currentPage > totalPages && totalPages > 0) {
+            currentPage = totalPages;
+        }
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+
+        updateInfoDataDisplay();
+        updatePaginationButtons();
+        updatePageNumbers();
+        updateTableWithPagination();
+    }
+
+    // Fungsi untuk membuat dan memperbarui page numbers
+    function updatePageNumbers() {
+        const pageNumbersContainer = document.getElementById('pageNumbers');
+        pageNumbersContainer.innerHTML = '';
+
+        // Jika hanya 1 halaman atau kurang, jangan tampilkan page numbers
+        if (totalPages <= 1) {
+            return;
+        }
+
+        // Calculate pagination range (seperti logika EJS)
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, currentPage + 2);
+
+        // Adjust if we're near the beginning or end
+        if (currentPage <= 3) {
+            endPage = Math.min(totalPages, 5);
+        }
+        if (currentPage >= totalPages - 2) {
+            startPage = Math.max(1, totalPages - 4);
+        }
+
+        // First page and ellipsis
+        if (startPage > 1) {
+            pageNumbersContainer.appendChild(createPageButton(1, '1', false));
+
+            if (startPage > 2) {
+                pageNumbersContainer.appendChild(createEllipsis());
+            }
+        }
+
+        // Page numbers
+        for (let i = startPage; i <= endPage; i++) {
+            if (i === currentPage) {
+                pageNumbersContainer.appendChild(createPageButton(i, i.toString(), true));
+            } else {
+                pageNumbersContainer.appendChild(createPageButton(i, i.toString(), false));
+            }
+        }
+
+        // Last page and ellipsis
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                pageNumbersContainer.appendChild(createEllipsis());
+            }
+            pageNumbersContainer.appendChild(createPageButton(totalPages, totalPages.toString(), false));
+        }
+    }
+
+    // Fungsi helper untuk membuat tombol halaman
+    function createPageButton(pageNum, text, isActive) {
+        if (isActive) {
+            const span = document.createElement('span');
+            span.className =
+                'relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-indigo-600';
+            span.textContent = text;
+            return span;
+        } else {
+            const button = document.createElement('button');
+            button.onclick = () => goToPage(pageNum);
+            button.className =
+                'relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50';
+            button.textContent = text;
+            return button;
+        }
+    }
+
+    // Fungsi helper untuk membuat ellipsis
+    function createEllipsis() {
+        const span = document.createElement('span');
+        span.className =
+            'relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300';
+        span.textContent = '...';
+        return span;
+    }
+
+    // Fungsi untuk pindah ke halaman tertentu
+    function goToPage(pageNum) {
+        if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
+            currentPage = pageNum;
+            updatePagination();
+        }
+    }
+
+    // Update info data display
+    function updateInfoDataDisplay() {
+        const infoDataDisplay = document.getElementById('infoDataDisplay');
+
+        if (totalItems === 0) {
+            infoDataDisplay.innerHTML = 'Tidak ada data untuk ditampilkan';
+            return;
+        }
+
+        const startItem = ((currentPage - 1) * limit) + 1;
+        const endItem = Math.min(currentPage * limit, totalItems);
+        infoDataDisplay.innerHTML =
+            `Menampilkan <span class="font-medium">${startItem}</span> hingga <span class="font-medium">${endItem}</span> dari <span class="font-medium">${totalItems}</span> hasil`;
+    }
+
+    // Update table dengan data yang sudah dipaginate
+    function updateTableWithPagination() {
+        const data = window.dashboardData || [];
+        const startIndex = (currentPage - 1) * limit;
+        const endIndex = startIndex + limit;
+        const paginatedData = data.slice(startIndex, endIndex);
+
+        // Update header tabel
+        if (typeof createTableHeader === 'function') {
+            createTableHeader(data); // Gunakan data lengkap untuk header
+        }
+
+        // Update body tabel dengan data yang sudah dipaginate
+        if (typeof createTableBody === 'function') {
+            createTableBodyWithPagination(paginatedData, startIndex);
+        }
+    }
+
+    // Fungsi khusus untuk membuat body tabel dengan pagination
+    function createTableBodyWithPagination(data, startIndex) {
+        const tableBody = document.querySelector('tbody');
+        if (data.length === 0) {
+            tableBody.innerHTML = `
+            <tr>
+                <td colspan="100%" class="px-6 py-4 text-center text-gray-500">Tidak ada data tersedia</td>
+            </tr>
+            `;
+            return;
+        }
+
+        let bodyRows = '';
+        data.forEach((item, index) => {
+            const actualIndex = startIndex + index + 1; // Nomor urut yang benar
+            bodyRows += '<tr class="border-b hover:bg-gray-50">';
+            bodyRows += `<td class="px-6 py-4">${actualIndex}</td>`;
+
+            Object.keys(item).forEach(key => {
+                if (key !== '_id' && key !== '__v') {
+                    if (key === 'Judul') {
+                        bodyRows +=
+                            `<td class="px-6 py-4"><p class="w-96 text-wrap">${item[key]}</p></td>`;
+                    } else if (key === 'Anggota') {
+                        bodyRows += `<td class="relative px-6 py-4">`;
+                        let anggotaArray = [];
+                        if (item.Anggota && Array.isArray(item.Anggota)) {
+                            anggotaArray = item.Anggota.filter(anggota => anggota && anggota.trim() !==
+                                '');
+                        }
+                        if (anggotaArray.length > 0) {
+                            bodyRows += `<div class="flex flex-col space-y-1">`;
+                            anggotaArray.forEach(anggota => {
+                                bodyRows +=
+                                    `<div class="px-2 py-1 text-xs text-blue-800 bg-blue-100 rounded-md">${anggota}</div>`;
+                            });
+                            bodyRows += `</div>`;
+                        } else {
+                            bodyRows += `<span class="italic text-gray-400">-</span>`;
+                        }
+                        bodyRows += `</td>`;
+                    } else {
+                        bodyRows += `<td class="px-6 py-4">${item[key]}</td>`;
+                    }
+                }
+            });
+
+            // Add action buttons column
+            bodyRows += `<td class="sticky right-0 z-10 px-6 py-4 text-center bg-gray-200 whitespace-nowrap">
+                            <button 
+                                onclick="openEditModal('${JSON.stringify(item).replace(/'/g, '&apos;')}')" 
+                                class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">
+                                Edit
+                            </button>
+                            <button
+                                onclick="openDeleteModal('/dashboard/penelitian/pnbp/delete/${item._id}?_method=DELETE')"
+                                class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
+                                Hapus
+                            </button>
+                        </td>`;
+            bodyRows += '</tr>';
+        });
+
+        tableBody.innerHTML = bodyRows;
+    }
+
+    // Previous button logic
+    function goToPreviousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            updatePagination();
+        }
+    }
+
+    // Next button logic
+    function goToNextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updatePagination();
+        }
+    }
+
+    // Update button states
+    function updatePaginationButtons() {
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const paginationContainer = document.getElementById('paginationButtons');
+
+        // Sembunyikan pagination jika total halaman <= 1
+        if (totalPages <= 1) {
+            paginationContainer.style.display = 'none';
+        } else {
+            paginationContainer.style.display = 'flex';
+        }
+
+        // Update previous button state
+        if (currentPage <= 1) {
+            prevButton.classList.add('cursor-not-allowed', 'opacity-50');
+            prevButton.disabled = true;
+            prevButton.onclick = null;
+        } else {
+            prevButton.classList.remove('cursor-not-allowed', 'opacity-50');
+            prevButton.disabled = false;
+            prevButton.onclick = goToPreviousPage;
+        }
+
+        // Update next button state
+        if (currentPage >= totalPages) {
+            nextButton.classList.add('cursor-not-allowed', 'opacity-50');
+            nextButton.disabled = true;
+            nextButton.onclick = null;
+        } else {
+            nextButton.classList.remove('cursor-not-allowed', 'opacity-50');
+            nextButton.disabled = false;
+            nextButton.onclick = goToNextPage;
+        }
+    }
+
+    // Reset pagination ke halaman 1
+    function resetPagination() {
+        currentPage = 1;
+        updatePagination();
+    }
+
+    // Inisialisasi saat DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        updatePagination();
+
+        // Daftarkan callback untuk perubahan data
+        if (typeof window.registerDataChangeCallback === 'function') {
+            window.registerDataChangeCallback('pagination', resetPagination);
+        } else {
+            // Fallback jika sistem callback belum ada
+            setTimeout(() => {
+                if (typeof window.registerDataChangeCallback === 'function') {
+                    window.registerDataChangeCallback('pagination', resetPagination);
+                }
+            }, 200);
+        }
+    });
+
+    // Export fungsi untuk digunakan dari luar
+    window.updatePagination = updatePagination;
+    window.resetPagination = resetPagination;
+    window.goToPage = goToPage;
+</script>

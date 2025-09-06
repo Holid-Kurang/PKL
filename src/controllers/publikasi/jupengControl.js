@@ -7,10 +7,10 @@ exports.getAllData = async (req, res) => {
         // --- Menangani Parameter untuk Pencarian dan Pagination ---
         const searchQuery = req.query.search || '';
         const page = parseInt(req.query.page) || 1;
-        
+
         // Mengambil limit dari query, dengan nilai default 50 jika tidak ada
-        const limit = parseInt(req.query.limit) || 50; 
-        
+        const limit = parseInt(req.query.limit) || 50;
+
         const skip = (page - 1) * limit;
 
         // --- Membuat Filter Pencarian (jika ada) ---
@@ -19,9 +19,8 @@ exports.getAllData = async (req, res) => {
             const regex = new RegExp(searchQuery, 'i'); // 'i' untuk case-insensitive
             filter = {
                 $or: [
-                    { jurnal_judul: regex },
-                    { _pengguna_nama: regex },
-                    { _prodi_nama: regex }, // Pastikan nama field di model adalah 'PRODI'
+                    { Judul: regex },
+                    { Prodi: regex },
                 ]
             };
         }
@@ -60,7 +59,7 @@ exports.createData = async (req, res) => {
     try {
         // Replace empty fields with '-'
         const {
-            jurnal_judul = '-',
+            Judul = '-',
             jurnal_url = '-',
             jurnal_file = '-',
             jurnal_tahun = 0,
@@ -68,14 +67,14 @@ exports.createData = async (req, res) => {
             pengguna_kode = '-',
             _pengguna_jenis = '-',
             _pengguna_nama = '-',
-            _prodi_nama = '-',
+            Prodi = '-',
             _personil_data_ketua = '-',
             _personil_data_ketua_kode = '-',
             _personil_data_ketua_jenis = '-'
         } = req.body;
 
         const newData = new jupengModel({
-            jurnal_judul: jurnal_judul || '-',
+            Judul: Judul || '-',
             jurnal_url: jurnal_url || '-',
             jurnal_file: jurnal_file || '-',
             jurnal_tahun: jurnal_tahun || 0,
@@ -83,7 +82,7 @@ exports.createData = async (req, res) => {
             pengguna_kode: pengguna_kode || '-',
             _pengguna_jenis: _pengguna_jenis || '-',
             _pengguna_nama: _pengguna_nama || '-',
-            _prodi_nama: _prodi_nama || '-',
+            Prodi: Prodi || '-',
             _personil_data_ketua: _personil_data_ketua || '-',
             _personil_data_ketua_kode: _personil_data_ketua_kode || '-',
             _personil_data_ketua_jenis: _personil_data_ketua_jenis || '-'
@@ -121,7 +120,7 @@ exports.updateData = async (req, res) => {
     try {
         const id = req.params.id;
         const {
-            jurnal_judul = '-',
+            Judul = '-',
             jurnal_url = '-',
             jurnal_file = '-',
             jurnal_tahun = 0,
@@ -129,14 +128,14 @@ exports.updateData = async (req, res) => {
             pengguna_kode = '-',
             _pengguna_jenis = '-',
             _pengguna_nama = '-',
-            _prodi_nama = '-',
+            Prodi = '-',
             _personil_data_ketua = '-',
             _personil_data_ketua_kode = '-',
             _personil_data_ketua_jenis = '-'
         } = req.body;
 
         const updatedData = {
-            jurnal_judul: jurnal_judul || '-',
+            Judul: Judul || '-',
             jurnal_url: jurnal_url || '-',
             jurnal_file: jurnal_file || '-',
             jurnal_tahun: jurnal_tahun || 0,
@@ -144,7 +143,7 @@ exports.updateData = async (req, res) => {
             pengguna_kode: pengguna_kode || '-',
             _pengguna_jenis: _pengguna_jenis || '-',
             _pengguna_nama: _pengguna_nama || '-',
-            _prodi_nama: _prodi_nama || '-',
+            Prodi: Prodi || '-',
             _personil_data_ketua: _personil_data_ketua || '-',
             _personil_data_ketua_kode: _personil_data_ketua_kode || '-',
             _personil_data_ketua_jenis: _personil_data_ketua_jenis || '-'
@@ -180,7 +179,7 @@ exports.exportData = async (req, res) => {
         // Add data rows
         data.forEach(item => {
             worksheet.addRow([
-                item.jurnal_judul || '-',
+                item.Judul || '-',
                 item.jurnal_url || '-',
                 item.jurnal_file || '-',
                 item.jurnal_tahun || 0,
@@ -188,7 +187,7 @@ exports.exportData = async (req, res) => {
                 item.pengguna_kode || '-',
                 item._pengguna_jenis || '-',
                 item._pengguna_nama || '-',
-                item._prodi_nama || '-',
+                item.Prodi || '-',
                 item._personil_data_ketua || '-',
                 item._personil_data_ketua_kode || '-',
                 item._personil_data_ketua_jenis || '-'
@@ -221,8 +220,8 @@ exports.importData = async (req, res) => {
         const headers = headerRow.values.slice(1); // values[0] is null
 
         const expectedHeaders = [
-            'jurnal_judul', 'jurnal_url', 'jurnal_file', 'jurnal_tahun', 'jurnal_bulan',
-            'pengguna_kode', '_pengguna_jenis', '_pengguna_nama', '_prodi_nama',
+            'Judul', 'jurnal_url', 'jurnal_file', 'jurnal_tahun', 'jurnal_bulan',
+            'pengguna_kode', '_pengguna_jenis', '_pengguna_nama', 'Prodi',
             '_personil_data_ketua', '_personil_data_ketua_kode', '_personil_data_ketua_jenis'
         ];
 

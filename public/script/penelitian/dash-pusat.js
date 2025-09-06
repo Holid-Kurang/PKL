@@ -28,11 +28,11 @@ function openEditModal(itemString) {
     document.getElementById('edit_NAMA').value = item.NAMA || '';
     document.getElementById('edit_NIP').value = item.NIP || '';
     document.getElementById('edit_NIDN').value = item.NIDN || '';
-    document.getElementById('edit_PRODI').value = item.PRODI || '';
-    document.getElementById('edit_JUDUL').value = item.JUDUL || '';
+    document.getElementById('edit_Prodi').value = item.Prodi || '';
+    document.getElementById('edit_Judul').value = item.Judul || '';
     document.getElementById('edit_BIAYA').value = item.BIAYA || '';
 
-    
+
     // Handle dynamic anggota fields
     const anggotaArray = item.Anggota || [];
     populateEditAnggotaFields(anggotaArray);
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function validateForm(event) {
     let valid = true;
     const requiredFields = [
-        'TAHUN', 'SKEMA', 'NAMA', 'NIP', 'NIDN', 'PRODI', 'JUDUL', 'BIAYA'
+        'TAHUN', 'SKEMA', 'NAMA', 'NIP', 'NIDN', 'Prodi', 'Judul', 'BIAYA'
     ];
     requiredFields.forEach(function (field) {
         const input = document.getElementById(field);
@@ -89,14 +89,14 @@ function validateForm(event) {
 }
 
 // General keyboard event handler for all modals
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     // Check if any modal is open
     const modals = ['addDataModal', 'editDataModal', 'deleteDataModal', 'importDataModal'];
     const openModal = modals.find(modalId => {
         const modal = document.getElementById(modalId);
         return modal && !modal.classList.contains('hidden');
     });
-    
+
     if (openModal) {
         if (event.key === 'Escape') {
             closeModal(openModal);
@@ -120,16 +120,16 @@ let currentSortDirection = 'asc';
 // Fungsi untuk sorting tabel
 function sortTable(column) {
     const table = document.querySelector('table tbody');
-    const rows = Array.from(table.querySelectorAll('tr')).filter(row => 
+    const rows = Array.from(table.querySelectorAll('tr')).filter(row =>
         !row.querySelector('td[colspan]') // Exclude "no data" row
     );
-    
+
     // Reset semua ikon sort
     document.querySelectorAll('.sort-icon').forEach(icon => {
         icon.textContent = 'unfold_more';
         icon.classList.remove('text-blue-600');
     });
-    
+
     // Determine sort direction
     if (currentSortColumn === column) {
         currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
@@ -137,31 +137,31 @@ function sortTable(column) {
         currentSortDirection = 'asc';
         currentSortColumn = column;
     }
-    
+
     // Update sort icon
     const sortIcon = document.getElementById(`sort-${column}`);
     if (sortIcon) {
         sortIcon.textContent = currentSortDirection === 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
         sortIcon.classList.add('text-blue-600');
     }
-    
+
     // Get column index for sorting (sesuaikan dengan struktur tabel pusat)
     const columnMap = {
-        'JUDUL': 1,
+        'Judul': 1,
         'SKEMA': 2,
-        'PRODI': 3,
+        'Prodi': 3,
         'NAMA': 4,
         'BIAYA': 8,
         'TAHUN': 9
     };
-    
+
     const columnIndex = columnMap[column];
-    
+
     // Sort rows
     rows.sort((a, b) => {
         let aValue = a.cells[columnIndex].textContent.trim();
         let bValue = b.cells[columnIndex].textContent.trim();
-        
+
         // Handle numeric columns
         if (column === 'BIAYA') {
             // Remove currency formatting and convert to number
@@ -175,17 +175,17 @@ function sortTable(column) {
             aValue = aValue.toLowerCase();
             bValue = bValue.toLowerCase();
         }
-        
+
         let comparison = 0;
         if (aValue > bValue) {
             comparison = 1;
         } else if (aValue < bValue) {
             comparison = -1;
         }
-        
+
         return currentSortDirection === 'asc' ? comparison : -comparison;
     });
-    
+
     // Update row numbers and reappend sorted rows
     rows.forEach((row, index) => {
         row.cells[0].textContent = index + 1; // Update row number

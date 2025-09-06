@@ -1,0 +1,116 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="/style/main.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        /* Style untuk scrollbar agar lebih minimalis */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Efek transisi untuk submenu di sidebar */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        /* Style untuk header table yang dapat disortir */
+        .sortable-header {
+            user-select: none;
+        }
+
+        .sort-icon {
+            transition: all 0.2s ease;
+            font-size: 16px !important;
+        }
+
+        .sortable-header:hover .sort-icon {
+            color: #4F46E5;
+        }
+    </style>
+
+    <!-- Include JavaScript files di head untuk memastikan dimuat lebih dulu -->
+    <script src="/script/sidebar-dashboard.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex h-screen bg-gray-100">
+        <!-- include Sidebar -->
+        <%- include('./partials/sidebar-dashboard-new.ejs') %>
+        <!-- Konten Utama -->
+        <main class="flex flex-col flex-1 overflow-hidden">
+            <!-- Header -->
+            <header class="flex items-center justify-between h-20 px-8 bg-white shadow-md">
+                <h1 class="text-2xl font-bold text-gray-800">Penelitian Mandiri</h1>
+                <div class="flex items-center">
+                    <!-- Search Bar -->
+                    <div action="/dashboard/penelitian/mandiri" method="GET" class="relative">
+                        <span
+                            class="absolute text-gray-400 -translate-y-1/2 material-icons-outlined left-3 top-1/2">search</span>
+
+                        <!-- Input pencarian. 'value' diisi dengan searchQuery dari controller -->
+                        <input type="text" name="search" placeholder="Cari Judul..."
+                            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                            class="pl-10 pr-4 py-2 w-72 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4F46E5]">
+
+                        <!-- Opsional: tombol submit tersembunyi untuk submit via 'Enter' -->
+                        <button type="submit" class="hidden">Cari</button>
+                    </div>
+                    <!-- Tombol Tambah Data -->
+                    <button onclick="openModal('addDataModal')"
+                        class="ml-4 flex items-center bg-[#4F46E5] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#4338CA] transition-colors">
+                        <span class="mr-2 material-icons-outlined">add</span>
+                        Tambah Data
+                    </button>
+                </div>
+            </header>
+
+            <!-- Tabel Data & Kontrol -->
+            <div class="flex-1 p-8 overflow-y-auto">
+                <!-- Kontrol Import/Export -->
+                <div class="flex justify-end mb-6 space-x-4">
+                    <button type="submit">
+                        <form action="/dashboard/penelitian/pnbp/export" method="GET" class="inline">
+                            <div class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600">
+                                <span class="mr-2 material-icons-outlined">file_download</span>
+                                Export file
+                            </div>
+                        </form>
+                    </button>
+                    <button type="button"
+                        class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600">
+                        <span class="mr-2 material-icons-outlined">file_upload</span>
+                        Import file
+                    </button>
+                </div>
+
+                <!-- include pagination.ejs -->
+                <%- include('./partials/pagination.ejs') %>
+
+                <!-- include tabel-dashboard.ejs -->
+                <%- include('./partials/table-dashboard.ejs') %>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

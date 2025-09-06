@@ -6,7 +6,7 @@ const publikasiSchema = new mongoose.Schema({
     tahun: { type: Number, required: true },
     pengguna_kode: { type: String, required: true },
     _pengguna_nama: { type: String, required: true },
-    _prodi_nama: { type: String, required: true },
+    Prodi: { type: String, required: true },
     file: { type: String },
     bulan: { type: String },
     _pengguna_jenis: { type: String },

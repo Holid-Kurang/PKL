@@ -32,7 +32,7 @@ function openEditModal(itemString) {
     form.action = `/dashboard/publikasi/jupeng/update/${item._id}`;
 
     // Isi setiap field dalam form edit dengan data dari item
-    document.getElementById('edit_jurnal_judul').value = item.jurnal_judul || '';
+    document.getElementById('edit_Judul').value = item.Judul || '';
     document.getElementById('edit_jurnal_url').value = item.jurnal_url || '';
     document.getElementById('edit_jurnal_file').value = item.jurnal_file || '';
     document.getElementById('edit_jurnal_tahun').value = item.jurnal_tahun || '';
@@ -40,7 +40,7 @@ function openEditModal(itemString) {
     document.getElementById('edit_pengguna_kode').value = item.pengguna_kode || '';
     document.getElementById('edit__pengguna_jenis').value = item._pengguna_jenis || '';
     document.getElementById('edit__pengguna_nama').value = item._pengguna_nama || '';
-    document.getElementById('edit__prodi_nama').value = item._prodi_nama || '';
+    document.getElementById('edit_Prodi').value = item.Prodi || '';
     document.getElementById('edit__personil_data_ketua').value = item._personil_data_ketua || '';
     document.getElementById('edit__personil_data_ketua_kode').value = item._personil_data_ketua_kode || '';
     document.getElementById('edit__personil_data_ketua_jenis').value = item._personil_data_ketua_jenis || '';
@@ -70,9 +70,9 @@ document.addEventListener('DOMContentLoaded', function () {
 function validateForm(event) {
     let valid = true;
     const requiredFields = [
-        'jurnal_judul',
+        'Judul',
         'jurnal_tahun',
-        '_prodi_nama'
+        'Prodi'
     ];
     requiredFields.forEach(function (field) {
         const input = document.getElementById(field);
@@ -91,14 +91,14 @@ function validateForm(event) {
 }
 
 // General keyboard event handler for all modals
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     // Check if any modal is open
     const modals = ['addDataModal', 'editDataModal', 'deleteDataModal', 'importDataModal'];
     const openModal = modals.find(modalId => {
         const modal = document.getElementById(modalId);
         return modal && !modal.classList.contains('hidden');
     });
-    
+
     if (openModal) {
         if (event.key === 'Escape') {
             closeModal(openModal);
@@ -122,16 +122,16 @@ let currentSortDirection = 'asc';
 // Fungsi untuk sorting tabel
 function sortTable(column) {
     const table = document.querySelector('table tbody');
-    const rows = Array.from(table.querySelectorAll('tr')).filter(row => 
+    const rows = Array.from(table.querySelectorAll('tr')).filter(row =>
         !row.querySelector('td[colspan]') // Exclude "no data" row
     );
-    
+
     // Reset semua ikon sort
     document.querySelectorAll('.sort-icon').forEach(icon => {
         icon.textContent = 'unfold_more';
         icon.classList.remove('text-blue-600');
     });
-    
+
     // Determine sort direction
     if (currentSortColumn === column) {
         currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
@@ -139,35 +139,35 @@ function sortTable(column) {
         currentSortDirection = 'asc';
         currentSortColumn = column;
     }
-    
+
     // Update sort icon
     const sortIcon = document.getElementById(`sort-${column}`);
     if (sortIcon) {
         sortIcon.textContent = currentSortDirection === 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
         sortIcon.classList.add('text-blue-600');
     }
-    
+
     // Get column index for sorting (adjusted for publikasi Jupeng table structure)
     const columnMap = {
-        'jurnal_judul': 1,
+        'Judul': 1,
         'jurnal_tahun': 4,
         'jurnal_bulan': 5,
         'pengguna_kode': 6,
         '_pengguna_jenis': 7,
         '_pengguna_nama': 8,
-        '_prodi_nama': 9,
+        'Prodi': 9,
         '_personil_data_ketua': 10,
         '_personil_data_ketua_kode': 11,
         '_personil_data_ketua_jenis': 12
     };
-    
+
     const columnIndex = columnMap[column];
-    
+
     // Sort rows
     rows.sort((a, b) => {
         let aValue = a.cells[columnIndex].textContent.trim();
         let bValue = b.cells[columnIndex].textContent.trim();
-        
+
         // Handle numeric columns
         if (column === 'jurnal_tahun') {
             aValue = parseFloat(aValue) || 0;
@@ -177,17 +177,17 @@ function sortTable(column) {
             aValue = aValue.toLowerCase();
             bValue = bValue.toLowerCase();
         }
-        
+
         let comparison = 0;
         if (aValue > bValue) {
             comparison = 1;
         } else if (aValue < bValue) {
             comparison = -1;
         }
-        
+
         return currentSortDirection === 'asc' ? comparison : -comparison;
     });
-    
+
     // Update row numbers and reappend sorted rows
     rows.forEach((row, index) => {
         row.cells[0].textContent = index + 1; // Update row number

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const JupengSchema = new mongoose.Schema({
-    jurnal_judul: { type: String, required: true },
+    Judul: { type: String, required: true },
     jurnal_url: { type: String },
     jurnal_file: { type: String },
     jurnal_tahun: { type: Number },
@@ -9,7 +9,7 @@ const JupengSchema = new mongoose.Schema({
     pengguna_kode: { type: String },
     _pengguna_jenis: { type: String },
     _pengguna_nama: { type: String },
-    _prodi_nama: { type: String },
+    Prodi: { type: String },
     _personil_data_ketua: { type: String },
     _personil_data_ketua_kode: { type: String },
     _personil_data_ketua_jenis: { type: String }

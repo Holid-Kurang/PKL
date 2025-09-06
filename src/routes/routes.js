@@ -6,6 +6,7 @@ const loginRoutes = require("./loginRoute");
 const pengabdianRoutes = require("./pengabdianRoute");
 const penelitianRoutes = require("./penelitianRoute");
 const publikasiRoutes = require("./publikasiRoute");
+const languageRoute = require('./languageRoute');
 
 // Dashboard routes for penelitian
 const dashboardPenelitianPNBPRoutes = require("./dashboardRoute/penelitian/pnbp");
@@ -18,6 +19,7 @@ const dashboardPengabdianPusatRoutes = require("./dashboardRoute/pengabdian/pusa
 const dashboardPublikasiBukuRoutes = require("./dashboardRoute/publikasi/buku");
 const dashboardPublikasiJupengRoutes = require("./dashboardRoute/publikasi/jupeng");
 const dashboardPublikasiHAKIRoutes = require("./dashboardRoute/publikasi/haki");
+const dashboard = require("./dashboardRoute");
 // dashboard for prodi
 const prodiRoutes = require("./prodiRoute");
 // dashboard for pengaturan
@@ -25,6 +27,7 @@ const pengaturanRoutes = require("./dashboardRoute/pengaturanRoute");
 
 
 // Gunakan route yang sudah dibuat
+route.use('/api', languageRoute);
 route.use("/", homeRoutes);
 route.use("/", loginRoutes);
 route.use("/", pengabdianRoutes);
@@ -40,5 +43,6 @@ route.use("/", dashboardPublikasiJupengRoutes);
 route.use("/", dashboardPublikasiHAKIRoutes);
 route.use("/", prodiRoutes);
 route.use("/", pengaturanRoutes);
+route.use("/", dashboard);
 
 module.exports = route;
