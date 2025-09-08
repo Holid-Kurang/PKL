@@ -202,4 +202,5 @@ router.get("/", async (req, res) => {
         pageTranslations: JSON.stringify(languages[currentLang])
     });
 });
+
 module.exports = router;

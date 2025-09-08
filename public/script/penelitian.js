@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mandiriData = window.mandiriData || {};
     const translations = window.pageTranslations || {};
     // Tambahkan pnbpData, mandiriData jika ingin sekaligus
-    
+
     const chartInstances = {};
 
     const chartConfigurations = [
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
-                                label: context => context.parsed.y + " " + translations.dashboard.charts.penelitian
+                                label: context => context.parsed.y + " " + translations.home.charts.penelitian
                             }
                         },
                         title: {
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + " " + translations.dashboard.charts.penelitian
+                                label: context => context.parsed + " " + translations.home.charts.penelitian
                             }
                         },
                         title: {
@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
-                                label: context => context.parsed.y + " " + translations.dashboard.charts.penelitian
+                                label: context => context.parsed.y + " " + translations.home.charts.penelitian
                             }
                         },
                         title: {
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + " " + translations.dashboard.charts.penelitian
+                                label: context => context.parsed + " " + translations.home.charts.penelitian
                             }
                         },
                         title: {
@@ -760,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => translations.penelitianPage.tahun + " " + tooltipItems[0].label,
-                                label: context => context.parsed.y + " " + translations.dashboard.charts.penelitian
+                                label: context => context.parsed.y + " " + translations.home.charts.penelitian
                             }
                         },
                         title: {
@@ -810,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + " " + translations.dashboard.charts.penelitian
+                                label: context => context.parsed + " " + translations.home.charts.penelitian
                             }
                         },
                         title: {

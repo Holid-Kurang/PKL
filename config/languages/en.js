@@ -19,8 +19,8 @@ module.exports = {
         pengaturan: "Settings"
     },
 
-    // Dashboard
-    dashboard: {
+    // Home
+    home: {
         title: "Dashboard",
         loading: "Loading data...",
         noData: "No data available",
@@ -69,6 +69,33 @@ module.exports = {
             publikasiJupeng: "Service Journal",
             total: "Total"
         }
+    },
+
+    // Dashboard
+    dashboard: {
+        category: {
+            penelitianPusat: 'Central Research',
+            penelitianPNBP: 'PNBP Research',
+            penelitianMandiri: 'Independent Research',
+            pengabdianPusat: 'Central Community Service',
+            pengabdianPNBP: 'PNBP Community Service',
+            publikasiHAKI: 'Intellectual Property Publication',
+            publikasiBuku: 'Book Publication',
+            publikasiJupeng: 'Community Service Journal Publication'
+        },
+        exportButton: "Export Data",
+        importButton: "Import Data",
+        addButton: "Add Data",
+        deleteButton: "Delete",
+        searchPlaceholder: "Search Title...",
+    },
+
+    // Pagination
+    pagination: {
+        showing: "Showing",
+        to: "to",
+        of: "of",
+        results: "Results",
     },
 
     // Footer

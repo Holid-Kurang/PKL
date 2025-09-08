@@ -42,6 +42,10 @@
     let totalPages = 1;
     let totalItems = 0;
 
+    // Export variabel ke window untuk akses global
+    window.currentPage = currentPage;
+    window.paginationLimit = limit;
+
     // Fungsi untuk menghitung dan memperbarui pagination
     function updatePagination() {
         const data = window.dashboardData || [];
@@ -55,6 +59,9 @@
         if (currentPage < 1) {
             currentPage = 1;
         }
+
+        // Update global reference
+        window.currentPage = currentPage;
 
         updateInfoDataDisplay();
         updatePaginationButtons();
@@ -142,6 +149,7 @@
     function goToPage(pageNum) {
         if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
             currentPage = pageNum;
+            window.currentPage = currentPage; // Update global reference
             updatePagination();
         }
     }
@@ -158,7 +166,13 @@
         const startItem = ((currentPage - 1) * limit) + 1;
         const endItem = Math.min(currentPage * limit, totalItems);
         infoDataDisplay.innerHTML =
-            `Menampilkan <span class="font-medium">${startItem}</span> hingga <span class="font-medium">${endItem}</span> dari <span class="font-medium">${totalItems}</span> hasil`;
+            `<%= translate('pagination.showing') %> 
+            <span class="font-medium">${startItem}</span> 
+            <%= translate('pagination.to') %> 
+            <span class="font-medium">${endItem}</span> 
+            <%= translate('pagination.of') %> 
+            <span class="font-medium">${totalItems}</span> 
+            <%= translate('pagination.results') %>`;
     }
 
     // Update table dengan data yang sudah dipaginate
@@ -167,6 +181,11 @@
         const startIndex = (currentPage - 1) * limit;
         const endIndex = startIndex + limit;
         const paginatedData = data.slice(startIndex, endIndex);
+
+        // Reset sorting saat pindah halaman
+        if (typeof window.resetTableSorting === 'function') {
+            window.resetTableSorting();
+        }
 
         // Update header tabel
         if (typeof createTableHeader === 'function') {
@@ -236,7 +255,7 @@
                             <button
                                 onclick="openDeleteModal('/dashboard/penelitian/pnbp/delete/${item._id}?_method=DELETE')"
                                 class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
-                                Hapus
+                                <%= translate('dashboard.deleteButton') %>
                             </button>
                         </td>`;
             bodyRows += '</tr>';
@@ -249,6 +268,7 @@
     function goToPreviousPage() {
         if (currentPage > 1) {
             currentPage--;
+            window.currentPage = currentPage; // Update global reference
             updatePagination();
         }
     }
@@ -257,6 +277,7 @@
     function goToNextPage() {
         if (currentPage < totalPages) {
             currentPage++;
+            window.currentPage = currentPage; // Update global reference
             updatePagination();
         }
     }
@@ -300,6 +321,7 @@
     // Reset pagination ke halaman 1
     function resetPagination() {
         currentPage = 1;
+        window.currentPage = currentPage; // Update global reference
         updatePagination();
     }
 

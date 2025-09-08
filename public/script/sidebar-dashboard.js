@@ -65,17 +65,65 @@ async function loadDashboardCategory(category) {
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
 
+        // Set kategori saat ini TERLEBIH DAHULU
+        window.currentDashboardCategory = category;
+
         // Set data global (akan trigger semua callback)
         window.dashboardData = data.data || [];
 
+        // Trigger semua callback secara eksplisit untuk memastikan modal dan komponen lain terupdate
+        triggerDataChangeCallbacks();
+
+        // Update dashboard title dan informasi lainnya
+        if (typeof window.updateDashboardInfo === 'function') {
+            window.updateDashboardInfo(category);
+        }
+
+        // Explicitly refresh modal for new category
+        if (typeof window.refreshModalForCategory === 'function') {
+            window.refreshModalForCategory(category);
+        }
+
+        console.log('Dashboard category loaded:', category);
+
     } catch (error) {
         console.error('Error fetching dashboard category:', error);
+        // Set kategori saat ini terlebih dahulu
+        window.currentDashboardCategory = category;
+
         // Set data kosong jika terjadi error
         window.dashboardData = [];
+
+        // Trigger callback meskipun error
+        triggerDataChangeCallbacks();
+
+        if (typeof window.updateDashboardInfo === 'function') {
+            window.updateDashboardInfo(category);
+        }
+
+        // Explicitly refresh modal for new category even on error
+        if (typeof window.refreshModalForCategory === 'function') {
+            window.refreshModalForCategory(category);
+        }
     }
 }
-
 // Load data awal saat script dimuat
 document.addEventListener('DOMContentLoaded', function () {
-    loadDashboardCategory('penelitian-pnbp');
+    // Cek apakah ada kategori yang disimpan di localStorage
+    let selectedCategory = 'penelitian-pnbp';
+
+    if (typeof (Storage) !== "undefined") {
+        const storedCategory = localStorage.getItem('selectedCategory');
+        if (storedCategory) {
+            selectedCategory = storedCategory;
+            // Hapus dari localStorage setelah digunakan
+            localStorage.removeItem('selectedCategory');
+        }
+    }
+
+    // Set kategori default
+    window.currentDashboardCategory = selectedCategory;
+
+    // Load data dan update dashboard
+    loadDashboardCategory(selectedCategory);
 });

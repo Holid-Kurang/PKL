@@ -31,89 +31,101 @@
 
 <body class="text-center bg-[#EDF0F1] ">
     <%- include('partials/navbar', {isLogin}) %>
-    
-        <h1 class="pt-5 text-4xl font-bold text-center text-indigo"><%= translate('pengabdianPage.title') %></h1>
-        <div class="grid grid-cols-2 gap-6 p-5 px-96">
-            <div class="p-8 bg-white shadow-lg rounded-xl">
-                <div class="flex items-center justify-between gap-4">
-                    <div class="p-3 bg-blue-100 rounded-full">
-                        <img src="/assets/school.svg" alt="">
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= translate('pengabdianPage.proditerakhir') %> <%= gabunganData.tahunAktif %></h3>
-                        <p class="text-2xl font-bold text-gray-900"><%= gabunganData.prodiTeraktif || translate('pengabdianPage.noData') %></p>
-                        <p class="text-sm text-gray-600"><%= gabunganData.prodiCounts && gabunganData.prodiCounts[gabunganData.prodiTeraktif] ? gabunganData.prodiCounts[gabunganData.prodiTeraktif] : 0 %> <%= translate('pengabdianPage.pengabdianCount') %></p>
-                    </div>
+
+    <h1 class="pt-5 text-4xl font-bold text-center text-indigo"><%= translate('pengabdianPage.title') %></h1>
+    <div class="grid grid-cols-2 gap-6 p-5 px-96">
+        <div class="p-8 bg-white shadow-lg rounded-xl">
+            <div class="flex items-center justify-between gap-4">
+                <div class="p-3 bg-blue-100 rounded-full">
+                    <img src="/assets/school.svg" alt="">
+                </div>
+                <div>
+                    <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">
+                        <%= translate('pengabdianPage.proditerakhir') %> <%= gabunganData.tahunAktif %></h3>
+                    <p class="text-2xl font-bold text-gray-900">
+                        <%= gabunganData.prodiTeraktif || translate('pengabdianPage.noData') %></p>
+                    <p class="text-sm text-gray-600">
+                        <%= gabunganData.prodiCounts && gabunganData.prodiCounts[gabunganData.prodiTeraktif] ? gabunganData.prodiCounts[gabunganData.prodiTeraktif] : 0 %>
+                        <%= translate('pengabdianPage.pengabdianCount') %></p>
                 </div>
             </div>
-            
-            <div class="p-8 bg-white shadow-lg rounded-xl">
-                <div class="flex items-center justify-between gap-4">
-                    <div class="p-3 bg-orange-100 rounded-full">
-                        <img src="/assets/science.svg" alt="" >
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= translate('pengabdianPage.totalPengabdian') %></h3>
-                        <p class="text-2xl font-bold text-gray-900"><%= gabunganData.penelitianTahunAktif || 0 %></p>
-                        <p class="text-sm text-gray-600"><%= translate('pengabdianPage.tahun') %> <%= gabunganData.tahunAktif %></p>
-                    </div>
+        </div>
+
+        <div class="p-8 bg-white shadow-lg rounded-xl">
+            <div class="flex items-center justify-between gap-4">
+                <div class="p-3 bg-orange-100 rounded-full">
+                    <img src="/assets/science.svg" alt="">
+                </div>
+                <div>
+                    <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">
+                        <%= translate('pengabdianPage.totalPengabdian') %></h3>
+                    <p class="text-2xl font-bold text-gray-900"><%= gabunganData.penelitianTahunAktif || 0 %></p>
+                    <p class="text-sm text-gray-600"><%= translate('pengabdianPage.tahun') %>
+                        <%= gabunganData.tahunAktif %></p>
                 </div>
             </div>
-            
-            <div class="p-8 bg-white shadow-lg rounded-xl">
-                <div class="flex items-center justify-between gap-4">
-                    <div class="p-3 bg-green-100 rounded-full">
-                        <img src="/assets/paid.svg" alt="" >
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= translate('pengabdianPage.rataBiaya') %></h3>
-                        <p class="text-2xl font-bold text-gray-900">
-                            <%= new Intl.NumberFormat('id-ID', { 
+        </div>
+
+        <div class="p-8 bg-white shadow-lg rounded-xl">
+            <div class="flex items-center justify-between gap-4">
+                <div class="p-3 bg-green-100 rounded-full">
+                    <img src="/assets/paid.svg" alt="">
+                </div>
+                <div>
+                    <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">
+                        <%= translate('pengabdianPage.rataBiaya') %></h3>
+                    <p class="text-2xl font-bold text-gray-900">
+                        <%= new Intl.NumberFormat('id-ID', { 
                             style: 'currency', 
                             currency: 'IDR',
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
                             }).format(gabunganData.rataRataBiayaGabungan || 0) %>
-                        </p>
-                        <p class="text-sm text-gray-600"><%= translate('pengabdianPage.tahun') %> <%= gabunganData.tahunAktif %></p>
-                    </div>
+                    </p>
+                    <p class="text-sm text-gray-600"><%= translate('pengabdianPage.tahun') %>
+                        <%= gabunganData.tahunAktif %></p>
                 </div>
             </div>
-            
-            <div class="p-8 bg-white shadow-lg rounded-xl">
-                <div class="flex items-center justify-between gap-4">
-                    <div class="p-3 bg-purple-100 rounded-full">
-                        <img src="/assets/paid.svg" alt="" >
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase"><%= translate('pengabdianPage.totalBiaya') %></h3>
-                        <p class="text-2xl font-bold text-gray-900">
-                            <%= new Intl.NumberFormat('id-ID', { 
+        </div>
+
+        <div class="p-8 bg-white shadow-lg rounded-xl">
+            <div class="flex items-center justify-between gap-4">
+                <div class="p-3 bg-purple-100 rounded-full">
+                    <img src="/assets/paid.svg" alt="">
+                </div>
+                <div>
+                    <h3 class="text-sm font-medium tracking-wide text-gray-500 uppercase">
+                        <%= translate('pengabdianPage.totalBiaya') %></h3>
+                    <p class="text-2xl font-bold text-gray-900">
+                        <%= new Intl.NumberFormat('id-ID', { 
                             style: 'currency', 
                             currency: 'IDR',
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
                             }).format(gabunganData.totalBiayaKeseluruhan || 0) %>
-                        </p>
-                        <p class="text-sm text-gray-600"><%= translate('pengabdianPage.tahun') %> <%= gabunganData.tahunAktif %></p>
-                    </div>
+                    </p>
+                    <p class="text-sm text-gray-600"><%= translate('pengabdianPage.tahun') %>
+                        <%= gabunganData.tahunAktif %></p>
                 </div>
             </div>
         </div>
+    </div>
 
     <!-- Dropdown untuk memilih jenis penelitian -->
     <div class="py-6 ">
         <div class="text-center">
-            <label for="jenispenelitian" class="block mb-4 text-2xl font-bold text-indigo"><%= translate('pengabdianPage.subtitle') %></label>
-            <select id="jenispenelitian" class="px-6 py-3 text-lg font-medium transition-all duration-200 bg-white border-2 border-indigo-300 rounded-lg penelitian-select text-indigo focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
+            <label for="jenispenelitian"
+                class="block mb-4 text-2xl font-bold text-indigo"><%= translate('pengabdianPage.subtitle') %></label>
+            <select id="jenispenelitian"
+                class="px-6 py-3 text-lg font-medium transition-all duration-200 bg-white border-2 border-indigo-300 rounded-lg penelitian-select text-indigo focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
                 <option value="pusat"><%= translate('categories.pusat') %></option>
                 <option value="pnbp"><%= translate('categories.pnbp') %></option>
             </select>
         </div>
     </div>
-        
+
     <!-- Container untuk grafik yang akan berubah -->
-    <div id="chart-container" >
+    <div id="chart-container">
         <!-- Grafik Pusat -->
         <div id="pusat-section" class="chart-section">
             <h1 class="text-4xl font-bold text-center text-indigo"><%= translate('categories.pusat') %></h1>
@@ -129,7 +141,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Grafik PNBP -->
         <div id="pnbp-section" class="chart-section" style="display: none;">
             <h1 class="text-4xl font-bold text-center text-indigo"><%= translate('categories.pnbp') %></h1>
@@ -165,5 +177,3 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/script/pengabdian.js"></script>
 </body>
-
-</html>

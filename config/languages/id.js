@@ -19,8 +19,8 @@ module.exports = {
         pengaturan: "Pengaturan"
     },
 
-    // Dashboard
-    dashboard: {
+    // Home
+    home: {
         title: "Dashboard",
         loading: "Memuat data...",
         noData: "Data tidak tersedia",
@@ -69,6 +69,33 @@ module.exports = {
             publikasiJupeng: "Jurnal Pengabdian",
             total: "Total"
         }
+    },
+
+    // Dashboard
+    dashboard: {
+        category: {
+            penelitianPusat: 'Penelitian Pusat',
+            penelitianPNBP: 'Penelitian PNBP',
+            penelitianMandiri: 'Penelitian Mandiri',
+            pengabdianPusat: 'Pengabdian Pusat',
+            pengabdianPNBP: 'Pengabdian PNBP',
+            publikasiHAKI: 'Publikasi HAKI',
+            publikasiBuku: 'Publikasi Buku',
+            publikasiJupeng: 'Publikasi Jurnal Pengabdian'
+        },
+        exportButton: "Ekspor Data",
+        importButton: "Impor Data",
+        addButton: "Tambah Data",
+        deleteButton: "Hapus",
+        searchPlaceholder: "Cari Judul...",
+    },
+
+    // Pagination
+    pagination: {
+        showing: "Menampilkan",
+        to: "hingga",
+        of: "dari",
+        results: "Hasil",
     },
 
     // Footer

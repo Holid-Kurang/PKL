@@ -53,79 +53,80 @@
     <div class="flex h-screen bg-gray-100">
         <!-- include Sidebar -->
         <%- include('../../partials/sidebar-dashboard.ejs') %>
-            <!-- Konten Utama -->
-            <main class="flex flex-col flex-1 overflow-hidden">
-                <!-- Header -->
-                <header class="flex items-center justify-between h-20 px-8 bg-white shadow-md">
-                    <h1 class="text-2xl font-bold text-gray-800">Penelitian Mandiri</h1>
-                    <div class="flex items-center">
-                        <!-- Search Bar -->
-                        <form action="/dashboard/penelitian/mandiri" method="GET" class="relative">
-                            <span
-                                class="absolute text-gray-400 -translate-y-1/2 material-icons-outlined left-3 top-1/2">search</span>
+        <!-- Konten Utama -->
+        <main class="flex flex-col flex-1 overflow-hidden">
+            <!-- Header -->
+            <header class="flex items-center justify-between h-20 px-8 bg-white shadow-md">
+                <h1 class="text-2xl font-bold text-gray-800"><%= translate('dashboard.category.penelitianMandiri') %></h1>
+                <div class="flex items-center">
+                    <!-- Search Bar -->
+                    <form action="/dashboard/penelitian/mandiri" method="GET" class="relative">
+                        <span
+                            class="absolute text-gray-400 -translate-y-1/2 material-icons-outlined left-3 top-1/2">search</span>
 
-                            <!-- Input pencarian. 'value' diisi dengan searchQuery dari controller -->
-                            <input type="text" name="search" placeholder="Cari Judul..."
-                                value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
-                                class="pl-10 pr-4 py-2 w-72 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4F46E5]">
+                        <!-- Input pencarian. 'value' diisi dengan searchQuery dari controller -->
+                        <input type="text" name="search" placeholder="Cari Judul..."
+                            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                            class="pl-10 pr-4 py-2 w-72 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4F46E5]">
 
-                            <!-- Opsional: tombol submit tersembunyi untuk submit via 'Enter' -->
-                            <button type="submit" class="hidden">Cari</button>
-                        </form>
-                        <!-- Tombol Tambah Data -->
-                        <button onclick="openModal('addDataModal')"
-                            class="ml-4 flex items-center bg-[#4F46E5] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#4338CA] transition-colors">
-                            <span class="mr-2 material-icons-outlined">add</span>
-                            Tambah Data
+                        <!-- Opsional: tombol submit tersembunyi untuk submit via 'Enter' -->
+                        <button type="submit" class="hidden">Cari</button>
+                    </form>
+                    <!-- Tombol Tambah Data -->
+                    <button onclick="openModal('addDataModal')"
+                        class="ml-4 flex items-center bg-[#4F46E5] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#4338CA] transition-colors">
+                        <span class="mr-2 material-icons-outlined">add</span>
+                        Tambah Data
+                    </button>
+                </div>
+            </header>
+
+            <!-- Tabel Data & Kontrol -->
+            <div class="flex-1 p-8 overflow-y-auto">
+                <!-- Kontrol Import/Export -->
+                <div class="flex justify-end mb-6 space-x-4">
+                    <form action="/dashboard/penelitian/mandiri/export" method="GET" class="inline">
+                        <button type="submit"
+                            class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600">
+                            <span class="mr-2 material-icons-outlined">file_download</span>
+                            Export file
                         </button>
-                    </div>
-                </header>
-
-                <!-- Tabel Data & Kontrol -->
-                <div class="flex-1 p-8 overflow-y-auto">
-                    <!-- Kontrol Import/Export -->
-                    <div class="flex justify-end mb-6 space-x-4">
-                        <form action="/dashboard/penelitian/mandiri/export" method="GET" class="inline">
-                            <button 
-                                type="submit"
-                                class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600">
-                                <span class="mr-2 material-icons-outlined">file_download</span>
-                                Export file
-                            </button>
-                        </form>
-                        <button 
-                            type="button"
-                            onclick="openModal('importDataModal')"
-                            class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600">
-                            <span class="mr-2 material-icons-outlined">file_upload</span>
-                            Import file
-                        </button>
-                    </div>
-                    <% if (totalPages> 1) { %>
-                        <div class="flex flex-col items-center justify-between px-5 py-4 bg-white border-t sm:flex-row">
-                            <!-- Info Menampilkan data -->
-                            <div class="mb-4 text-sm text-gray-700 sm:mb-0">
-                                <%
+                    </form>
+                    <button type="button" onclick="openModal('importDataModal')"
+                        class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600">
+                        <span class="mr-2 material-icons-outlined">file_upload</span>
+                        Import file
+                    </button>
+                </div>
+                <% if (totalPages> 1) { %>
+                <div class="flex flex-col items-center justify-between px-5 py-4 bg-white border-t sm:flex-row">
+                    <!-- Info Menampilkan data -->
+                    <div class="mb-4 text-sm text-gray-700 sm:mb-0">
+                        <%
                                     const startItem = ((currentPage - 1) * limit) + 1;
                                     const endItem = Math.min(currentPage * limit, typeof totalData !== 'undefined' ? totalData : data.length);
                                     const total = typeof totalData !== 'undefined' ? totalData : data.length;
                                 %>
-                                Menampilkan <span class="font-medium"><%= startItem %></span> hingga <span class="font-medium"><%= endItem %></span> dari <span class="font-medium"><%= total %></span> hasil
-                            </div>
-                            
-                            <!-- Pagination buttons -->
-                            <div class="flex items-center space-x-1">
-                                <!-- Previous button -->
-                                <a href="/dashboard/penelitian/mandiri?page=<%= currentPage - 1 %>&search=<%= searchQuery %>" 
-                                   class="relative inline-flex items-center px-2 py-2 text-gray-400 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 <%= currentPage <= 1 ? 'cursor-not-allowed opacity-50' : 'hover:text-gray-500' %>"
-                                   <%= currentPage <= 1 ? 'onclick="return false;"' : '' %>>
-                                    <span class="sr-only">Previous</span>
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                </a>
+                        <%= translate('pagination.showing') %> <span class="font-medium"><%= startItem %></span> <%= translate('pagination.to') %> <span
+                            class="font-medium"><%= endItem %></span> <%= translate('pagination.of') %> <span class="font-medium"><%= total %></span>
+                        <%= translate('pagination.results') %>
+                    </div>
 
-                                <%
+                    <!-- Pagination buttons -->
+                    <div class="flex items-center space-x-1">
+                        <!-- Previous button -->
+                        <a href="/dashboard/penelitian/mandiri?page=<%= currentPage - 1 %>&search=<%= searchQuery %>"
+                            class="relative inline-flex items-center px-2 py-2 text-gray-400 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 <%= currentPage <= 1 ? 'cursor-not-allowed opacity-50' : 'hover:text-gray-500' %>"
+                            <%= currentPage <= 1 ? 'onclick="return false;"' : '' %>>
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+
+                        <%
                                     // Calculate pagination range
                                     let startPage = Math.max(1, currentPage - 2);
                                     let endPage = Math.min(totalPages, currentPage + 2);
@@ -139,190 +140,214 @@
                                     }
                                 %>
 
-                                <!-- First page and ellipsis -->
-                                <% if (startPage > 1) { %>
-                                    <a href="/dashboard/penelitian/mandiri?page=1&search=<%= searchQuery %>" 
-                                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
-                                        1
-                                    </a>
-                                    <% if (startPage > 2) { %>
-                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
-                                            ...
-                                        </span>
-                                    <% } %>
-                                <% } %>
+                        <!-- First page and ellipsis -->
+                        <% if (startPage > 1) { %>
+                        <a href="/dashboard/penelitian/mandiri?page=1&search=<%= searchQuery %>"
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
+                            1
+                        </a>
+                        <% if (startPage > 2) { %>
+                        <span
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                            ...
+                        </span>
+                        <% } %>
+                        <% } %>
 
-                                <!-- Page numbers -->
-                                <% for (let i = startPage; i <= endPage; i++) { %>
-                                    <% if (i === currentPage) { %>
-                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-indigo-600">
-                                            <%= i %>
-                                        </span>
-                                    <% } else { %>
-                                        <a href="/dashboard/penelitian/mandiri?page=<%= i %>&search=<%= searchQuery %>" 
-                                           class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
-                                            <%= i %>
-                                        </a>
-                                    <% } %>
-                                <% } %>
+                        <!-- Page numbers -->
+                        <% for (let i = startPage; i <= endPage; i++) { %>
+                        <% if (i === currentPage) { %>
+                        <span
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-indigo-600">
+                            <%= i %>
+                        </span>
+                        <% } else { %>
+                        <a href="/dashboard/penelitian/mandiri?page=<%= i %>&search=<%= searchQuery %>"
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
+                            <%= i %>
+                        </a>
+                        <% } %>
+                        <% } %>
 
-                                <!-- Last page and ellipsis -->
-                                <% if (endPage < totalPages) { %>
-                                    <% if (endPage < totalPages - 1) { %>
-                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
-                                            ...
-                                        </span>
-                                    <% } %>
-                                    <a href="/dashboard/penelitian/mandiri?page=<%= totalPages %>&search=<%= searchQuery %>" 
-                                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
-                                        <%= totalPages %>
-                                    </a>
-                                <% } %>
+                        <!-- Last page and ellipsis -->
+                        <% if (endPage < totalPages) { %>
+                        <% if (endPage < totalPages - 1) { %>
+                        <span
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                            ...
+                        </span>
+                        <% } %>
+                        <a href="/dashboard/penelitian/mandiri?page=<%= totalPages %>&search=<%= searchQuery %>"
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
+                            <%= totalPages %>
+                        </a>
+                        <% } %>
 
-                                <!-- Next button -->
-                                <a href="/dashboard/penelitian/mandiri?page=<%= currentPage + 1 %>&search=<%= searchQuery %>" 
-                                   class="relative inline-flex items-center px-2 py-2 text-gray-400 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 <%= currentPage >= totalPages ? 'cursor-not-allowed opacity-50' : 'hover:text-gray-500' %>"
-                                   <%= currentPage >= totalPages ? 'onclick="return false;"' : '' %>>
-                                    <span class="sr-only">Next</span>
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    <% } %>
-                    
-                    <!-- Info data untuk semua kasus -->
-                    <% if (totalPages <= 1) { %>
-                        <div class="flex items-center justify-between px-5 py-6 bg-white border-t">
-                            <div class="text-sm text-gray-700">
-                                <%
+                        <!-- Next button -->
+                        <a href="/dashboard/penelitian/mandiri?page=<%= currentPage + 1 %>&search=<%= searchQuery %>"
+                            class="relative inline-flex items-center px-2 py-2 text-gray-400 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 <%= currentPage >= totalPages ? 'cursor-not-allowed opacity-50' : 'hover:text-gray-500' %>"
+                            <%= currentPage >= totalPages ? 'onclick="return false;"' : '' %>>
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <% } %>
+
+                <!-- Info data untuk semua kasus -->
+                <% if (totalPages <= 1) { %>
+                <div class="flex items-center justify-between px-5 py-6 bg-white border-t">
+                    <div class="text-sm text-gray-700">
+                        <%
                                     const total = typeof totalData !== 'undefined' ? totalData : data.length;
                                 %>
-                                Menampilkan <span class="font-medium">1</span> hingga <span class="font-medium"><%= total %></span> dari <span class="font-medium"><%= total %></span> hasil
-                            </div>
-                        </div>
-                    <% } %>
+                        <%= translate('pagination.showing') %> <span class="font-medium">1</span> <%= translate('pagination.to') %> <span
+                            class="font-medium"><%= total %></span> <%= translate('pagination.of') %> <span class="font-medium"><%= total %></span>
+                        <%= translate('pagination.results') %>
+                    </div>
+                </div>
+                <% } %>
 
-                    <!-- Tabel -->
-                    <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-                        <div class="overflow-y-auto md:max-h-[640px]">
-                            <table class="w-full text-sm text-left whitespace-nowrap">
-                                <thead class="sticky top-0 z-30 text-xs uppercase bg-gray-200">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">No</th>
-                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header" onclick="sortTable('Judul')">
-                                            <div class="flex items-center justify-between">
-                                                <span>Judul</span>
-                                                <span class="text-sm material-icons-outlined sort-icon" id="sort-Judul">unfold_more</span>
-                                            </div>
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header" onclick="sortTable('SKEMA')">
-                                            <div class="flex items-center justify-between">
-                                                <span>Skema</span>
-                                                <span class="text-sm material-icons-outlined sort-icon" id="sort-SKEMA">unfold_more</span>
-                                            </div>
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header" onclick="sortTable('Prodi')">
-                                            <div class="flex items-center justify-between">
-                                                <span>Prodi</span>
-                                                <span class="text-sm material-icons-outlined sort-icon" id="sort-Prodi">unfold_more</span>
-                                            </div>
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header" onclick="sortTable('Ketua')">
-                                            <div class="flex items-center justify-between">
-                                                <span>Ketua</span>
-                                                <span class="text-sm material-icons-outlined sort-icon" id="sort-Ketua">unfold_more</span>
-                                            </div>
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">Anggota</th>
-                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header" onclick="sortTable('Biaya')">
-                                            <div class="flex items-center justify-between">
-                                                <span>Dana</span>
-                                                <span class="text-sm material-icons-outlined sort-icon" id="sort-Biaya">unfold_more</span>
-                                            </div>
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header" onclick="sortTable('Tahun')">
-                                            <div class="flex items-center justify-between">
-                                                <span>Tahun</span>
-                                                <span class="text-sm material-icons-outlined sort-icon" id="sort-Tahun">unfold_more</span>
-                                            </div>
-                                        </th>
-                                        <th scope="col" class="sticky right-0 px-6 py-3 text-center bg-gray-200"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% data.forEach((item, index)=> { %>
-                                        <tr class="bg-white border-b hover:bg-gray-200">
-                                            <td class="px-6 py-4 font-medium "><%= index + 1 %></td>
-                                            <td class="px-6 py-4">
-                                                <p class="w-96 text-wrap">
-                                                    <%= item.Judul %>
-                                                </p>
-                                            </td>
-                                            <td class="px-6 py-4"><%= item.Skema %></td>
-                                            <td class="px-6 py-4"><%= item.Prodi %></td>
-                                            <td class="px-6 py-4"><%= item.Ketua %></td>
-                                            <td class="relative px-6 py-4">
-                                                <%
+                <!-- Tabel -->
+                <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+                    <div class="overflow-y-auto md:max-h-[640px]">
+                        <table class="w-full text-sm text-left whitespace-nowrap">
+                            <thead class="sticky top-0 z-30 text-xs uppercase bg-gray-200">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">No</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header"
+                                        onclick="sortTable('Judul')">
+                                        <div class="flex items-center justify-between">
+                                            <span>Judul</span>
+                                            <span class="text-sm material-icons-outlined sort-icon"
+                                                id="sort-Judul">unfold_more</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header"
+                                        onclick="sortTable('SKEMA')">
+                                        <div class="flex items-center justify-between">
+                                            <span>Skema</span>
+                                            <span class="text-sm material-icons-outlined sort-icon"
+                                                id="sort-SKEMA">unfold_more</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header"
+                                        onclick="sortTable('Prodi')">
+                                        <div class="flex items-center justify-between">
+                                            <span>Prodi</span>
+                                            <span class="text-sm material-icons-outlined sort-icon"
+                                                id="sort-Prodi">unfold_more</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header"
+                                        onclick="sortTable('Ketua')">
+                                        <div class="flex items-center justify-between">
+                                            <span>Ketua</span>
+                                            <span class="text-sm material-icons-outlined sort-icon"
+                                                id="sort-Ketua">unfold_more</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">Anggota</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header"
+                                        onclick="sortTable('Biaya')">
+                                        <div class="flex items-center justify-between">
+                                            <span>Dana</span>
+                                            <span class="text-sm material-icons-outlined sort-icon"
+                                                id="sort-Biaya">unfold_more</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 transition-colors cursor-pointer hover:bg-gray-300 sortable-header"
+                                        onclick="sortTable('Tahun')">
+                                        <div class="flex items-center justify-between">
+                                            <span>Tahun</span>
+                                            <span class="text-sm material-icons-outlined sort-icon"
+                                                id="sort-Tahun">unfold_more</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="sticky right-0 px-6 py-3 text-center bg-gray-200"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% data.forEach((item, index)=> { %>
+                                <tr class="bg-white border-b hover:bg-gray-200">
+                                    <td class="px-6 py-4 font-medium "><%= index + 1 %></td>
+                                    <td class="px-6 py-4">
+                                        <p class="w-96 text-wrap">
+                                            <%= item.Judul %>
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4"><%= item.Skema %></td>
+                                    <td class="px-6 py-4"><%= item.Prodi %></td>
+                                    <td class="px-6 py-4"><%= item.Ketua %></td>
+                                    <td class="relative px-6 py-4">
+                                        <%
                                                     let anggotaArray = [];
                                                     if (item.Anggota && Array.isArray(item.Anggota)) {
                                                         anggotaArray = item.Anggota.filter(anggota => anggota && anggota.trim() !== '');
                                                     } 
                                                 %>
-                                                <% if (anggotaArray.length > 0) { %>
-                                                    <div class="flex flex-col space-y-1">
-                                                        <% anggotaArray.forEach(anggota => { %>
-                                                            <div class="px-2 py-1 text-xs text-blue-800 bg-blue-100 rounded-md">
-                                                                <%= anggota %>
-                                                            </div>
-                                                        <% }) %>
-                                                    </div>
-                                                <% } else { %>
-                                                    <span class="italic text-gray-400">-</span>
-                                                <% } %>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <%= new Intl.NumberFormat('id-ID', { 
+                                        <% if (anggotaArray.length > 0) { %>
+                                        <div class="flex flex-col space-y-1">
+                                            <% anggotaArray.forEach(anggota => { %>
+                                            <div class="px-2 py-1 text-xs text-blue-800 bg-blue-100 rounded-md">
+                                                <%= anggota %>
+                                            </div>
+                                            <% }) %>
+                                        </div>
+                                        <% } else { %>
+                                        <span class="italic text-gray-400">-</span>
+                                        <% } %>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <%= new Intl.NumberFormat('id-ID', { 
                                                     style: 'currency', 
                                                     currency: 'IDR',
                                                     minimumFractionDigits: 0,
                                                     maximumFractionDigits: 0
                                                 }).format(item.Dana) %>
-                                            </td>
-                                            <td class="px-6 py-4"><%= item.tahun %></td>
-                                            <td class="sticky right-0 px-6 py-4 text-center bg-gray-200 whitespace-nowrap">
-                                                <button 
-                                                    onclick="openEditModal('<%= JSON.stringify(item) %>')" 
-                                                    class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    onclick="openDeleteModal('/dashboard/penelitian/mandiri/delete/<%= item._id %>?_method=DELETE')"
-                                                    class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
-                                                    Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <% }) %>
+                                    </td>
+                                    <td class="px-6 py-4"><%= item.tahun %></td>
+                                    <td class="sticky right-0 px-6 py-4 text-center bg-gray-200 whitespace-nowrap">
+                                        <button onclick="openEditModal('<%= JSON.stringify(item) %>')"
+                                            class="px-4 py-1 text-xs font-bold text-white bg-green-500 rounded-lg hover:bg-green-600">
+                                            Edit
+                                        </button>
+                                        <button
+                                            onclick="openDeleteModal('/dashboard/penelitian/mandiri/delete/<%= item._id %>?_method=DELETE')"
+                                            class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
+                                            Hapus
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }) %>
 
-                                        <!-- Menampilkan pesan jika tidak ada data ditemukan -->
-                                        <% if (data.length === 0) { %>
-                                            <tr>
-                                                <td colspan="14" class="py-10 text-center text-gray-500">
-                                                    <div>
-                                                        Data tidak ditemukan untuk pencarian "<%= searchQuery %>".
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <% } %>
-                                </tbody>
-                            </table>
-                        </div>
+                                <!-- Menampilkan pesan jika tidak ada data ditemukan -->
+                                <% if (data.length === 0) { %>
+                                <tr>
+                                    <td colspan="14" class="py-10 text-center text-gray-500">
+                                        <div>
+                                            Data tidak ditemukan untuk pencarian "<%= searchQuery %>".
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
                     </div>
-
                 </div>
-            </main>
+
+            </div>
+        </main>
     </div>
 
     <!-- Modal Tambah Data (awalnya tersembunyi) -->
@@ -337,7 +362,7 @@
         { name: 'Dana', label: 'Dana', type: 'number', required: true },
         { name: 'tahun', label: 'Tahun', type: 'number', required: true } // ganti nama field dari 'tahun' menjadi 'Tahun' agar konsisten jika perlu
     ]}) %>
-    
+
     <!-- Modal Edit Data (awalnya tersembunyi) -->
     <%- include('../../partials/modalEditData.ejs', {
         formFields: [
@@ -355,8 +380,6 @@
         action: '/dashboard/penelitian/mandiri/import',
         templateUrl: '/dashboard/penelitian/mandiri/template',
     }) %>
-    
+
     <script src="/script/penelitian/dash-mandiri.js"></script>
 </body>
-
-</html>

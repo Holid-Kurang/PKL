@@ -59,7 +59,7 @@
         <main class="flex flex-col flex-1 overflow-hidden">
             <!-- Header -->
             <header class="flex items-center justify-between h-20 px-8 bg-white shadow-md">
-                <h1 class="text-2xl font-bold text-gray-800">Publikasi Buku</h1>
+                <h1 class="text-2xl font-bold text-gray-800"><%= translate('dashboard.category.publikasiBuku') %></h1>
                 <div class="flex items-center">
                     <!-- Search Bar -->
                     <form action="/dashboard/publikasi/buku" method="GET" class="relative">
@@ -110,9 +110,9 @@
                                     const endItem = Math.min(currentPage * limit, typeof totalData !== 'undefined' ? totalData : data.length);
                                     const total = typeof totalData !== 'undefined' ? totalData : data.length;
                                 %>
-                        Menampilkan <span class="font-medium"><%= startItem %></span> hingga <span
-                            class="font-medium"><%= endItem %></span> dari <span class="font-medium"><%= total %></span>
-                        hasil
+                        <%= translate('pagination.showing') %> <span class="font-medium"><%= startItem %></span> <%= translate('pagination.to') %> <span
+                            class="font-medium"><%= endItem %></span> <%= translate('pagination.of') %> <span class="font-medium"><%= total %></span>
+                        <%= translate('pagination.results') %>
                     </div>
 
                     <!-- Pagination buttons -->
@@ -208,9 +208,9 @@
                         <%
                                     const total = typeof totalData !== 'undefined' ? totalData : data.length;
                                 %>
-                        Menampilkan <span class="font-medium">1</span> hingga <span
-                            class="font-medium"><%= total %></span> dari <span class="font-medium"><%= total %></span>
-                        hasil
+                        <%= translate('pagination.showing') %> <span class="font-medium">1</span> <%= translate('pagination.to') %> <span
+                            class="font-medium"><%= total %></span> <%= translate('pagination.of') %> <span class="font-medium"><%= total %></span>
+                        <%= translate('pagination.results') %>
                     </div>
                 </div>
                 <% } %>
@@ -425,5 +425,3 @@
 
     <script src="/script/publikasi/dash-buku.js"></script>
 </body>
-
-</html>

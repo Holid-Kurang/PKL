@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,26 +62,26 @@
         <main class="flex flex-col flex-1 overflow-hidden">
             <!-- Header -->
             <header class="flex items-center justify-between h-20 px-8 bg-white shadow-md">
-                <h1 class="text-2xl font-bold text-gray-800">Penelitian Mandiri</h1>
+                <h1 class="text-2xl font-bold text-gray-800"></h1>
                 <div class="flex items-center">
                     <!-- Search Bar -->
-                    <div action="/dashboard/penelitian/mandiri" method="GET" class="relative">
+                    <form id="searchForm" action="" method="POST" class="relative">
                         <span
                             class="absolute text-gray-400 -translate-y-1/2 material-icons-outlined left-3 top-1/2">search</span>
 
                         <!-- Input pencarian. 'value' diisi dengan searchQuery dari controller -->
-                        <input type="text" name="search" placeholder="Cari Judul..."
+                        <input type="text" name="search" placeholder="<%= translate('dashboard.searchPlaceholder') %>"
                             value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
                             class="pl-10 pr-4 py-2 w-72 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4F46E5]">
 
                         <!-- Opsional: tombol submit tersembunyi untuk submit via 'Enter' -->
                         <button type="submit" class="hidden">Cari</button>
-                    </div>
+                    </form>
                     <!-- Tombol Tambah Data -->
                     <button onclick="openModal('addDataModal')"
                         class="ml-4 flex items-center bg-[#4F46E5] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#4338CA] transition-colors">
                         <span class="mr-2 material-icons-outlined">add</span>
-                        Tambah Data
+                        <%= translate('dashboard.addButton') %>
                     </button>
                 </div>
             </header>
@@ -88,18 +90,17 @@
             <div class="flex-1 p-8 overflow-y-auto">
                 <!-- Kontrol Import/Export -->
                 <div class="flex justify-end mb-6 space-x-4">
-                    <button type="submit">
-                        <form action="/dashboard/penelitian/pnbp/export" method="GET" class="inline">
-                            <div class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600">
-                                <span class="mr-2 material-icons-outlined">file_download</span>
-                                Export file
-                            </div>
-                        </form>
-                    </button>
-                    <button type="button"
+                    <form id="exportForm" action="" method="GET" class="inline">
+                        <button type="submit"
+                            class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600">
+                            <span class="mr-2 material-icons-outlined">file_download</span>
+                            <%= translate('dashboard.exportButton') %>
+                        </button>
+                    </form>
+                    <button type="button" id="importButton"
                         class="flex items-center px-4 py-2 font-semibold text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600">
                         <span class="mr-2 material-icons-outlined">file_upload</span>
-                        Import file
+                        <%= translate('dashboard.importButton') %>
                     </button>
                 </div>
 
@@ -108,9 +109,113 @@
 
                 <!-- include tabel-dashboard.ejs -->
                 <%- include('./partials/table-dashboard.ejs') %>
+
+                <!-- include modals.ejs -->
+                <%- include('./partials/modals.ejs', { prodiOptions: prodiOptions }) %>
             </div>
         </main>
     </div>
 </body>
 
-</html>
+<script>
+    // Fungsi untuk membuka modal
+    function openModal(modalId) {
+        // Update modal dengan data terbaru sebelum membuka
+        document.getElementById(modalId).classList.remove('hidden');
+    }
+    // Fungsi untuk menutup modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
+    // Mapping kategori ke title dan informasi dashboard
+    const categoryMapping = {
+        'penelitian-pnbp': {
+            title: '<%= translate("dashboard.category.penelitianPNBP") %>',
+            exportUrl: '/dashboard/penelitian/pnbp/export',
+            searchUrl: '/dashboard/penelitian/pnbp',
+            importModal: 'importDataPenelitianPNBP'
+        },
+        'penelitian-pusat': {
+            title: '<%= translate("dashboard.category.penelitianPusat") %>',
+            exportUrl: '/dashboard/penelitian/pusat/export',
+            searchUrl: '/dashboard/penelitian/pusat',
+            importModal: 'importDataPenelitianPusat'
+        },
+        'penelitian-mandiri': {
+            title: '<%= translate("dashboard.category.penelitianMandiri") %>',
+            exportUrl: '/dashboard/penelitian/mandiri/export',
+            searchUrl: '/dashboard/penelitian/mandiri',
+            importModal: 'importDataPenelitianMandiri'
+        },
+        'pengabdian-pnbp': {
+            title: '<%= translate("dashboard.category.pengabdianPNBP") %>',
+            exportUrl: '/dashboard/pengabdian/pnbp/export',
+            searchUrl: '/dashboard/pengabdian/pnbp',
+            importModal: 'importDataPengabdianPNBP'
+        },
+        'pengabdian-pusat': {
+            title: '<%= translate("dashboard.category.pengabdianPusat") %>',
+            exportUrl: '/dashboard/pengabdian/pusat/export',
+            searchUrl: '/dashboard/pengabdian/pusat',
+            importModal: 'importDataPengabdianPusat'
+        },
+        'publikasi-buku': {
+            title: '<%= translate("dashboard.category.publikasiBuku") %>',
+            exportUrl: '/dashboard/publikasi/buku/export',
+            searchUrl: '/dashboard/publikasi/buku',
+            importModal: 'importDataPublikasiBuku'
+        },
+        'publikasi-haki': {
+            title: '<%= translate("dashboard.category.publikasiHAKI") %>',
+            exportUrl: '/dashboard/publikasi/haki/export',
+            searchUrl: '/dashboard/publikasi/haki',
+            importModal: 'importDataPublikasiHAKI'
+        },
+        'publikasi-jupeng': {
+            title: '<%= translate("dashboard.category.publikasiJupeng") %>',
+            exportUrl: '/dashboard/publikasi/jupeng/export',
+            searchUrl: '/dashboard/publikasi/jupeng',
+            importModal: 'importDataPublikasiJupeng'
+        }
+    };
+
+    // Fungsi untuk update informasi dashboard berdasarkan kategori
+    window.updateDashboardInfo = function(category) {
+        const categoryInfo = categoryMapping[category];
+        if (!categoryInfo) return;
+
+        // Update title
+        const pageTitle = document.querySelector('header h1');
+        if (pageTitle) {
+            pageTitle.textContent = categoryInfo.title;
+        }
+
+        // Update export form action
+        const exportForm = document.getElementById('exportForm');
+        if (exportForm) {
+            exportForm.action = categoryInfo.exportUrl;
+        }
+
+        // Update search form action
+        const searchForm = document.getElementById('searchForm');
+        if (searchForm) {
+            searchForm.action = categoryInfo.searchUrl;
+        }
+
+        // Update import button (jika diperlukan nanti)
+        const importButton = document.getElementById('importButton');
+        if (importButton) {
+            importButton.setAttribute('onclick', `openModal('${categoryInfo.importModal}')`);
+        }
+
+    };
+
+    // Set kategori awal dan update dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tunggu sebentar untuk memastikan sidebar script sudah load
+        setTimeout(() => {
+            const currentCategory = window.currentDashboardCategory || 'penelitian-pnbp';
+            window.updateDashboardInfo(currentCategory);
+        }, 100);
+    });
+</script>

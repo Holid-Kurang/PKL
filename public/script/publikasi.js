@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => translations.publikasiPage.tahun + " " + tooltipItems[0].label, label: (context) => context.parsed.y + " " + translations.dashboard.charts.publikasi } },
+                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => translations.publikasiPage.tahun + " " + tooltipItems[0].label, label: (context) => context.parsed.y + " " + translations.home.charts.publikasi } },
                         title: { display: true, text: translations.publikasiPage.charts.jupeng.jupengPerTahun, font: { size: 20, weight: 'lighter' }, color: '#232F58' }, legend: { display: false }
                     },
                     layout: { padding: 20 },
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
-                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + " " + translations.dashboard.charts.publikasi } },
+                        tooltip: { backgroundColor: '#232F58', titleFont: { size: 16 }, bodyFont: { size: 14 }, footerFont: { weight: 'normal' }, callbacks: { title: (tooltipItems) => tooltipItems[0].label, label: (context) => context.parsed + " " + translations.home.charts.publikasi } },
                         title: { display: true, text: translations.publikasiPage.charts.jupeng.jupengPerProdi, font: { size: 20, weight: 'lighter' }, color: '#232F58' },
                         legend: { display: true, position: 'bottom', labels: { font: { size: 12 } } }
                     },

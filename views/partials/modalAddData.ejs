@@ -1,17 +1,13 @@
-<!-- Modal Tambah Data (awalnya tersembunyi) -->
 <div id="addDataModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
     <div class="w-full max-w-2xl transition-all transform bg-white rounded-lg shadow-xl">
-        <!-- Modal Header -->
         <div class="flex items-center justify-between px-6 py-4 border-b">
             <h3 class="text-xl font-semibold text-gray-800">Tambah Data</h3>
             <button onclick="closeModal('addDataModal')" class="text-gray-500 hover:text-gray-800">
                 <span class="material-icons-outlined">close</span>
             </button>
         </div>
-        <!-- Modal Body -->
         <div class="p-6 max-h-[60vh] overflow-y-auto">
             <form id="addDataForm" action="<%= action %>" method="POST" class="space-y-4">
-                <%# Loop untuk membuat setiap elemen form secara dinamis %>
                 <% formFields.forEach(field => { %>
                     <div>
                         <label for="<%= field.name %>" class="block text-sm font-medium text-left text-gray-700">
@@ -21,7 +17,6 @@
                             <% } %>
                         </label>
 
-                        <%# Kondisi untuk tipe input 'select' %>
                         <% if (field.type === 'select') { %>
                             <select 
                                 name="<%= field.name %>" 
@@ -35,7 +30,6 @@
                                     </option>
                                 <% }); %>
                             </select>
-                        <%# Kondisi untuk tipe input 'anggota' (dynamic member input) %>
                         <% } else if (field.type === 'anggota') { %>
                             <div id="anggotaContainer">
                                 <div class="flex items-center mb-2 space-x-2 anggota-input-group">
@@ -60,7 +54,6 @@
                                 <span class="mr-1 text-sm material-icons-outlined">add</span>
                                 Tambah Anggota
                             </button>
-                        <%# Kondisi untuk tipe input lain (text, number, email, dll) %>
                         <% } else { %>
                             <input 
                                 type="<%= field.type %>" 
@@ -79,7 +72,6 @@
                 <% }); %>
             </form>
         </div>
-        <!-- Modal Footer -->
         <div class="px-6 py-4 space-x-3 text-right bg-gray-50">
             <button onclick="closeModal('addDataModal')" type="button"
                 class="px-4 py-2 text-sm font-medium text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">

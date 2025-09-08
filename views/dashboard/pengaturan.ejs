@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,7 +80,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         .modal-content {
@@ -105,6 +104,70 @@
             color: black;
         }
     </style>
+
+    <!-- Include JavaScript files di head untuk memastikan dimuat lebih dulu -->
+    <script>
+        // Fungsi untuk toggle submenu di sidebar (sama seperti di sidebar-dashboard.js)
+        function toggleMenu(menuId) {
+            const menu = document.getElementById(menuId);
+            const icon = document.getElementById(menuId.replace('Menu', 'Icon'));
+
+            if (menu.style.maxHeight) {
+                menu.style.maxHeight = null;
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Tutup semua submenu lain terlebih dahulu
+                document.querySelectorAll('.submenu').forEach(item => {
+                    if (item.id !== menuId) {
+                        item.style.maxHeight = null;
+                        const otherIcon = document.getElementById(item.id.replace('Menu', 'Icon'));
+                        if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                    }
+                });
+                // Buka submenu yang diklik
+                menu.style.maxHeight = menu.scrollHeight + "px";
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Fungsi untuk navigasi ke halaman dashboard category
+        function loadDashboardCategory(category) {
+            // Langsung redirect ke halaman dashboard dengan category
+            window.location.href = '/dashboard';
+
+            // Set category untuk digunakan saat halaman dashboard load
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem('selectedCategory', category);
+            }
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.style.display = 'block';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        }
+    </script>
 </head>
 
 <body class="bg-gray-100">
@@ -119,7 +182,7 @@
                 <h1 class="text-2xl font-bold text-gray-800">Pengaturan Kategori</h1>
             </header>
             <div class="container p-8">
-                
+
                 <!-- Success/Error Messages -->
                 <div id="messageContainer"></div>
 
@@ -139,15 +202,20 @@
             <form id="addKategoriForm">
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-medium text-gray-700">Nama Kategori</label>
-                    <input type="text" id="kategoriName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="text" id="kategoriName"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
                 </div>
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-medium text-gray-700">Option Pertama (Opsional)</label>
-                    <input type="text" id="firstOption" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="firstOption"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div class="flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('addKategoriModal')" class="px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Batal</button>
-                    <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Simpan</button>
+                    <button type="button" onclick="closeModal('addKategoriModal')"
+                        class="px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Batal</button>
+                    <button type="submit"
+                        class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Simpan</button>
                 </div>
             </form>
         </div>
@@ -162,11 +230,15 @@
                 <input type="hidden" id="optionKategoriId">
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-medium text-gray-700">Nama Option</label>
-                    <input type="text" id="optionName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="text" id="optionName"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
                 </div>
                 <div class="flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('addOptionModal')" class="px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Batal</button>
-                    <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Simpan</button>
+                    <button type="button" onclick="closeModal('addOptionModal')"
+                        class="px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Batal</button>
+                    <button type="submit"
+                        class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Simpan</button>
                 </div>
             </form>
         </div>
@@ -181,11 +253,15 @@
                 <input type="hidden" id="editKategoriId">
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-medium text-gray-700">Nama Kategori</label>
-                    <input type="text" id="editKategoriName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="text" id="editKategoriName"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
                 </div>
                 <div class="flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('editKategoriModal')" class="px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Batal</button>
-                    <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Simpan</button>
+                    <button type="button" onclick="closeModal('editKategoriModal')"
+                        class="px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Batal</button>
+                    <button type="submit"
+                        class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Simpan</button>
                 </div>
             </form>
         </div>
@@ -193,5 +269,3 @@
 
     <script src="/script/pengaturan.js"></script>
 </body>
-
-</html>

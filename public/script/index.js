@@ -10,11 +10,11 @@ translations = window.pageTranslations;
 function getTranslation(key) {
     const keys = key.split('.');
     let value = translations;
-    
+
     for (const k of keys) {
         value = value ? value[k] : undefined;
     }
-    
+
     return value || key;
 }
 
@@ -62,30 +62,30 @@ function updateStatisticsText() {
 
     // Update penelitian text
     document.getElementById('penelitianText').innerHTML = `
-        ${getTranslation('dashboard.penelitianText.prefix')} <strong>${penelitianStats.total}</strong> ${getTranslation('dashboard.penelitianText.middle')} 
-        <strong>${penelitianStats.topCategory}</strong> ${getTranslation('dashboard.penelitianText.suffix')} <strong>${penelitianStats.topPercentage.toFixed(1)}%</strong> ${getTranslation('dashboard.penelitianText.percent')}
+        ${getTranslation('home.penelitianText.prefix')} <strong>${penelitianStats.total}</strong> ${getTranslation('home.penelitianText.middle')} 
+        <strong>${penelitianStats.topCategory}</strong> ${getTranslation('home.penelitianText.suffix')} <strong>${penelitianStats.topPercentage.toFixed(1)}%</strong> ${getTranslation('home.penelitianText.percent')}
         <a href="/penelitian" class="text-blue-600" style="text-decoration: none;" 
            onmouseover="this.style.textDecoration='underline'" 
-           onmouseout="this.style.textDecoration='none'">${getTranslation('dashboard.seeDetail')}.</a>
+           onmouseout="this.style.textDecoration='none'">${getTranslation('home.seeDetail')}.</a>
     `;
 
     // Update pengabdian text
     document.getElementById('pengabdianText').innerHTML = `
-        ${getTranslation('dashboard.pengabdianText.prefix')} <strong>${pengabdianStats.total}</strong> ${getTranslation('dashboard.pengabdianText.middle')} 
+        ${getTranslation('home.pengabdianText.prefix')} <strong>${pengabdianStats.total}</strong> ${getTranslation('home.pengabdianText.middle')} 
         <strong>${pengabdianStats.topCategory}</strong> 
-        ${getTranslation('dashboard.pengabdianText.suffix')} <strong>${pengabdianStats.topPercentage.toFixed(1)}%</strong>.
+        ${getTranslation('home.pengabdianText.suffix')} <strong>${pengabdianStats.topPercentage.toFixed(1)}%</strong>.
         <a href="/pengabdian" class="text-blue-600" style="text-decoration: none;" 
            onmouseover="this.style.textDecoration='underline'" 
-           onmouseout="this.style.textDecoration='none'">${getTranslation('dashboard.seeDetail')}.</a>
+           onmouseout="this.style.textDecoration='none'">${getTranslation('home.seeDetail')}.</a>
     `;
 
     // Update publikasi text
     document.getElementById('publikasiText').innerHTML = `
-        ${getTranslation('dashboard.publikasiText.prefix')} <strong>${publikasiStats.total}</strong> ${getTranslation('dashboard.publikasiText.middle')} <strong>${publikasiStats.topCategory}</strong>, 
-        ${getTranslation('dashboard.publikasiText.suffix')} <strong>${publikasiStats.topPercentage.toFixed(1)}%</strong> ${getTranslation('dashboard.publikasiText.percent')}
+        ${getTranslation('home.publikasiText.prefix')} <strong>${publikasiStats.total}</strong> ${getTranslation('home.publikasiText.middle')} <strong>${publikasiStats.topCategory}</strong>, 
+        ${getTranslation('home.publikasiText.suffix')} <strong>${publikasiStats.topPercentage.toFixed(1)}%</strong> ${getTranslation('home.publikasiText.percent')}
         <a href="/publikasi" class="text-blue-600" style="text-decoration: none;" 
            onmouseover="this.style.textDecoration='underline'" 
-           onmouseout="this.style.textDecoration='none'">${getTranslation('dashboard.seeDetail')}.</a>
+           onmouseout="this.style.textDecoration='none'">${getTranslation('home.seeDetail')}.</a>
     `;
 }
 
@@ -120,7 +120,7 @@ function updateProdiTable() {
         const totalRow = document.createElement('tr');
         totalRow.className = 'font-semibold bg-white';
         totalRow.innerHTML = `
-            <td class="px-4 py-3 border border-gray-300">${getTranslation('dashboard.table.total')}</td>
+            <td class="px-4 py-3 border border-gray-300">${getTranslation('home.table.total')}</td>
             <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.penelitian?.pusat || 0), 0)}</td>
             <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.penelitian?.pnbp || 0), 0)}</td>
             <td class="px-3 py-2 text-center border border-gray-300">${prodiData.reduce((sum, p) => sum + (p.penelitian?.mandiri || 0), 0)}</td>
@@ -136,7 +136,7 @@ function updateProdiTable() {
         const noDataRow = document.createElement('tr');
         noDataRow.innerHTML = `
             <td colspan="9" class="px-4 py-8 text-center text-gray-500 border border-gray-300">
-                ${getTranslation('dashboard.noData')}
+                ${getTranslation('home.noData')}
             </td>
         `;
         tbody.appendChild(noDataRow);
@@ -147,17 +147,17 @@ function updateProdiTable() {
 function showError(message) {
     document.getElementById('loadingState').innerHTML = `
         <div class="text-center text-red-600">
-            <p class="text-lg font-semibold">${getTranslation('dashboard.error')}</p>
+            <p class="text-lg font-semibold">${getTranslation('home.error')}</p>
             <p>${message}</p>
             <button onclick="window.location.reload()" class="mt-2 px-4 py-2 bg-veronica text-white rounded hover:bg-veronica-dark">
-                ${getTranslation('dashboard.refresh')}
+                ${getTranslation('home.refresh')}
             </button>
         </div>
     `;
 
     document.getElementById('tableLoadingState').innerHTML = `
         <div class="text-center text-red-600">
-            <p>${getTranslation('dashboard.error')}</p>
+            <p>${getTranslation('home.error')}</p>
         </div>
     `;
 }
@@ -221,7 +221,7 @@ const centerTextPlugin = {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         // Gambar teks "Total" sedikit di atas tengah
-        ctx.fillText(getTranslation('dashboard.total'), centerX, centerY - 15);
+        ctx.fillText(getTranslation('home.total'), centerX, centerY - 15);
 
         // Pengaturan Font untuk Angka Total
         ctx.font = 'bold 36px Arial';
@@ -291,7 +291,7 @@ const chartConfigs = [
                     },
                     title: {
                         display: true,
-                        text: translations.dashboard.charts.penelitian,
+                        text: translations.home.charts.penelitian,
                         font: {
                             size: 30,
                             weight: 'lighter'
@@ -352,7 +352,7 @@ const chartConfigs = [
                     },
                     title: {
                         display: true,
-                        text: translations.dashboard.charts.pengabdian,
+                        text: translations.home.charts.pengabdian,
                         font: {
                             size: 30,
                             weight: 'lighter'
@@ -415,7 +415,7 @@ const chartConfigs = [
                     },
                     title: {
                         display: true,
-                        text: translations.dashboard.charts.publikasi,
+                        text: translations.home.charts.publikasi,
                         font: {
                             size: 30,
                             weight: 'lighter'

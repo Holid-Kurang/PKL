@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => translations.pengabdianPage.tahun + " " + tooltipItems[0].label,
-                                label: context => context.parsed.y + " " + translations.dashboard.charts.pengabdian
+                                label: context => context.parsed.y + " " + translations.home.charts.pengabdian
                             }
                         },
                         title: {
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             footerFont: { weight: 'normal' },
                             callbacks: {
                                 title: tooltipItems => tooltipItems[0].label,
-                                label: context => context.parsed + " " + translations.dashboard.charts.pengabdian
+                                label: context => context.parsed + " " + translations.home.charts.pengabdian
                             }
                         },
                         title: {
