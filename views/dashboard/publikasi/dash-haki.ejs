@@ -67,7 +67,7 @@
                             class="absolute text-gray-400 -translate-y-1/2 material-icons-outlined left-3 top-1/2">search</span>
 
                         <!-- Input pencarian. 'value' diisi dengan searchQuery dari controller -->
-                        <input type="text" name="search" placeholder="Cari Judul..."
+                        <input type="text" name="search" placeholder=<%= translate('dashboard.searchPlaceholder') %>
                             value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
                             class="pl-10 pr-4 py-2 w-72 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4F46E5]">
 
@@ -78,7 +78,7 @@
                     <button onclick="openModal('addDataModal')"
                         class="ml-4 flex items-center bg-[#4F46E5] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#4338CA] transition-colors">
                         <span class="mr-2 material-icons-outlined">add</span>
-                        Tambah Data
+                        <%= translate('dashboard.addButton') %>
                     </button>
                 </div>
             </header>
@@ -110,8 +110,9 @@
                                     const endItem = Math.min(currentPage * limit, typeof totalData !== 'undefined' ? totalData : data.length);
                                     const total = typeof totalData !== 'undefined' ? totalData : data.length;
                                 %>
-                        <%= translate('pagination.showing') %> <span class="font-medium"><%= startItem %></span> <%= translate('pagination.to') %> <span
-                            class="font-medium"><%= endItem %></span> <%= translate('pagination.of') %> <span class="font-medium"><%= total %></span>
+                        <%= translate('pagination.showing') %> <span class="font-medium"><%= startItem %></span>
+                        <%= translate('pagination.to') %> <span class="font-medium"><%= endItem %></span>
+                        <%= translate('pagination.of') %> <span class="font-medium"><%= total %></span>
                         <%= translate('pagination.results') %>
                     </div>
 
@@ -208,8 +209,9 @@
                         <%
                                     const total = typeof totalData !== 'undefined' ? totalData : data.length;
                                 %>
-                        <%= translate('pagination.showing') %> <span class="font-medium">1</span> <%= translate('pagination.to') %> <span
-                            class="font-medium"><%= total %></span> <%= translate('pagination.of') %> <span class="font-medium"><%= total %></span>
+                        <%= translate('pagination.showing') %> <span class="font-medium">1</span>
+                        <%= translate('pagination.to') %> <span class="font-medium"><%= total %></span>
+                        <%= translate('pagination.of') %> <span class="font-medium"><%= total %></span>
                         <%= translate('pagination.results') %>
                     </div>
                 </div>
@@ -331,7 +333,7 @@
                                         <button
                                             onclick="openDeleteModal('/dashboard/publikasi/haki/delete/<%= item._id %>?_method=DELETE')"
                                             class="bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold py-1 px-4 rounded-lg ml-2">
-                                            Hapus
+                                            <%= translate('dashboard.deleteButton') %>
                                         </button>
                                     </td>
                                 </tr>
