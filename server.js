@@ -16,7 +16,7 @@ connectDB(); // Connect to MongoDB
 // Set view engine dan folder views
 app.use('/js', express.static('node_modules/chart.js/dist'));
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "src", "views"));
 app.use(express.static(path.join(__dirname, "public"))); // Set folder public untuk file statis
 app.use(express.json()); // Middleware untuk parsing JSON
 app.use(express.urlencoded({ extended: false })); // Middleware untuk parsing x-www-form-urlencoded
@@ -47,7 +47,7 @@ app.use(i18n);
 // Routes
 app.use("/", routes); // Gunakan routes yang sudah dibuat
 
-app.use( async (req, res, next) => {
+app.use(async (req, res, next) => {
     // Mengatur status 404 dan merender halaman 404 kustom
     res.status(404).render('404page', {
         title: "404 Not Found",

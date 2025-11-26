@@ -71,12 +71,27 @@ exports.getAllData = async (req, res) => {
             models[category].countDocuments(searchQuery)
         ]);
 
+        // Transform data to convert MongoDB Long to string
+        const transformedData = data.map(item => {
+            const transformed = { ...item };
+
+            // Convert Long types to string for pengguna_kode fields
+            if (transformed.pengguna_kode && typeof transformed.pengguna_kode === 'object') {
+                transformed.pengguna_kode = transformed.pengguna_kode.toString();
+            }
+            if (transformed._personil_data_ketua_kode && typeof transformed._personil_data_ketua_kode === 'object') {
+                transformed._personil_data_ketua_kode = transformed._personil_data_ketua_kode.toString();
+            }
+
+            return transformed;
+        });
+
         const totalPages = Math.ceil(totalRecords / limit);
 
         res.status(200).json({
             success: true,
             message: 'Data retrieved successfully',
-            data,
+            data: transformedData,
             pagination: {
                 currentPage: page,
                 totalPages,

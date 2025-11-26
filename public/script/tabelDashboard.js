@@ -297,8 +297,10 @@ function renderTable() {
             }
 
             // Format URL fields as clickable links
-            else if (typeof value === 'string' && value && field === 'jurnal_url' && value.startsWith('http')) {
-                value = `<a href="${value}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline">
+            else if (typeof value === 'string' && value && field === 'jurnal_url') {
+                // Add http:// if URL doesn't start with http:// or https://
+                const url = value.startsWith('http://') || value.startsWith('https://') ? value : `https://${value}`;
+                value = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline">
                     <span class="material-icons-outlined text-sm">link</span>
                 </a>`;
             }

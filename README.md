@@ -4,61 +4,79 @@ Aplikasi web ini dirancang untuk menampilkan indeks kinerja penelitian, pengabdi
 
 ## Fitur Utama
 
-- 🔒 Login untuk pengguna
-- 📥 Import dan export data dalam format CSV/Excel
-- 📊 Visualisasi grafik interaktif (kinerja penelitian, pengabdian, publikasi)
-- 🧾 Penjelasan mendalam terkait grafik
-- ⚙️ Desain responsif menggunakan Tailwind CSS
+-   🔒 Login untuk pengguna
+-   📥 Import dan export data dalam format CSV/Excel
+-   📊 Visualisasi grafik interaktif (kinerja penelitian, pengabdian, publikasi)
+-   🧾 Penjelasan mendalam terkait grafik
+-   ⚙️ Desain responsif menggunakan Tailwind CSS
 
 ## Teknologi yang Digunakan
 
-- Node.js
-- Express.js
-- MongoDB
-- Tailwind CSS
-- Chart.js
-- HTML/CSS/JS
+-   Node.js
+-   Express.js
+-   MongoDB (Mongoose)
+-   Tailwind CSS
+-   Chart.js
+-   EJS (View Engine)
 
+## Struktur Folder
+
+```
+PKL/
+├── config/          # Konfigurasi database dan bahasa
+├── public/          # File statis (CSS, JS, assets)
+├── src/
+│   ├── controllers/ # Controller untuk logika bisnis
+│   ├── middlewares/ # Middleware (auth, i18n)
+│   ├── models/      # Model database (Mongoose)
+│   ├── routes/      # Route definitions
+│   └── views/       # Template EJS
+├── .env             # Environment variables
+├── server.js        # Entry point aplikasi
+└── package.json     # Dependencies
 ```
 
 ## Cara Menjalankan
 
 1. **Clone repositori ini:**
-   ```bash
-   git clone <repo-url>
-   cd nama-folder-proyek
-   ```
+
+    ```bash
+    git clone <repo-url>
+    cd nama-folder-proyek
+    ```
 
 2. **Install dependensi:**
-   ```bash
-   npm install
-   ```
+
+    ```bash
+    npm install
+    ```
 
 3. **Setup MongoDB:**
-   - Pastikan MongoDB sudah terinstal dan berjalan di komputer Anda, atau gunakan layanan MongoDB Atlas.
-   - Buat database baru sesuai kebutuhan proyek.
-   - Tambahkan URI koneksi MongoDB ke file `.env`, misal:
-     ```
-     MONGODB_URI=mongodb://localhost:27017/nama-database
-     ```
-     atau untuk MongoDB Atlas:
-     ```
-     MONGODB_URI=mongodb+srv://<username>:<password>@cluster-url/nama-database
-     ```
+
+    - Pastikan MongoDB sudah terinstal dan berjalan di komputer Anda, atau gunakan layanan MongoDB Atlas.
+    - Buat database baru sesuai kebutuhan proyek.
+    - Tambahkan URI koneksi MongoDB ke file `.env`, misal:
+        ```
+        MONGODB_URI=mongodb://localhost:27017/nama-database
+        ```
+        atau untuk MongoDB Atlas:
+        ```
+        MONGODB_URI=mongodb+srv://<username>:<password>@cluster-url/nama-database
+        ```
 
 4. **Jalankan server:**
-   ```bash
-   npm run dev
-   ```
+
+    ```bash
+    npm run dev
+    ```
 
 5. **Akses aplikasi di browser:**
-   ```
-   http://localhost:3000
-   ```
+    ```
+    http://localhost:3000
+    ```
 
 ## Catatan
 
-- Pastikan Node.js versi terbaru telah terinstal.
-- Tambahkan file `.env` jika proyek ini membutuhkan konfigurasi lingkungan.
-- Pastikan MongoDB sudah berjalan sebelum menjalankan aplikasi.
-
+-   Pastikan Node.js versi terbaru telah terinstal.
+-   Tambahkan file `.env` jika proyek ini membutuhkan konfigurasi lingkungan.
+-   Pastikan MongoDB sudah berjalan sebelum menjalankan aplikasi.
