@@ -245,18 +245,26 @@ function renderTable() {
                 value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
             }
 
+            // Format file fields as clickable download links
+            else if (typeof value === 'string' && value && (field === 'jurnal_file' || field === 'hki_file' || field === 'buku_file')) {
+                value = `<a href="${value}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline">
+                    <span class="material-icons-outlined text-sm">description</span>
+                </a>`;
+            }
+
             // Format URL fields as clickable links
-            else if (typeof value === 'string' && field.includes('url') && value.startsWith('http')) {
-                const shortUrl = value.length > 30 ? value.substring(0, 30) + '...' : value;
-                value = `<a href="${value}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline">${shortUrl}</a>`;
+            else if (typeof value === 'string' && value && field === 'jurnal_url' && value.startsWith('http')) {
+                value = `<a href="${value}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline">
+                    <span class="material-icons-outlined text-sm">link</span>
+                </a>`;
             }
 
-            // Truncate long text (but not for array fields which are already formatted)
-            else if (typeof value === 'string' && value.length > 50) {
-                value = value.substring(0, 50) + '...';
+            // Apply width constraint for file and URL columns
+            if (field === 'jurnal_file' || field === 'hki_file' || field === 'buku_file' || field === 'jurnal_url') {
+                bodyHTML += `<td class="px-6 py-4 text-sm text-gray-900" style="max-width: 80px; width: 80px;">${value || '-'}</td>`;
+            } else {
+                bodyHTML += `<td class="px-6 py-4 text-sm text-gray-900">${value || '-'}</td>`;
             }
-
-            bodyHTML += `<td class="px-6 py-4 text-sm text-gray-900">${value || '-'}</td>`;
         });
 
         bodyHTML += `

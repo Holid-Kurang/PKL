@@ -81,6 +81,18 @@
                     opacity: 1;
                 }
             }
+
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
         </style>
     </head>
 
@@ -106,9 +118,6 @@
 
                 <!-- Dashboard Content -->
                 <main class="flex-1 p-8 overflow-y-auto">
-                    <!-- Message Container -->
-                    <div id="message-container"></div>
-
                     <!-- Action Bar -->
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-xl font-semibold text-gray-800">Daftar Kategori</h2>

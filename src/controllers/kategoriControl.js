@@ -21,7 +21,7 @@ const getAllKategori = async (req, res) => {
 const addKategori = async (req, res) => {
     try {
         const { kategori, firstOption } = req.body;
-        
+
         // Check if kategori already exists
         const existingKategori = await KategoriOption.findOne({ kategori: kategori });
         if (existingKategori) {
@@ -38,7 +38,7 @@ const addKategori = async (req, res) => {
         });
 
         await newKategori.save();
-        
+
         res.json({
             success: true,
             message: 'Kategori berhasil ditambahkan',

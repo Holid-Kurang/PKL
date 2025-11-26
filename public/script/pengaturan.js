@@ -1,27 +1,46 @@
 // Global variables
 let currentKategoriId = null;
+let deleteAction = null;
+let deleteData = null;
 
 // DOM Ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadKategori();
     setupEventListeners();
 });
 
 // Setup event listeners
 function setupEventListeners() {
-    // Add option form
-    document.getElementById('addOptionForm').addEventListener('submit', handleAddOption);
-    
-    // Add kategori button
-    // document.getElementById('addKategoriBtn').addEventListener('click', function() {
-    //     openModal('addKategoriModal');
-    // });
+    // Add kategori button and form
+    document.getElementById('btn-add-kategori').addEventListener('click', openAddKategoriModal);
+    document.getElementById('form-add-kategori').addEventListener('submit', handleAddKategori);
+    document.getElementById('btn-cancel-add-kategori').addEventListener('click', () => closeModal('modal-add-kategori'));
+    document.getElementById('close-add-kategori').addEventListener('click', () => closeModal('modal-add-kategori'));
 
-    // Add kategori form
-    // document.getElementById('addKategoriForm').addEventListener('submit', handleAddKategori);
-    
     // Edit kategori form
-    // document.getElementById('editKategoriForm').addEventListener('submit', handleEditKategori);
+    document.getElementById('form-edit-kategori').addEventListener('submit', handleEditKategori);
+    document.getElementById('btn-cancel-edit-kategori').addEventListener('click', () => closeModal('modal-edit-kategori'));
+    document.getElementById('close-edit-kategori').addEventListener('click', () => closeModal('modal-edit-kategori'));
+
+    // Add option form
+    document.getElementById('form-add-option').addEventListener('submit', handleAddOption);
+    document.getElementById('btn-cancel-add-option').addEventListener('click', () => closeModal('modal-add-option'));
+    document.getElementById('close-add-option').addEventListener('click', () => closeModal('modal-add-option'));
+
+    // Delete modal
+    document.getElementById('btn-cancel-delete').addEventListener('click', () => closeModal('modal-delete'));
+    document.getElementById('close-delete').addEventListener('click', () => closeModal('modal-delete'));
+    document.getElementById('btn-confirm-delete').addEventListener('click', handleDelete);
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function (event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                closeModal(modal.id);
+            }
+        });
+    });
 }
 
 // Load all kategori
@@ -29,7 +48,7 @@ async function loadKategori() {
     try {
         const response = await fetch('/api/kategori');
         const result = await response.json();
-        
+
         if (result.success) {
             displayKategori(result.data);
         } else {
@@ -43,8 +62,8 @@ async function loadKategori() {
 
 // Display kategori cards
 function displayKategori(kategoriList) {
-    const container = document.getElementById('kategoriContainer');
-    
+    const container = document.getElementById('kategori-container');
+
     if (kategoriList.length === 0) {
         container.innerHTML = `
             <div class="col-span-full text-center py-8">
@@ -53,45 +72,66 @@ function displayKategori(kategoriList) {
         `;
         return;
     }
-    
+
     container.innerHTML = kategoriList.map(kategori => `
-        <div class="kategori-card bg-white rounded-lg p-6 shadow-sm">
+        <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <div class="flex justify-between items-start mb-4">
                 <h3 class="text-lg font-semibold text-gray-800">${kategori.kategori}</h3>
+                <div class="flex gap-2">
+                    <button onclick="openEditKategoriModal('${kategori._id}', '${kategori.kategori}')" 
+                            class="text-indigo hover:text-indigo/80 transition-colors">
+                        <span class="material-icons-outlined text-sm">edit</span>
+                    </button>
+                    <button onclick="openDeleteKategoriModal('${kategori._id}', '${kategori.kategori}')" 
+                            class="text-red-600 hover:text-red-800 transition-colors">
+                        <span class="material-icons-outlined text-sm">delete</span>
+                    </button>
+                </div>
             </div>
             
             <div class="mb-4">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm font-medium text-gray-600">Options:</span>
-                    <button onclick="addOption('${kategori._id}')" 
-                            class="text-green-500 hover:text-green-700 text-sm">
-                        <span class="material-icons-outlined text-xs">add</span>
+                    <span class="text-sm font-medium text-gray-600">Options (${kategori.option.length}):</span>
+                    <button onclick="openAddOptionModal('${kategori._id}', '${kategori.kategori}')" 
+                            class="text-green-600 hover:text-green-800 transition-colors">
+                        <span class="material-icons-outlined text-sm">add_circle</span>
                     </button>
                 </div>
-                <div class="flex flex-wrap gap-1">
-                    ${kategori.option.map(opt => `
-                        <span class="option-tag">
-                            ${opt}
-                            <button onclick="removeOption('${kategori._id}', '${opt}')">×</button>
-                        </span>
-                    `).join('')}
-                    ${kategori.option.length === 0 ? '<span class="text-gray-400 text-sm">Belum ada option</span>' : ''}
+                <div class="flex flex-wrap gap-2">
+                    ${kategori.option.length === 0
+            ? '<span class="text-gray-400 text-sm italic">Belum ada opsi</span>'
+            : kategori.option.map(opt => `
+                            <span class="inline-flex items-center gap-1 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full">
+                                ${opt}
+                                <button onclick="openDeleteOptionModal('${kategori._id}', '${opt}')" 
+                                        class="ml-1 text-blue-700 hover:text-blue-900 font-bold">
+                                    ×
+                                </button>
+                            </span>
+                        `).join('')
+        }
                 </div>
             </div>
         </div>
     `).join('');
 }
 
+// Open add kategori modal
+function openAddKategoriModal() {
+    document.getElementById('kategori-name').value = '';
+    document.getElementById('first-option').value = '';
+    openModal('modal-add-kategori');
+}
+
 // Handle add kategori
 async function handleAddKategori(event) {
     event.preventDefault();
-    
-    const formData = new FormData(event.target);
+
     const data = {
-        kategori: document.getElementById('kategoriName').value,
-        firstOption: document.getElementById('firstOption').value
+        kategori: document.getElementById('kategori-name').value,
+        firstOption: document.getElementById('first-option').value
     };
-    
+
     try {
         const response = await fetch('/api/kategori', {
             method: 'POST',
@@ -100,30 +140,37 @@ async function handleAddKategori(event) {
             },
             body: JSON.stringify(data)
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
-            showMessage('success', result.message);
-            closeModal('addKategoriModal');
-            document.getElementById('addKategoriForm').reset();
+            showToast('success', result.message);
+            closeModal('modal-add-kategori');
+            document.getElementById('form-add-kategori').reset();
             loadKategori();
         } else {
-            showMessage('error', result.message);
+            showToast('error', result.message);
         }
     } catch (error) {
         console.error('Error adding kategori:', error);
-        showMessage('error', 'Terjadi kesalahan saat menambah kategori');
+        showToast('error', 'Terjadi kesalahan saat menambah kategori');
     }
+}
+
+// Open edit kategori modal
+function openEditKategoriModal(id, nama) {
+    document.getElementById('edit-kategori-id').value = id;
+    document.getElementById('edit-kategori-name').value = nama;
+    openModal('modal-edit-kategori');
 }
 
 // Handle edit kategori
 async function handleEditKategori(event) {
     event.preventDefault();
-    
-    const id = document.getElementById('editKategoriId').value;
-    const kategori = document.getElementById('editKategoriName').value;
-    
+
+    const id = document.getElementById('edit-kategori-id').value;
+    const kategori = document.getElementById('edit-kategori-name').value;
+
     try {
         const response = await fetch(`/api/kategori/${id}`, {
             method: 'PUT',
@@ -132,29 +179,45 @@ async function handleEditKategori(event) {
             },
             body: JSON.stringify({ kategori })
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
-            showMessage('success', result.message);
-            closeModal('editKategoriModal');
+            showToast('success', result.message);
+            closeModal('modal-edit-kategori');
             loadKategori();
         } else {
-            showMessage('error', result.message);
+            showToast('error', result.message);
         }
     } catch (error) {
         console.error('Error editing kategori:', error);
-        showMessage('error', 'Terjadi kesalahan saat mengupdate kategori');
+        showToast('error', 'Terjadi kesalahan saat mengupdate kategori');
     }
+}
+
+// Open delete kategori modal
+function openDeleteKategoriModal(id, nama) {
+    deleteAction = 'kategori';
+    deleteData = { id, nama };
+    document.getElementById('delete-message').textContent = `Apakah Anda yakin ingin menghapus kategori "${nama}"? Semua opsi di dalamnya juga akan terhapus.`;
+    openModal('modal-delete');
+}
+
+// Open add option modal
+function openAddOptionModal(id, kategoriNama) {
+    document.getElementById('add-option-kategori-id').value = id;
+    document.getElementById('add-option-kategori-name').value = kategoriNama;
+    document.getElementById('new-option').value = '';
+    openModal('modal-add-option');
 }
 
 // Handle add option
 async function handleAddOption(event) {
     event.preventDefault();
-    
-    const id = document.getElementById('optionKategoriId').value;
-    const option = document.getElementById('optionName').value;
-    
+
+    const id = document.getElementById('add-option-kategori-id').value;
+    const option = document.getElementById('new-option').value;
+
     try {
         const response = await fetch(`/api/kategori/${id}/option`, {
             method: 'POST',
@@ -163,122 +226,105 @@ async function handleAddOption(event) {
             },
             body: JSON.stringify({ option })
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
-            showMessage('success', result.message);
-            closeModal('addOptionModal');
-            document.getElementById('addOptionForm').reset();
+            showToast('success', result.message);
+            closeModal('modal-add-option');
+            document.getElementById('form-add-option').reset();
             loadKategori();
         } else {
-            showMessage('error', result.message);
+            showToast('error', result.message);
         }
     } catch (error) {
         console.error('Error adding option:', error);
-        showMessage('error', 'Terjadi kesalahan saat menambah option');
+        showToast('error', 'Terjadi kesalahan saat menambah opsi');
     }
 }
 
-// Edit kategori
-function editKategori(id, nama) {
-    document.getElementById('editKategoriId').value = id;
-    document.getElementById('editKategoriName').value = nama;
-    openModal('editKategoriModal');
+// Open delete option modal
+function openDeleteOptionModal(id, option) {
+    deleteAction = 'option';
+    deleteData = { id, option };
+    document.getElementById('delete-message').textContent = `Apakah Anda yakin ingin menghapus opsi "${option}"?`;
+    openModal('modal-delete');
 }
 
-// Delete kategori
-async function deleteKategori(id) {
-    if (!confirm('Apakah Anda yakin ingin menghapus kategori ini?')) {
-        return;
-    }
-    
+// Handle delete (kategori or option)
+async function handleDelete() {
+    if (!deleteAction || !deleteData) return;
+
     try {
-        const response = await fetch(`/api/kategori/${id}`, {
-            method: 'DELETE'
-        });
-        
+        let response;
+
+        if (deleteAction === 'kategori') {
+            response = await fetch(`/api/kategori/${deleteData.id}`, {
+                method: 'DELETE'
+            });
+        } else if (deleteAction === 'option') {
+            response = await fetch(`/api/kategori/${deleteData.id}/option`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ option: deleteData.option })
+            });
+        }
+
         const result = await response.json();
-        
+
         if (result.success) {
-            showMessage('success', result.message);
+            showToast('success', result.message);
+            closeModal('modal-delete');
             loadKategori();
         } else {
-            showMessage('error', result.message);
+            showToast('error', result.message);
         }
     } catch (error) {
-        console.error('Error deleting kategori:', error);
-        showMessage('error', 'Terjadi kesalahan saat menghapus kategori');
-    }
-}
-
-// Add option
-function addOption(id) {
-    document.getElementById('optionKategoriId').value = id;
-    openModal('addOptionModal');
-}
-
-// Remove option
-async function removeOption(id, option) {
-    if (!confirm(`Apakah Anda yakin ingin menghapus option "${option}"?`)) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`/api/kategori/${id}/option`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ option })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            showMessage('success', result.message);
-            loadKategori();
-        } else {
-            showMessage('error', result.message);
-        }
-    } catch (error) {
-        console.error('Error removing option:', error);
-        showMessage('error', 'Terjadi kesalahan saat menghapus option');
+        console.error('Error deleting:', error);
+        showToast('error', 'Terjadi kesalahan saat menghapus');
+    } finally {
+        deleteAction = null;
+        deleteData = null;
     }
 }
 
 // Modal functions
 function openModal(modalId) {
-    document.getElementById(modalId).style.display = 'block';
+    document.getElementById(modalId).classList.add('active');
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+    document.getElementById(modalId).classList.remove('active');
 }
 
-// Close modal when clicking outside
-window.onclick = function(event) {
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-}
+// Show toast notification
+function showToast(type, message) {
+    // Remove existing toast if any
+    const existingToast = document.querySelector('.toast');
+    if (existingToast) {
+        existingToast.remove();
+    }
 
-// Show message
-function showMessage(type, message) {
-    const container = document.getElementById('messageContainer');
-    const alertClass = type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
-    
-    container.innerHTML = `
-        <div class="${alertClass} px-4 py-3 mb-6 rounded border" role="alert">
-            <span class="block sm:inline">${message}</span>
-        </div>
-    `;
-    
-    // Auto hide after 5 seconds
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+
+    // Add to body
+    document.body.appendChild(toast);
+
+    // Auto remove after 3 seconds
     setTimeout(() => {
-        container.innerHTML = '';
-    }, 5000);
+        toast.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
+
+// Make functions globally accessible
+window.openAddKategoriModal = openAddKategoriModal;
+window.openEditKategoriModal = openEditKategoriModal;
+window.openDeleteKategoriModal = openDeleteKategoriModal;
+window.openAddOptionModal = openAddOptionModal;
+window.openDeleteOptionModal = openDeleteOptionModal;
