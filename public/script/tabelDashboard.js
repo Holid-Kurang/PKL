@@ -197,10 +197,8 @@ function renderTable() {
         headerHTML += `<th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">${fieldLabels[field] || field}</th>`;
     });
 
-    headerHTML += '<th class="px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-700 uppercase">Aksi</th>';
-    thead.innerHTML = headerHTML;
-
-    // Render body
+    headerHTML += '<th class="sticky-col-header px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-700 uppercase">Aksi</th>';
+    thead.innerHTML = headerHTML;    // Render body
     const tbody = document.getElementById('table-body');
 
     if (filteredData.length === 0) {
@@ -227,26 +225,42 @@ function renderTable() {
         fields.forEach(field => {
             let value = item[field];
 
-            // Format array fields
+            // Format array fields with attractive badge design
             if (Array.isArray(value)) {
-                value = value.join(', ');
+                if (value.length === 0) {
+                    value = '-';
+                } else {
+                    // Display as vertical list with badges
+                    const arrayItems = value; // Store original array
+                    value = '<div class="flex flex-col gap-1">';
+                    arrayItems.forEach(v => {
+                        value += `<span class="inline-block px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded w-fit">${v}</span>`;
+                    });
+                    value += '</div>';
+                }
             }
 
             // Format number fields
-            if (typeof value === 'number' && (field.includes('Biaya') || field.includes('Dana'))) {
+            else if (typeof value === 'number' && (field.includes('Biaya') || field.includes('Dana'))) {
                 value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
             }
 
-            // Truncate long text
-            if (typeof value === 'string' && value.length > 50) {
+            // Format URL fields as clickable links
+            else if (typeof value === 'string' && field.includes('url') && value.startsWith('http')) {
+                const shortUrl = value.length > 30 ? value.substring(0, 30) + '...' : value;
+                value = `<a href="${value}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline">${shortUrl}</a>`;
+            }
+
+            // Truncate long text (but not for array fields which are already formatted)
+            else if (typeof value === 'string' && value.length > 50) {
                 value = value.substring(0, 50) + '...';
             }
 
-            bodyHTML += `<td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">${value || '-'}</td>`;
+            bodyHTML += `<td class="px-6 py-4 text-sm text-gray-900">${value || '-'}</td>`;
         });
 
         bodyHTML += `
-            <td class="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
+            <td class="sticky-col px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                 <button onclick="editData('${item._id}')" class="text-indigo hover:text-indigo/80 mr-3">
                     <span class="material-icons-outlined">edit</span>
                 </button>

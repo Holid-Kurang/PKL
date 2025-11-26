@@ -22,7 +22,7 @@ class LanguageSwitcher {
                     <path d="M12 15.5c-.28 0-.53-.11-.71-.29l-5-5 1.42-1.42L12 12.79l4.29-4.3 1.42 1.42-5 5c-.18.18-.43.29-.71.29z"/>
                 </svg>
             </button>
-            <div id="languageDropdown" class="absolute right-0 hidden w-48 mt-2 overflow-hidden bg-white border-2 border-purple-200 shadow-lg rounded-2xl">
+            <div id="languageDropdown" class="absolute right-0 hidden w-48 mt-2 overflow-hidden bg-white  shadow-[0px_10px_20px_5px] shadow-black/25 rounded-2xl">
                 <button class="language-option flex items-center w-full gap-3 px-4 py-3 text-left transition-colors duration-200 hover:bg-veronica hover:text-white" data-lang="id">
                     <div class="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-red-400 to-red-600">
                         <span class="text-xs font-bold text-white">🇮🇩</span>

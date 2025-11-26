@@ -49,6 +49,21 @@
             .close:focus {
                 color: #000;
             }
+
+            /* Sticky action column */
+            .sticky-col {
+                position: sticky;
+                right: 0;
+                background-color: white;
+                box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+            }
+
+            .sticky-col-header {
+                position: sticky;
+                right: 0;
+                background-color: rgb(243, 244, 246);
+                box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+            }
         </style>
     </head>
 
@@ -61,7 +76,7 @@
             <div class="flex flex-col flex-1 overflow-hidden">
                 <!-- Header -->
                 <header class="bg-white shadow-sm">
-                    <div class="flex items-center justify-between px-8 py-4">
+                    <div class="flex items-center justify-between h-20 px-8">
                         <div>
                             <h1 class="text-2xl font-bold text-gray-800" id="page-title">
                                 <%= section.charAt(0).toUpperCase() + section.slice(1) %> -
@@ -106,19 +121,34 @@
                             </button>
                         </div>
                     </div>
-
+                    
+                    <!-- Pagination -->
+                    <div class="flex items-center justify-between my-6">
+                        <div class="text-sm text-gray-700">
+                            <span id="pagination-info">
+                                <%= translate('pagination.showing') %> <span id="page-start">0</span>
+                                <%= translate('pagination.to') %> <span id="page-end">0</span>
+                                <%= translate('pagination.of') %> <span id="total-records">0</span>
+                                <%= translate('pagination.results') %>
+                            </span>
+                        </div>
+                        <div class="flex gap-2" id="pagination-controls">
+                            <!-- Pagination buttons will be inserted here -->
+                        </div>
+                    </div>
+                    
                     <!-- Data Table -->
                     <div class="overflow-hidden bg-white rounded-lg shadow">
-                        <div class="overflow-x-auto">
+                        <div class="overflow-x-auto max-h-[600px]">
                             <table class="w-full">
-                                <thead class="bg-gray-100 border-b">
+                                <thead class="sticky top-0 z-10 bg-gray-100 border-b">
                                     <tr id="table-header">
                                         <th
-                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-700 uppercase bg-gray-100">
                                             No</th>
                                         <!-- Dynamic headers will be inserted here -->
                                         <th
-                                            class="px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-700 uppercase">
+                                            class="px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-700 uppercase sticky-col-header">
                                             Aksi</th>
                                     </tr>
                                 </thead>
@@ -133,21 +163,6 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="flex items-center justify-between mt-6">
-                        <div class="text-sm text-gray-700">
-                            <span id="pagination-info">
-                                <%= translate('pagination.showing') %> <span id="page-start">0</span>
-                                <%= translate('pagination.to') %> <span id="page-end">0</span>
-                                <%= translate('pagination.of') %> <span id="total-records">0</span>
-                                <%= translate('pagination.results') %>
-                            </span>
-                        </div>
-                        <div class="flex gap-2" id="pagination-controls">
-                            <!-- Pagination buttons will be inserted here -->
                         </div>
                     </div>
                 </main>
