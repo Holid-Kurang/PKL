@@ -24,16 +24,72 @@ exports.getAllData = async (req, res) => {
             });
         }
 
-        const data = await models[category].find({})
-            .sort({ createdAt: -1 });
+        // Extract query parameters for pagination, sorting, and filtering
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 50;
+        const sortBy = req.query.sortBy || 'createdAt';
+        const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+        const search = req.query.search || '';
+
+        const skip = (page - 1) * limit;
+
+        // Build search query
+        let searchQuery = {};
+        if (search) {
+            // Get model schema fields
+            const modelSchema = models[category].schema.obj;
+            const searchableFields = Object.keys(modelSchema).filter(key =>
+                !['createdAt', 'updatedAt', '__v', '_id'].includes(key)
+            );
+
+            // Create OR query for all searchable fields
+            searchQuery.$or = searchableFields.map(field => {
+                const fieldType = modelSchema[field].type || modelSchema[field];
+
+                // For string fields, use regex search
+                if (fieldType === String || (Array.isArray(fieldType) && fieldType[0] === String)) {
+                    return { [field]: { $regex: search, $options: 'i' } };
+                }
+
+                // For number fields, try exact match if search is a number
+                if (fieldType === Number && !isNaN(search)) {
+                    return { [field]: Number(search) };
+                }
+
+                return null;
+            }).filter(query => query !== null);
+        }
+
+        // Execute query with pagination
+        const [data, totalRecords] = await Promise.all([
+            models[category]
+                .find(searchQuery)
+                .sort({ [sortBy]: sortOrder })
+                .skip(skip)
+                .limit(limit)
+                .lean(), // Use lean() for better performance
+            models[category].countDocuments(searchQuery)
+        ]);
+
+        const totalPages = Math.ceil(totalRecords / limit);
 
         res.status(200).json({
+            success: true,
             message: 'Data retrieved successfully',
-            data
+            data,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalRecords,
+                limit,
+                hasNextPage: page < totalPages,
+                hasPrevPage: page > 1
+            }
         });
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).json({
+            success: false,
             message: 'Failed to retrieve data',
             error: 'Internal Server Error'
         });

@@ -10,6 +10,10 @@ let editingId = null;
 let deleteId = null;
 let sortColumn = null;
 let sortDirection = 'asc';
+let totalRecords = 0;
+let totalPages = 0;
+let searchTerm = '';
+let searchDebounceTimer = null;
 
 // Config from server-side
 const { section, category, fullCategory, fields, prodiOptions, hakiOptions, translations } = window.dashboardConfig;
@@ -112,13 +116,27 @@ function initializeEventListeners() {
     document.getElementById('btn-add').addEventListener('click', openAddModal);
     document.getElementById('btn-export').addEventListener('click', exportData);
     document.getElementById('btn-import').addEventListener('click', openImportModal);
-    document.getElementById('btn-search').addEventListener('click', handleSearch);
 
-    // Search on Enter key
+    // Live search with debouncing
+    document.getElementById('search-input').addEventListener('input', function () {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+            handleSearch();
+        }, 300); // 300ms debounce delay
+    });
+
+    // Search on Enter key (immediate, no debounce)
     document.getElementById('search-input').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
+            clearTimeout(searchDebounceTimer);
             handleSearch();
         }
+    });
+
+    // Search button click (immediate, no debounce)
+    document.getElementById('btn-search').addEventListener('click', function () {
+        clearTimeout(searchDebounceTimer);
+        handleSearch();
     });
 
     // Modal controls
@@ -146,12 +164,24 @@ function initializeEventListeners() {
 async function loadData() {
     try {
         showLoading();
-        const response = await fetch(`/api/dashboard/${fullCategory}`);
+
+        // Build query parameters for server-side pagination
+        const params = new URLSearchParams({
+            page: currentPage,
+            limit: itemsPerPage,
+            sortBy: sortColumn || 'createdAt',
+            sortOrder: sortDirection,
+            search: searchTerm
+        });
+
+        const response = await fetch(`/api/dashboard/${fullCategory}?${params}`);
         const result = await response.json();
 
-        if (response.ok && result.data) {
+        if (response.ok && result.success) {
             currentData = result.data;
             filteredData = [...currentData];
+            totalRecords = result.pagination.totalRecords;
+            totalPages = result.pagination.totalPages;
             renderTable();
             renderPagination();
         } else {
@@ -228,12 +258,11 @@ function renderTable() {
         return;
     }
 
+    // Server-side pagination - no need to slice, data already paginated
     const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageData = filteredData.slice(start, end);
 
     let bodyHTML = '';
-    pageData.forEach((item, index) => {
+    filteredData.forEach((item, index) => {
         bodyHTML += `<tr class="hover:bg-gray-50">`;
         bodyHTML += `<td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">${start + index + 1}</td>`;
 
@@ -300,15 +329,14 @@ function renderTable() {
 
 // Render pagination
 function renderPagination() {
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
     const paginationControls = document.getElementById('pagination-controls');
 
-    // Update pagination info
-    const start = filteredData.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
-    const end = Math.min(currentPage * itemsPerPage, filteredData.length);
+    // Update pagination info - use server-side totalRecords
+    const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+    const end = Math.min(currentPage * itemsPerPage, totalRecords);
     document.getElementById('page-start').textContent = start;
     document.getElementById('page-end').textContent = end;
-    document.getElementById('total-records').textContent = filteredData.length;
+    document.getElementById('total-records').textContent = totalRecords;
 
     // Generate pagination buttons
     let paginationHTML = '';
@@ -354,39 +382,17 @@ function renderPagination() {
 
 // Change page
 function changePage(page) {
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
     if (page < 1 || page > totalPages) return;
 
     currentPage = page;
-    renderTable();
-    renderPagination();
+    loadData(); // Reload data from server with new page
 }
 
 // Handle search
 function handleSearch() {
-    const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
-
-    if (searchTerm === '') {
-        filteredData = [...currentData];
-    } else {
-        filteredData = currentData.filter(item => {
-            return fields.some(field => {
-                const value = item[field];
-                if (typeof value === 'string') {
-                    return value.toLowerCase().includes(searchTerm);
-                }
-                if (Array.isArray(value)) {
-                    return value.some(v => v.toLowerCase().includes(searchTerm));
-                }
-                return false;
-            });
-        });
-    }
-
-    currentPage = 1;
-    applySorting(); // Apply current sorting after search
-    renderTable();
-    renderPagination();
+    searchTerm = document.getElementById('search-input').value.trim();
+    currentPage = 1; // Reset to first page
+    loadData(); // Reload data from server with search term
 }
 
 // Sort table by column
@@ -399,42 +405,12 @@ function sortTable(field) {
         sortDirection = 'asc';
     }
 
-    applySorting();
     currentPage = 1; // Reset to first page
-    renderTable();
-    renderPagination();
+    loadData(); // Reload data from server with sorting
 }
 
-// Apply sorting to filtered data
-function applySorting() {
-    if (!sortColumn) return;
-
-    filteredData.sort((a, b) => {
-        let valueA = a[sortColumn];
-        let valueB = b[sortColumn];
-
-        // Handle null/undefined values
-        if (valueA == null) valueA = '';
-        if (valueB == null) valueB = '';
-
-        // Handle arrays - compare by length or first element
-        if (Array.isArray(valueA)) valueA = valueA.length > 0 ? valueA[0] : '';
-        if (Array.isArray(valueB)) valueB = valueB.length > 0 ? valueB[0] : '';
-
-        // Handle numbers
-        if (typeof valueA === 'number' && typeof valueB === 'number') {
-            return sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
-        }
-
-        // Handle strings (case-insensitive)
-        const strA = String(valueA).toLowerCase();
-        const strB = String(valueB).toLowerCase();
-
-        if (strA < strB) return sortDirection === 'asc' ? -1 : 1;
-        if (strA > strB) return sortDirection === 'asc' ? 1 : -1;
-        return 0;
-    });
-}
+// Remove client-side applySorting function - now handled by server
+// applySorting() function removed
 
 // Generate form fields dynamically
 function generateFormFields(data = null) {
