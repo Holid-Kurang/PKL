@@ -26,7 +26,7 @@ exports.getAllData = async (req, res) => {
 
         const data = await models[category].find({})
             .sort({ createdAt: -1 });
-        
+
         res.status(200).json({
             message: 'Data retrieved successfully',
             data
@@ -57,7 +57,11 @@ exports.createData = async (req, res) => {
         const newData = new models[category](req.body);
         await newData.save();
 
-        res.status(201)
+        res.status(201).json({
+            success: true,
+            message: 'Data created successfully',
+            data: newData
+        });
     } catch (error) {
         console.error('Error creating data:', error);
         res.status(500).json({
@@ -236,19 +240,61 @@ exports.importDataFromExcel = async (req, res) => {
 
 exports.renderDashboard = async (req, res) => {
     try {
+        // Get statistics from all categories
+        const stats = {};
+        for (const [category, model] of Object.entries(models)) {
+            stats[category] = await model.countDocuments({});
+        }
+
+        res.render('dashboard/homeDashboard', {
+            title: 'Dashboard',
+            stats
+        });
+    } catch (error) {
+        console.error('Error rendering dashboard:', error);
+        res.status(500).render('404page', {
+            title: 'Error',
+            message: 'Failed to load dashboard'
+        });
+    }
+};
+
+exports.renderDashboardTable = async (req, res) => {
+    try {
+        const { section, category } = req.params;
+        const fullCategory = `${section}-${category}`;
+
+        // Validate category
+        if (!models[fullCategory]) {
+            return res.status(404).render('404page', {
+                title: 'Error',
+                message: 'Invalid category'
+            });
+        }
+
         // Get prodi options for the modal
         let prodiOptions = await kategoriModel.find({ kategori: 'Program Studi' });
         prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
-        let hakiOptions = await kategoriModel.find({ kategori: 'Jenis HAKI' });
-        hakiOptions = hakiOptions.length > 0 ? hakiOptions[0].option : []; // Ambil opsi haki dari kategori
 
-        res.render('dashboard', {
-            title: 'Dashboard',
+        // Get HAKI options if needed
+        let hakiOptions = await kategoriModel.find({ kategori: 'Jenis HAKI' });
+        hakiOptions = hakiOptions.length > 0 ? hakiOptions[0].option : [];
+
+        // Get model schema to determine fields
+        const modelSchema = models[fullCategory].schema.obj;
+        const fields = Object.keys(modelSchema).filter(key => !['createdAt', 'updatedAt', '__v', '_id'].includes(key));
+
+        res.render('dashboard/tabelDashboard', {
+            title: `Dashboard - ${section} ${category}`,
+            section,
+            category,
+            fullCategory,
+            fields,
             prodiOptions: JSON.stringify(prodiOptions),
             hakiOptions: JSON.stringify(hakiOptions)
         });
     } catch (error) {
-        console.error('Error rendering dashboard:', error);
+        console.error('Error rendering dashboard table:', error);
         res.status(500).render('404page', {
             title: 'Error',
             message: 'Failed to load dashboard'

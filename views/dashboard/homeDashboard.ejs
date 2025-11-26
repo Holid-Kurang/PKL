@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="<%= currentLang %>">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><%= title %></title>
+        <link href="/style/main.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    </head>
+
+    <body class="bg-gray-50">
+        <div class="flex h-screen overflow-hidden">
+            <!-- Sidebar -->
+            <%- include('../partials/sidebar-dashboard') %>
+
+            <!-- Main Content -->
+            <div class="flex flex-col flex-1 overflow-hidden">
+                <!-- Header -->
+                <header class="bg-white shadow-sm">
+                    <div class="flex items-center justify-between px-8 py-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800"><%= translate('navbar.dashboard') %></h1>
+                            <p class="text-sm text-gray-600"><%= translate('auth.user') %>: Admin</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <%- include('../partials/dropdown') %>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Dashboard Content -->
+                <main class="flex-1 p-8 overflow-y-auto">
+                    <!-- Welcome Section -->
+                    <div class="p-6 mb-8 bg-white rounded-lg shadow">
+                        <h2 class="mb-2 text-xl font-bold text-indigo">
+                            <%= translate('welcome.title') %>
+                        </h2>
+                        <p class="text-gray-600">
+                            <%= translate('welcome.description') %>
+                        </p>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="mb-8">
+                        <h3 class="mb-4 text-lg font-semibold text-gray-700"><%= translate('welcome.summaryTitle') %>
+                        </h3>
+                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                            <!-- Penelitian Card -->
+                            <div class="p-6 transition-shadow bg-white rounded-lg shadow hover:shadow-lg">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-3 bg-blue-100 rounded-lg">
+                                        <span class="text-3xl text-blue-600 material-icons-outlined">science</span>
+                                    </div>
+                                    <span class="text-3xl font-bold text-gray-800" id="total-penelitian">
+                                        <%= (stats['penelitian-pnbp'] || 0) + (stats['penelitian-pusat'] || 0) + (stats['penelitian-mandiri'] || 0) %>
+                                    </span>
+                                </div>
+                                <h4 class="mb-1 text-sm font-medium text-gray-600"><%= translate('navbar.penelitian') %>
+                                </h4>
+                                <p class="text-xs text-gray-500">
+                                    PNBP: <%= stats['penelitian-pnbp'] || 0 %>,
+                                    Pusat: <%= stats['penelitian-pusat'] || 0 %>,
+                                    Mandiri: <%= stats['penelitian-mandiri'] || 0 %>
+                                </p>
+                            </div>
+
+                            <!-- Pengabdian Card -->
+                            <div class="p-6 transition-shadow bg-white rounded-lg shadow hover:shadow-lg">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-3 bg-green-100 rounded-lg">
+                                        <span
+                                            class="text-3xl text-green-600 material-icons-outlined">local_library</span>
+                                    </div>
+                                    <span class="text-3xl font-bold text-gray-800" id="total-pengabdian">
+                                        <%= (stats['pengabdian-pnbp'] || 0) + (stats['pengabdian-pusat'] || 0) %>
+                                    </span>
+                                </div>
+                                <h4 class="mb-1 text-sm font-medium text-gray-600"><%= translate('navbar.pengabdian') %>
+                                </h4>
+                                <p class="text-xs text-gray-500">
+                                    PNBP: <%= stats['pengabdian-pnbp'] || 0 %>,
+                                    Pusat: <%= stats['pengabdian-pusat'] || 0 %>
+                                </p>
+                            </div>
+
+                            <!-- Publikasi Card -->
+                            <div class="p-6 transition-shadow bg-white rounded-lg shadow hover:shadow-lg">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-3 bg-purple-100 rounded-lg">
+                                        <span class="text-3xl text-purple-600 material-icons-outlined">groups</span>
+                                    </div>
+                                    <span class="text-3xl font-bold text-gray-800" id="total-publikasi">
+                                        <%= (stats['publikasi-buku'] || 0) + (stats['publikasi-haki'] || 0) + (stats['publikasi-jupeng'] || 0) %>
+                                    </span>
+                                </div>
+                                <h4 class="mb-1 text-sm font-medium text-gray-600"><%= translate('navbar.publikasi') %>
+                                </h4>
+                                <p class="text-xs text-gray-500">
+                                    Buku: <%= stats['publikasi-buku'] || 0 %>,
+                                    HAKI: <%= stats['publikasi-haki'] || 0 %>,
+                                    Jupeng: <%= stats['publikasi-jupeng'] || 0 %>
+                                </p>
+                            </div>
+
+                            <!-- Total Card -->
+                            <div class="p-6 transition-shadow bg-white rounded-lg shadow hover:shadow-lg">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-3 rounded-lg bg-indigo/10">
+                                        <span class="text-3xl material-icons-outlined text-indigo">assessment</span>
+                                    </div>
+                                    <span class="text-3xl font-bold text-gray-800" id="total-all">
+                                        <%= Object.values(stats).reduce((a, b) => a + b, 0) %>
+                                    </span>
+                                </div>
+                                <h4 class="mb-1 text-sm font-medium text-gray-600"><%= translate('home.total') %></h4>
+                                <p class="text-xs text-gray-500">Total Semua Data</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Access Navigation -->
+                    <div class="mb-8">
+                        <h3 class="mb-4 text-lg font-semibold text-gray-700">Akses Cepat</h3>
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            <!-- Penelitian Section -->
+                            <div class="p-6 bg-white rounded-lg shadow">
+                                <div class="flex items-center mb-4">
+                                    <span class="mr-3 text-2xl text-blue-600 material-icons-outlined">science</span>
+                                    <h4 class="font-semibold text-gray-800"><%= translate('navbar.penelitian') %></h4>
+                                </div>
+                                <div class="space-y-2">
+                                    <a href="/dashboard/penelitian/pnbp"
+                                        class="block px-4 py-2 transition-colors rounded bg-gray-50 hover:bg-blue-50 hover:text-blue-600">
+                                        <%= translate('categories.pnbp') %>
+                                    </a>
+                                    <a href="/dashboard/penelitian/pusat"
+                                        class="block px-4 py-2 transition-colors rounded bg-gray-50 hover:bg-blue-50 hover:text-blue-600">
+                                        <%= translate('categories.pusat') %>
+                                    </a>
+                                    <a href="/dashboard/penelitian/mandiri"
+                                        class="block px-4 py-2 transition-colors rounded bg-gray-50 hover:bg-blue-50 hover:text-blue-600">
+                                        <%= translate('categories.mandiri') %>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Pengabdian Section -->
+                            <div class="p-6 bg-white rounded-lg shadow">
+                                <div class="flex items-center mb-4">
+                                    <span
+                                        class="mr-3 text-2xl text-green-600 material-icons-outlined">local_library</span>
+                                    <h4 class="font-semibold text-gray-800"><%= translate('navbar.pengabdian') %></h4>
+                                </div>
+                                <div class="space-y-2">
+                                    <a href="/dashboard/pengabdian/pnbp"
+                                        class="block px-4 py-2 transition-colors rounded bg-gray-50 hover:bg-green-50 hover:text-green-600">
+                                        <%= translate('categories.pnbp') %>
+                                    </a>
+                                    <a href="/dashboard/pengabdian/pusat"
+                                        class="block px-4 py-2 transition-colors rounded bg-gray-50 hover:bg-green-50 hover:text-green-600">
+                                        <%= translate('categories.pusat') %>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Publikasi Section -->
+                            <div class="p-6 bg-white rounded-lg shadow">
+                                <div class="flex items-center mb-4">
+                                    <span class="mr-3 text-2xl text-purple-600 material-icons-outlined">groups</span>
+                                    <h4 class="font-semibold text-gray-800"><%= translate('navbar.publikasi') %></h4>
+                                </div>
+                                <div class="space-y-2">
+                                    <a href="/dashboard/publikasi/buku"
+                                        class="block px-4 py-2 transition-colors rounded bg-gray-50 hover:bg-purple-50 hover:text-purple-600">
+                                        <%= translate('categories.buku') %>
+                                    </a>
+                                    <a href="/dashboard/publikasi/haki"
+                                        class="block px-4 py-2 transition-colors rounded bg-gray-50 hover:bg-purple-50 hover:text-purple-600">
+                                        <%= translate('categories.haki') %>
+                                    </a>
+                                    <a href="/dashboard/publikasi/jupeng"
+                                        class="block px-4 py-2 transition-colors rounded bg-gray-50 hover:bg-purple-50 hover:text-purple-600">
+                                        <%= translate('categories.jupeng') %>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Settings -->
+                            <div class="p-6 bg-white rounded-lg shadow">
+                                <div class="flex items-center mb-4">
+                                    <span class="mr-3 text-2xl text-gray-600 material-icons-outlined">settings</span>
+                                    <h4 class="font-semibold text-gray-800"><%= translate('navbar.pengaturan') %></h4>
+                                </div>
+                                <div class="space-y-2">
+                                    <a href="/dashboard/pengaturan"
+                                        class="block px-4 py-2 transition-colors rounded bg-gray-50 hover:bg-indigo/10 hover:text-indigo">
+                                        Kelola Kategori
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity (Placeholder) -->
+                    <div class="p-6 bg-white rounded-lg shadow">
+                        <h3 class="mb-4 text-lg font-semibold text-gray-700">Aktivitas Terbaru</h3>
+                        <p class="text-sm text-gray-500">Fitur aktivitas terbaru akan ditampilkan di sini.</p>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <script src="/script/language-switcher.js"></script>
+    </body>
+
+</html>

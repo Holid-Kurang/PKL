@@ -19,4 +19,7 @@ router.get('/api/dashboard/:category/export', isLogin, dashboardControl.exportDa
 // Route untuk render halaman dashboard tanpa kategori (default)
 router.get('/dashboard', isLogin, dashboardControl.renderDashboard);
 
+// Route untuk render halaman dashboard dengan kategori spesifik (tabel CRUD)
+router.get('/dashboard/:section/:category', isLogin, dashboardControl.renderDashboardTable);
+
 module.exports = router;
