@@ -873,6 +873,14 @@ video {
   max-height: 600px;
 }
 
+.max-h-80 {
+  max-height: 20rem;
+}
+
+.max-h-\[1000px\] {
+  max-height: 1000px;
+}
+
 .w-0 {
   width: 0px;
 }
@@ -968,6 +976,16 @@ video {
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.select-none {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 .grid-cols-1 {
@@ -1980,6 +1998,11 @@ video {
 
 .hover\:bg-white\/10:hover {
   background-color: rgb(255 255 255 / 0.1);
+}
+
+.hover\:bg-gray-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:bg-opacity-10:hover {

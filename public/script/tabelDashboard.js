@@ -8,6 +8,8 @@ let currentPage = 1;
 let itemsPerPage = 50;
 let editingId = null;
 let deleteId = null;
+let sortColumn = null;
+let sortDirection = 'asc';
 
 // Config from server-side
 const { section, category, fullCategory, fields, prodiOptions, hakiOptions, translations } = window.dashboardConfig;
@@ -194,7 +196,20 @@ function renderTable() {
     let headerHTML = '<th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">No</th>';
 
     fields.forEach(field => {
-        headerHTML += `<th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">${fieldLabels[field] || field}</th>`;
+        const isSorted = sortColumn === field;
+        const sortIcon = isSorted
+            ? (sortDirection === 'asc' ? '▲' : '▼')
+            : '⇅';
+
+        headerHTML += `
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-700 uppercase cursor-pointer hover:bg-gray-200 transition-colors select-none" 
+                onclick="sortTable('${field}')" 
+                title="Klik untuk mengurutkan">
+                <div class="flex items-center gap-2">
+                    <span>${fieldLabels[field] || field}</span>
+                    <span class="text-xs ${isSorted ? 'text-indigo font-bold' : 'text-gray-400'}">${sortIcon}</span>
+                </div>
+            </th>`;
     });
 
     headerHTML += '<th class="sticky-col-header px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-700 uppercase">Aksi</th>';
@@ -369,8 +384,56 @@ function handleSearch() {
     }
 
     currentPage = 1;
+    applySorting(); // Apply current sorting after search
     renderTable();
     renderPagination();
+}
+
+// Sort table by column
+function sortTable(field) {
+    // Toggle sort direction if clicking same column
+    if (sortColumn === field) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        sortColumn = field;
+        sortDirection = 'asc';
+    }
+
+    applySorting();
+    currentPage = 1; // Reset to first page
+    renderTable();
+    renderPagination();
+}
+
+// Apply sorting to filtered data
+function applySorting() {
+    if (!sortColumn) return;
+
+    filteredData.sort((a, b) => {
+        let valueA = a[sortColumn];
+        let valueB = b[sortColumn];
+
+        // Handle null/undefined values
+        if (valueA == null) valueA = '';
+        if (valueB == null) valueB = '';
+
+        // Handle arrays - compare by length or first element
+        if (Array.isArray(valueA)) valueA = valueA.length > 0 ? valueA[0] : '';
+        if (Array.isArray(valueB)) valueB = valueB.length > 0 ? valueB[0] : '';
+
+        // Handle numbers
+        if (typeof valueA === 'number' && typeof valueB === 'number') {
+            return sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+        }
+
+        // Handle strings (case-insensitive)
+        const strA = String(valueA).toLowerCase();
+        const strB = String(valueB).toLowerCase();
+
+        if (strA < strB) return sortDirection === 'asc' ? -1 : 1;
+        if (strA > strB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+    });
 }
 
 // Generate form fields dynamically
@@ -387,9 +450,45 @@ function generateFormFields(data = null) {
         formHTML += `<label class="block mb-2 text-sm font-medium text-gray-700">${label}</label>`;
 
         if (fieldType === 'array') {
-            const arrayValue = Array.isArray(value) ? value.join(', ') : '';
-            formHTML += `<input type="text" name="${field}" value="${arrayValue}" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo" placeholder="Pisahkan dengan koma">`;
-            formHTML += `<p class="mt-1 text-xs text-gray-500">Pisahkan dengan koma untuk multiple values</p>`;
+            const arrayValues = Array.isArray(value) ? value : [];
+            formHTML += `
+                <div id="array-container-${field}" class="space-y-2">
+                    ${arrayValues.length > 0
+                    ? arrayValues.map((val, idx) => `
+                            <div class="flex gap-2 array-item">
+                                <input type="text" 
+                                    class="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo" 
+                                    value="${val}" 
+                                    placeholder="Masukkan ${label.toLowerCase()}">
+                                <button type="button" 
+                                    onclick="removeArrayItem(this)" 
+                                    class="px-3 py-2 text-white transition-colors bg-red-600 rounded hover:bg-red-700">
+                                    <span class="material-icons-outlined text-sm">remove</span>
+                                </button>
+                            </div>
+                        `).join('')
+                    : `
+                            <div class="flex gap-2 array-item">
+                                <input type="text" 
+                                    class="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo" 
+                                    placeholder="Masukkan ${label.toLowerCase()}">
+                                <button type="button" 
+                                    onclick="removeArrayItem(this)" 
+                                    class="px-3 py-2 text-white transition-colors bg-red-600 rounded hover:bg-red-700">
+                                    <span class="material-icons-outlined text-sm">remove</span>
+                                </button>
+                            </div>
+                        `
+                }
+                </div>
+                <button type="button" 
+                    onclick="addArrayItem('${field}', '${label}')" 
+                    class="flex items-center gap-1 px-3 py-2 mt-2 text-sm text-white transition-colors bg-green-600 rounded hover:bg-green-700">
+                    <span class="material-icons-outlined text-sm">add</span>
+                    Tambah ${label}
+                </button>
+                <input type="hidden" name="${field}" id="hidden-${field}">
+            `;
         } else if (fieldType === 'select-prodi') {
             formHTML += `<select name="${field}" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo" required>`;
             formHTML += `<option value="">Pilih Program Studi</option>`;
@@ -416,6 +515,38 @@ function generateFormFields(data = null) {
     });
 
     formFields.innerHTML = formHTML;
+}
+
+// Add new array item
+function addArrayItem(field, label) {
+    const container = document.getElementById(`array-container-${field}`);
+    const newItem = document.createElement('div');
+    newItem.className = 'flex gap-2 array-item';
+    newItem.innerHTML = `
+        <input type="text" 
+            class="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo" 
+            placeholder="Masukkan ${label.toLowerCase()}">
+        <button type="button" 
+            onclick="removeArrayItem(this)" 
+            class="px-3 py-2 text-white transition-colors bg-red-600 rounded hover:bg-red-700">
+            <span class="material-icons-outlined text-sm">remove</span>
+        </button>
+    `;
+    container.appendChild(newItem);
+}
+
+// Remove array item
+function removeArrayItem(button) {
+    const container = button.closest('.array-item').parentElement;
+    const item = button.closest('.array-item');
+
+    // Keep at least one input field
+    if (container.querySelectorAll('.array-item').length > 1) {
+        item.remove();
+    } else {
+        // Clear the input instead of removing
+        item.querySelector('input').value = '';
+    }
 }
 
 // Open add modal
@@ -456,8 +587,16 @@ async function handleFormSubmit(e) {
         const fieldType = fieldTypeMap[key];
 
         if (fieldType === 'array') {
-            // Split by comma and trim
-            data[key] = value.split(',').map(v => v.trim()).filter(v => v !== '');
+            // Collect values from array inputs
+            const container = document.getElementById(`array-container-${key}`);
+            if (container) {
+                const inputs = container.querySelectorAll('input[type="text"]');
+                data[key] = Array.from(inputs)
+                    .map(input => input.value.trim())
+                    .filter(v => v !== '');
+            } else {
+                data[key] = [];
+            }
         } else if (fieldType === 'number') {
             data[key] = Number(value);
         } else {
@@ -592,3 +731,6 @@ function closeAllModals() {
 window.changePage = changePage;
 window.editData = editData;
 window.openDeleteModal = openDeleteModal;
+window.sortTable = sortTable;
+window.addArrayItem = addArrayItem;
+window.removeArrayItem = removeArrayItem;
