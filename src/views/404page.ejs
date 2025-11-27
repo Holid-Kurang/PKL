@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="/style/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <%- include('partials/navbar', {isLogin}) %>
+    <div class="flex items-center justify-center min-h-screen px-4 py-12 bg-gray-100">
+        <div class="max-w-2xl text-center">
+            <!-- Error Code -->
+            <h1 class="font-bold text-9xl text-veronica">
+                <%= title.match(/\d+/)?.[0] || '404' %>
+            </h1>
+
+            <!-- Error Message -->
+            <p class="mt-4 text-2xl font-light text-gray-800 md:text-3xl">
+                <%= typeof message !== 'undefined' ? message : 'Oops! Halaman Tidak Ditemukan.' %>
+            </p>
+
+            <!-- URL Info (only for 404) -->
+            <% if (typeof url !== 'undefined' && url) { %>
+            <p class="mt-4 text-gray-500">
+                Halaman yang Anda cari untuk URL <code class="p-1 text-sm bg-gray-200 rounded"><%= url %></code> tidak
+                ada.
+            </p>
+            <% } %>
+
+            <!-- Development Error Details -->
+            <% if (typeof error !== 'undefined' && error && process.env.NODE_ENV === 'development') { %>
+            <div class="p-4 mt-6 text-left border border-red-200 rounded-lg bg-red-50">
+                <h3 class="mb-2 text-lg font-semibold text-red-800">🐛 Development Error Details:</h3>
+                <p class="mb-2 text-sm text-red-700"><strong>Status:</strong> <%= error.status || 'error' %></p>
+                <p class="mb-2 text-sm text-red-700"><strong>Message:</strong> <%= error.message %></p>
+                <% if (typeof stack !== 'undefined' && stack) { %>
+                <details class="mt-3">
+                    <summary class="text-sm font-semibold text-red-800 cursor-pointer hover:text-red-900">Stack Trace
+                    </summary>
+                    <pre class="p-3 mt-2 overflow-auto text-xs bg-red-100 rounded max-h-64"><%= stack %></pre>
+                </details>
+                <% } %>
+            </div>
+            <% } %>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mt-8">
+                <a href="javascript:history.back()"
+                    class="inline-block px-6 py-3 text-lg font-semibold text-gray-700 transition-colors bg-gray-200 rounded-lg shadow-md hover:bg-gray-300">
+                    ← Kembali
+                </a>
+                <a href="/"
+                    class="inline-block px-6 py-3 text-lg font-semibold text-white transition-colors rounded-lg shadow-md bg-veronica hover:bg-indigo">
+                    🏠 Halaman Utama
+                </a>
+            </div>
+
+            <!-- Help Text -->
+            <p class="mt-8 text-sm text-gray-500">
+                Jika masalah terus berlanjut, silakan hubungi administrator sistem.
+            </p>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+</body>

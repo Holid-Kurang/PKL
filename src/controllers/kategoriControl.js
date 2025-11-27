@@ -1,193 +1,113 @@
 const KategoriOption = require('../models/kategoriOptionModel');
+const AppError = require('../utils/AppError');
+const { catchAsync } = require('../middlewares/errorHandler');
 
 // Get all kategori
-const getAllKategori = async (req, res) => {
-    try {
-        const kategori = await KategoriOption.find({});
-        res.json({
-            success: true,
-            data: kategori
-        });
-    } catch (error) {
-        console.error('Error getting kategori:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengambil data kategori'
-        });
-    }
-};
+const getAllKategori = catchAsync(async (req, res, next) => {
+    const kategori = await KategoriOption.find({});
+    res.json({
+        success: true,
+        data: kategori
+    });
+});
 
 // Add new kategori
-const addKategori = async (req, res) => {
-    try {
-        const { kategori, firstOption } = req.body;
-        
-        // Check if kategori already exists
-        const existingKategori = await KategoriOption.findOne({ kategori: kategori });
-        if (existingKategori) {
-            return res.status(400).json({
-                success: false,
-                message: 'Kategori sudah ada'
-            });
-        }
+const addKategori = catchAsync(async (req, res, next) => {
+    const { kategori, firstOption } = req.body;
 
-        // Create new kategori
-        const newKategori = new KategoriOption({
-            kategori: kategori,
-            option: firstOption ? [firstOption] : []
-        });
-
-        await newKategori.save();
-        
-        res.json({
-            success: true,
-            message: 'Kategori berhasil ditambahkan',
-            data: newKategori
-        });
-    } catch (error) {
-        console.error('Error adding kategori:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal menambahkan kategori'
-        });
+    // Check if kategori already exists
+    const existingKategori = await KategoriOption.findOne({ kategori: kategori });
+    if (existingKategori) {
+        return next(new AppError('Kategori sudah ada', 400));
     }
-};
+
+    // Create new kategori
+    const newKategori = new KategoriOption({
+        kategori: kategori,
+        option: firstOption ? [firstOption] : []
+    });
+
+    await newKategori.save();
+
+    res.json({
+        success: true,
+        message: 'Kategori berhasil ditambahkan',
+        data: newKategori
+    });
+});
 
 // Update kategori name
-const updateKategori = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { kategori } = req.body;
+const updateKategori = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { kategori } = req.body;
 
-        const updatedKategori = await KategoriOption.findByIdAndUpdate(
-            id,
-            { kategori },
-            { new: true }
-        );
+    const updatedKategori = await KategoriOption.findByIdAndUpdate(
+        id,
+        { kategori },
+        { new: true }
+    );
 
-        if (!updatedKategori) {
-            return res.status(404).json({
-                success: false,
-                message: 'Kategori tidak ditemukan'
-            });
-        }
-
-        res.json({
-            success: true,
-            message: 'Kategori berhasil diupdate',
-            data: updatedKategori
-        });
-    } catch (error) {
-        console.error('Error updating kategori:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengupdate kategori'
-        });
+    if (!updatedKategori) {
+        return next(new AppError('Kategori tidak ditemukan', 404));
     }
-};
 
-// Delete kategori
-const deleteKategori = async (req, res) => {
-    try {
-        const { id } = req.params;
+    res.json({
+        success: true,
+        message: 'Kategori berhasil diupdate',
+        data: updatedKategori
+    });
+});
 
-        const deletedKategori = await KategoriOption.findByIdAndDelete(id);
-
-        if (!deletedKategori) {
-            return res.status(404).json({
-                success: false,
-                message: 'Kategori tidak ditemukan'
-            });
-        }
-
-        res.json({
-            success: true,
-            message: 'Kategori berhasil dihapus'
-        });
-    } catch (error) {
-        console.error('Error deleting kategori:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal menghapus kategori'
-        });
-    }
-};
 
 // Add option to kategori
-const addOption = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { option } = req.body;
+const addOption = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { option } = req.body;
 
-        const kategori = await KategoriOption.findById(id);
-        if (!kategori) {
-            return res.status(404).json({
-                success: false,
-                message: 'Kategori tidak ditemukan'
-            });
-        }
-
-        // Check if option already exists
-        if (kategori.option.includes(option)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Option sudah ada'
-            });
-        }
-
-        kategori.option.push(option);
-        await kategori.save();
-
-        res.json({
-            success: true,
-            message: 'Option berhasil ditambahkan',
-            data: kategori
-        });
-    } catch (error) {
-        console.error('Error adding option:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal menambahkan option'
-        });
+    const kategori = await KategoriOption.findById(id);
+    if (!kategori) {
+        return next(new AppError('Kategori tidak ditemukan', 404));
     }
-};
+
+    // Check if option already exists
+    if (kategori.option.includes(option)) {
+        return next(new AppError('Option sudah ada', 400));
+    }
+
+    kategori.option.push(option);
+    await kategori.save();
+
+    res.json({
+        success: true,
+        message: 'Option berhasil ditambahkan',
+        data: kategori
+    });
+});
 
 // Remove option from kategori
-const removeOption = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { option } = req.body;
+const removeOption = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { option } = req.body;
 
-        const kategori = await KategoriOption.findById(id);
-        if (!kategori) {
-            return res.status(404).json({
-                success: false,
-                message: 'Kategori tidak ditemukan'
-            });
-        }
-
-        kategori.option = kategori.option.filter(opt => opt !== option);
-        await kategori.save();
-
-        res.json({
-            success: true,
-            message: 'Option berhasil dihapus',
-            data: kategori
-        });
-    } catch (error) {
-        console.error('Error removing option:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal menghapus option'
-        });
+    const kategori = await KategoriOption.findById(id);
+    if (!kategori) {
+        return next(new AppError('Kategori tidak ditemukan', 404));
     }
-};
+
+    kategori.option = kategori.option.filter(opt => opt !== option);
+    await kategori.save();
+
+    res.json({
+        success: true,
+        message: 'Option berhasil dihapus',
+        data: kategori
+    });
+});
 
 module.exports = {
     getAllKategori,
     addKategori,
     updateKategori,
-    deleteKategori,
     addOption,
     removeOption
 };

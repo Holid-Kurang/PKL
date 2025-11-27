@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="<%= currentLang %>">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><%= title %></title>
+        <link href="/style/main.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+        <style>
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .modal.active {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .modal-content {
+                background-color: #fefefe;
+                margin: auto;
+                padding: 20px;
+                border-radius: 8px;
+                width: 90%;
+                max-width: 600px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+            }
+
+            /* Sticky action column */
+            .sticky-col {
+                position: sticky;
+                right: 0;
+                background-color: white;
+                box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+            }
+
+            .sticky-col-header {
+                position: sticky;
+                right: 0;
+                background-color: rgb(243, 244, 246);
+                box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+            }
+        </style>
+    </head>
+
+    <body class="bg-gray-50">
+        <div class="flex h-screen overflow-hidden">
+            <!-- Sidebar -->
+            <%- include('../partials/sidebar-dashboard') %>
+
+            <!-- Main Content -->
+            <div class="flex flex-col flex-1 overflow-hidden">
+                <!-- Header -->
+                <header class="bg-white shadow-sm">
+                    <div class="flex items-center justify-between h-20 px-8">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800" id="page-title">
+                                <%= section.charAt(0).toUpperCase() + section.slice(1) %> -
+                                <%= category.toUpperCase() %>
+                            </h1>
+                            <p class="text-sm text-gray-600">Kelola data <%= section %></p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <%- include('../partials/dropdown') %>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Dashboard Content -->
+                <main class="flex-1 p-8 overflow-y-auto">
+                    <!-- Action Bar -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                        <div class="flex gap-2">
+                            <button id="btn-add"
+                                class="flex items-center gap-2 px-4 py-2 text-white transition-colors rounded bg-indigo hover:bg-indigo/80">
+                                <span class="material-icons-outlined">add</span>
+                                <%= translate('dashboard.addButton') %>
+                            </button>
+                            <button id="btn-export"
+                                class="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-green-600 rounded hover:bg-green-700">
+                                <span class="material-icons-outlined">download</span>
+                                <%= translate('dashboard.exportButton') %>
+                            </button>
+                            <button id="btn-import"
+                                class="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-blue-600 rounded hover:bg-blue-700">
+                                <span class="material-icons-outlined">upload</span>
+                                <%= translate('dashboard.importButton') %>
+                            </button>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="search-input"
+                                placeholder="<%= translate('dashboard.searchPlaceholder') %>"
+                                class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo">
+                            <button id="btn-search"
+                                class="px-4 py-2 text-white transition-colors rounded bg-indigo hover:bg-indigo/80">
+                                <span class="material-icons-outlined">search</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="flex items-center justify-between my-6">
+                        <div class="text-sm text-gray-700">
+                            <span id="pagination-info">
+                                <%= translate('pagination.showing') %> <span id="page-start">0</span>
+                                <%= translate('pagination.to') %> <span id="page-end">0</span>
+                                <%= translate('pagination.of') %> <span id="total-records">0</span>
+                                <%= translate('pagination.results') %>
+                            </span>
+                        </div>
+                        <div class="flex gap-2" id="pagination-controls">
+                            <!-- Pagination buttons will be inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="overflow-hidden bg-white rounded-lg shadow">
+                        <div class="overflow-x-auto max-h-[1000px]">
+                            <table class="w-full ">
+                                <thead class="sticky top-0 z-10 bg-gray-100 border-b">
+                                    <tr id="table-header">
+                                        <th
+                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-700 uppercase bg-gray-100">
+                                            No</th>
+                                        <!-- Dynamic headers will be inserted here -->
+                                        <th
+                                            class="px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-700 uppercase sticky-col-header">
+                                            Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body" class="bg-white divide-y divide-gray-200">
+                                    <!-- Dynamic rows will be inserted here -->
+                                    <tr>
+                                        <td colspan="100" class="px-6 py-8 text-center text-gray-500">
+                                            <span class="material-icons-outlined"
+                                                style="font-size: 48px;">hourglass_empty</span>
+                                            <p class="mt-2"><%= translate('home.loading') %></p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Add/Edit Modal -->
+        <div id="modal-form" class="modal">
+            <div class="modal-content">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-gray-800" id="modal-title">Tambah Data</h2>
+                    <span class="close" id="close-form-modal">&times;</span>
+                </div>
+                <form id="data-form">
+                    <div id="form-fields" class="space-y-4">
+                        <!-- Dynamic form fields will be inserted here -->
+                    </div>
+                    <div class="flex justify-end gap-2 mt-6">
+                        <button type="button"
+                            class="px-4 py-2 text-gray-700 transition-colors bg-gray-200 rounded hover:bg-gray-300"
+                            id="btn-cancel-form">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 text-white transition-colors rounded bg-indigo hover:bg-indigo/80"
+                            id="btn-submit-form">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="modal-delete" class="modal">
+            <div class="modal-content">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">Konfirmasi Hapus</h2>
+                    <span class="close" id="close-delete-modal">&times;</span>
+                </div>
+                <p class="mb-6 text-gray-600">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat
+                    dibatalkan.</p>
+                <div class="flex justify-end gap-2">
+                    <button type="button"
+                        class="px-4 py-2 text-gray-700 transition-colors bg-gray-200 rounded hover:bg-gray-300"
+                        id="btn-cancel-delete">
+                        Batal
+                    </button>
+                    <button type="button"
+                        class="px-4 py-2 text-white transition-colors bg-red-600 rounded hover:bg-red-700"
+                        id="btn-confirm-delete">
+                        Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Modal -->
+        <div id="modal-import" class="modal">
+            <div class="modal-content">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">Import Data dari Excel</h2>
+                    <span class="close" id="close-import-modal">&times;</span>
+                </div>
+
+                <!-- Download Template Section -->
+                <div class="p-4 mb-4 border border-blue-200 rounded-lg bg-blue-50">
+                    <div class="flex items-start gap-3">
+                        <span class="material-icons-outlined text-blue-600">info</span>
+                        <div class="flex-1">
+                            <h3 class="mb-2 text-sm font-semibold text-blue-900">Belum punya template?</h3>
+                            <p class="mb-3 text-xs text-blue-800">
+                                Download template Excel terlebih dahulu untuk memastikan format data sesuai dengan kolom
+                                yang dibutuhkan.
+                            </p>
+                            <button type="button" id="btn-download-template"
+                                class="flex items-center gap-2 px-3 py-2 text-sm text-white transition-colors bg-blue-600 rounded hover:bg-blue-700">
+                                <span class="material-icons-outlined" style="font-size: 18px;">download</span>
+                                Download Template
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="import-form" enctype="multipart/form-data">
+                    <!-- Warning Container -->
+                    <div id="import-warning" class="hidden p-4 mb-4 border rounded-lg">
+                        <!-- Warning content will be inserted here -->
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Pilih File Excel</label>
+                        <input type="file" id="import-file" name="file" accept=".xlsx,.xls"
+                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo"
+                            required>
+                        <p class="mt-1 text-xs text-gray-500">Format: .xlsx atau .xls (Maksimal 10MB)</p>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button type="button"
+                            class="px-4 py-2 text-gray-700 transition-colors bg-gray-200 rounded hover:bg-gray-300"
+                            id="btn-cancel-import">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 text-white transition-colors bg-blue-600 rounded hover:bg-blue-700"
+                            id="btn-submit-import">
+                            Import
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Hidden data for client-side script -->
+        <script>
+            window.dashboardConfig = {
+                section: '<%= section %>',
+                category: '<%= category %>',
+                fullCategory: '<%= fullCategory %>',
+                fields: <%- JSON.stringify(fields) %>,
+                prodiOptions: <%- prodiOptions %>,
+                hakiOptions: <%- hakiOptions %>,
+                translations: {
+                    loading: '<%= translate("home.loading") %>',
+                    noData: '<%= translate("home.noData") %>',
+                    error: '<%= translate("home.error") %>',
+                    deleteButton: '<%= translate("dashboard.deleteButton") %>',
+                    showing: '<%= translate("pagination.showing") %>',
+                    to: '<%= translate("pagination.to") %>',
+                    of: '<%= translate("pagination.of") %>',
+                    results: '<%= translate("pagination.results") %>'
+                }
+            };
+        </script>
+
+        <!-- Load modular scripts -->
+        <script src="/script/language-switcher.js"></script>
+        <script src="/script/dashboard/config.js"></script>
+        <script src="/script/dashboard/state.js"></script>
+        <script src="/script/dashboard/formatter.js"></script>
+        <script src="/script/dashboard/tableRenderer.js"></script>
+        <script src="/script/dashboard/paginationRenderer.js"></script>
+        <script src="/script/dashboard/apiService.js"></script>
+        <script src="/script/dashboard/formBuilder.js"></script>
+        <script src="/script/dashboard/modalManager.js"></script>
+        <script src="/script/dashboard/app.js"></script>
+    </body>
+
+</html>

@@ -177,22 +177,22 @@ function initializeCharts() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
-                // Render Chart jika desktop dan belum dirender
-                const chartConfig = chartConfigs.find(c => c.id === entry.target.querySelector('canvas')?.id);
-                if (chartConfig && !renderedCharts[chartConfig.id]) {
-                    const ctx = entry.target.querySelector('canvas').getContext('2d');
-                    renderedCharts[chartConfig.id] = new Chart(ctx, chartConfig.config);
+                // Render Chart hanya jika belum dirender
+                const canvas = entry.target.querySelector('canvas');
+                if (canvas) {
+                    const chartConfig = chartConfigs.find(c => c.id === canvas.id);
+                    if (chartConfig && !renderedCharts[chartConfig.id]) {
+                        const ctx = canvas.getContext('2d');
+                        renderedCharts[chartConfig.id] = new Chart(ctx, chartConfig.config);
+                    }
                 }
             } else {
                 entry.target.classList.remove('active');
-                // Destroy chart jika ada dan sudah dirender
-                const chartConfig = chartConfigs.find(c => c.id === entry.target.querySelector('canvas')?.id);
-                if (chartConfig && renderedCharts[chartConfig.id]) {
-                    renderedCharts[chartConfig.id].destroy();
-                    delete renderedCharts[chartConfig.id];
-                }
             }
         });
+    }, {
+        threshold: 0.1, // Trigger ketika 10% chart terlihat
+        rootMargin: '50px' // Mulai render 50px sebelum masuk viewport
     });
 
     document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
