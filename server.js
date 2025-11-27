@@ -9,6 +9,7 @@ const methodOverride = require('method-override');
 const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 const i18n = require('./src/middlewares/i18n');
+const { errorHandler } = require('./src/middlewares/errorHandler');
 require('dotenv').config();
 
 connectDB(); // Connect to MongoDB
@@ -47,14 +48,20 @@ app.use(i18n);
 // Routes
 app.use("/", routes); // Gunakan routes yang sudah dibuat
 
+// 404 Handler - harus setelah semua routes
 app.use(async (req, res, next) => {
     // Mengatur status 404 dan merender halaman 404 kustom
     res.status(404).render('404page', {
         title: "404 Not Found",
+        message: "Halaman yang Anda cari tidak ditemukan",
         url: req.originalUrl, // Mengirim URL yang coba diakses ke view
         isLogin: req.session.isLogin || false, // Mengirim status login ke view
     });
 });
+
+// Global Error Handler - harus terakhir
+app.use(errorHandler);
+
 // Jalankan server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server berjalan di http://localhost:${PORT}`));
