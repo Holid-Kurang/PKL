@@ -193,20 +193,89 @@ class DashboardApp {
         e.preventDefault();
 
         const formData = new FormData(e.target);
+        const warningContainer = document.getElementById('import-warning');
+
+        // Clear previous warnings
+        warningContainer.innerHTML = '';
+        warningContainer.classList.add('hidden');
 
         try {
             const result = await this.api.importData(formData);
 
             if (result.success) {
-                this.modalManager.closeImportModal();
-                this.loadData();
+                // Check for warnings
+                if (result.warnings && (result.warnings.unmatchedHeaders || result.warnings.missingHeaders)) {
+                    this.showImportWarnings(result.warnings, result.data);
+                } else {
+                    this.modalManager.closeImportModal();
+                    this.loadData();
+                }
             } else {
-                alert('Gagal mengimpor data: ' + (result.message || 'Unknown error'));
+                this.showImportError('Gagal mengimpor data: ' + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error importing data:', error);
-            alert('Terjadi kesalahan saat mengimpor data');
+            this.showImportError('Terjadi kesalahan saat mengimpor data');
         }
+    }
+
+    showImportWarnings(warnings, data) {
+        const warningContainer = document.getElementById('import-warning');
+        let warningHtml = '<div class="bg-yellow-50 border-yellow-300">';
+        warningHtml += '<div class="flex items-start gap-3">';
+        warningHtml += '<span class="material-icons-outlined text-yellow-600">warning</span>';
+        warningHtml += '<div class="flex-1">';
+        warningHtml += '<h4 class="text-sm font-semibold text-yellow-900 mb-2">Peringatan Header Excel</h4>';
+        warningHtml += `<p class="text-xs text-yellow-800 mb-2">Data berhasil diimport (${data.inserted} dari ${data.total} records), namun ditemukan masalah pada header:</p>`;
+
+        if (warnings.unmatchedHeaders && warnings.unmatchedHeaders.length > 0) {
+            warningHtml += '<div class="mb-2">';
+            warningHtml += '<p class="text-xs font-medium text-yellow-900">Header tidak dikenali:</p>';
+            warningHtml += '<ul class="list-disc list-inside text-xs text-yellow-800 ml-2">';
+            warnings.unmatchedHeaders.forEach(header => {
+                warningHtml += `<li>${header}</li>`;
+            });
+            warningHtml += '</ul></div>';
+        }
+
+        if (warnings.missingHeaders && warnings.missingHeaders.length > 0) {
+            warningHtml += '<div class="mb-2">';
+            warningHtml += '<p class="text-xs font-medium text-yellow-900">Header yang hilang:</p>';
+            warningHtml += '<ul class="list-disc list-inside text-xs text-yellow-800 ml-2">';
+            warnings.missingHeaders.forEach(header => {
+                warningHtml += `<li>${header}</li>`;
+            });
+            warningHtml += '</ul></div>';
+        }
+
+        warningHtml += '<p class="text-xs text-yellow-800 mt-2">Gunakan template yang disediakan untuk menghindari masalah ini.</p>';
+        warningHtml += '<button type="button" onclick="dashboardApp.closeWarningAndReload()" class="mt-3 px-3 py-1.5 text-xs bg-yellow-600 text-white rounded hover:bg-yellow-700">Tutup & Refresh</button>';
+        warningHtml += '</div></div></div>';
+
+        warningContainer.innerHTML = warningHtml;
+        warningContainer.classList.remove('hidden');
+    }
+
+    showImportError(message) {
+        const warningContainer = document.getElementById('import-warning');
+        let errorHtml = '<div class="bg-red-50 border-red-300">';
+        errorHtml += '<div class="flex items-start gap-3">';
+        errorHtml += '<span class="material-icons-outlined text-red-600">error</span>';
+        errorHtml += '<div class="flex-1">';
+        errorHtml += '<h4 class="text-sm font-semibold text-red-900 mb-2">Error Import</h4>';
+        errorHtml += `<p class="text-xs text-red-800">${message}</p>`;
+        errorHtml += '</div></div></div>';
+
+        warningContainer.innerHTML = errorHtml;
+        warningContainer.classList.remove('hidden');
+    }
+
+    closeWarningAndReload() {
+        const warningContainer = document.getElementById('import-warning');
+        warningContainer.innerHTML = '';
+        warningContainer.classList.add('hidden');
+        this.modalManager.closeImportModal();
+        this.loadData();
     }
 
     // ========== Array Field Helpers ==========

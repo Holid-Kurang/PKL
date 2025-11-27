@@ -37,6 +37,12 @@ class ModalManager {
     closeImportModal() {
         this.modals.import.classList.remove('active');
         document.getElementById('import-form').reset();
+        // Clear warnings
+        const warningContainer = document.getElementById('import-warning');
+        if (warningContainer) {
+            warningContainer.innerHTML = '';
+            warningContainer.classList.add('hidden');
+        }
     }
 
     closeAll() {

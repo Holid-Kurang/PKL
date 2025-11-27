@@ -24,7 +24,7 @@ setInterval(() => {
 cleanupTempFiles();
 
 // Set view engine dan folder views
-app.use('/js', express.static('node_modules/chart.js/dist'));
+app.use('/libs', express.static(path.join(__dirname, 'node_modules')));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src", "views"));
 app.use(express.static(path.join(__dirname, "public"))); // Set folder public untuk file statis

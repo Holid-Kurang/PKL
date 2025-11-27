@@ -11,7 +11,7 @@ router.post("/login", (req, res) => {
     // Simple authentication check
     if (username === "admin" && password === "admin") {
         req.session.isLogin = true;
-        return res.redirect("/dashboard/penelitian/pnbp");
+        return res.redirect("/dashboard");
     }
     res.status(401).render("login", { error: "Invalid credentials" });
 });

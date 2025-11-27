@@ -268,7 +268,9 @@ exports.downloadTemplate = catchAsync(async (req, res, next) => {
             return next(new AppError('Gagal mendownload template', 500));
         }
     });
-}); exports.importDataFromExcel = catchAsync(async (req, res, next) => {
+});
+
+exports.importDataFromExcel = catchAsync(async (req, res, next) => {
     let category = req.params.category;
 
     // ✅ Validasi category dengan utility
@@ -285,23 +287,41 @@ exports.downloadTemplate = catchAsync(async (req, res, next) => {
 
     // Baca dan parse file Excel
     const data = await readExcelFile(file);
-    
+
     if (!data || data.length === 0) {
         return next(new AppError('File Excel kosong atau format tidak valid', 400));
     }
 
     // Get model schema fields
     const modelSchema = models[category].schema.obj;
-    const schemaFields = Object.keys(modelSchema);
+    const schemaFields = Object.keys(modelSchema).filter(key =>
+        !['createdAt', 'updatedAt', '__v', '_id'].includes(key)
+    );
+
+    // Get Excel headers
+    const excelHeaders = data.length > 0 ? Object.keys(data[0]) : [];
 
     // Create case-insensitive mapping between Excel headers and schema fields
     const headerMapping = {};
-    data.length > 0 && Object.keys(data[0]).forEach(excelHeader => {
+    const unmatchedHeaders = [];
+    const missingHeaders = [];
+
+    excelHeaders.forEach(excelHeader => {
         const matchingField = schemaFields.find(schemaField =>
             schemaField.toLowerCase() === excelHeader.toLowerCase()
         );
         if (matchingField) {
             headerMapping[excelHeader] = matchingField;
+        } else {
+            unmatchedHeaders.push(excelHeader);
+        }
+    });
+
+    // Check for missing required headers
+    schemaFields.forEach(schemaField => {
+        const found = Object.values(headerMapping).includes(schemaField);
+        if (!found) {
+            missingHeaders.push(schemaField);
         }
     });
 
@@ -335,6 +355,10 @@ exports.downloadTemplate = catchAsync(async (req, res, next) => {
         data: {
             inserted: savedData.insertedCount || cleanedData.length,
             total: cleanedData.length
+        },
+        warnings: {
+            unmatchedHeaders: unmatchedHeaders.length > 0 ? unmatchedHeaders : null,
+            missingHeaders: missingHeaders.length > 0 ? missingHeaders : null
         }
     });
 });
