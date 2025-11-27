@@ -82,10 +82,6 @@ function displayKategori(kategoriList) {
                             class="text-indigo hover:text-indigo/80 transition-colors">
                         <span class="material-icons-outlined text-sm">edit</span>
                     </button>
-                    <button onclick="openDeleteKategoriModal('${kategori._id}', '${kategori.kategori}')" 
-                            class="text-red-600 hover:text-red-800 transition-colors">
-                        <span class="material-icons-outlined text-sm">delete</span>
-                    </button>
                 </div>
             </div>
             
@@ -195,13 +191,6 @@ async function handleEditKategori(event) {
     }
 }
 
-// Open delete kategori modal
-function openDeleteKategoriModal(id, nama) {
-    deleteAction = 'kategori';
-    deleteData = { id, nama };
-    document.getElementById('delete-message').textContent = `Apakah Anda yakin ingin menghapus kategori "${nama}"? Semua opsi di dalamnya juga akan terhapus.`;
-    openModal('modal-delete');
-}
 
 // Open add option modal
 function openAddOptionModal(id, kategoriNama) {
@@ -325,6 +314,5 @@ function showToast(type, message) {
 // Make functions globally accessible
 window.openAddKategoriModal = openAddKategoriModal;
 window.openEditKategoriModal = openEditKategoriModal;
-window.openDeleteKategoriModal = openDeleteKategoriModal;
 window.openAddOptionModal = openAddOptionModal;
 window.openDeleteOptionModal = openDeleteOptionModal;

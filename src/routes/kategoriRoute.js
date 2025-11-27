@@ -7,7 +7,6 @@ const isLogin = require("../middlewares/isLogin");
 router.get('/api/kategori', isLogin, kategoriControl.getAllKategori);
 router.post('/api/kategori', isLogin, kategoriControl.addKategori);
 router.put('/api/kategori/:id', isLogin, kategoriControl.updateKategori);
-router.delete('/api/kategori/:id', isLogin, kategoriControl.deleteKategori);
 
 // API routes untuk option management
 router.post('/api/kategori/:id/option', isLogin, kategoriControl.addOption);

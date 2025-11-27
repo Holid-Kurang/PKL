@@ -13,108 +13,81 @@ const kategoriModel = require('../models/kategoriOptionModel');
 const AppError = require('../utils/AppError');
 const { catchAsync } = require('../middlewares/errorHandler');
 
+// Import utilities
+const { transformMongoLongToString } = require('../utils/mongoUtils');
+const { buildSearchQuery, buildSortObject } = require('../utils/queryBuilder');
+const { parsePaginationParams, validatePaginationParams, calculateSkip, buildPaginationObject } = require('../utils/paginationUtils');
+const { validateCategory, validateRequestBody } = require('../utils/validationUtils');
+
 exports.getAllData = catchAsync(async (req, res, next) => {
     let category = req.params.category;
 
-    // ✅ Validasi category dengan whitelist
-    if (!models[category]) {
-        return next(new AppError('Kategori tidak valid', 400));
+    // ✅ Validasi category dengan whitelist menggunakan utility
+    const categoryValidation = validateCategory(category, models);
+    if (!categoryValidation.isValid) {
+        return next(new AppError(categoryValidation.error, 400));
     }
 
-    // Extract query parameters for pagination, sorting, and filtering
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 50;
+    // Parse dan validasi pagination parameters
+    const { page, limit } = parsePaginationParams(req.query);
+    const paginationValidation = validatePaginationParams(page, limit);
+    if (!paginationValidation.isValid) {
+        return next(new AppError(paginationValidation.error, 400));
+    }
+
+    // Extract query parameters
     const sortBy = req.query.sortBy || 'createdAt';
-    const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+    const sortOrder = req.query.sortOrder || 'desc';
     const search = req.query.search || '';
 
-    if (page < 1 || limit < 1 || limit > 1000) {
-        return next(new AppError('Parameter pagination tidak valid', 400));
-    }
+    // Calculate skip menggunakan utility
+    const skip = calculateSkip(page, limit);
 
-    const skip = (page - 1) * limit;
+    // Build search query menggunakan utility
+    const modelSchema = models[category].schema.obj;
+    const searchQuery = buildSearchQuery(search, modelSchema);
 
-    // Build search query
-    let searchQuery = {};
-    if (search) {
-        // Get model schema fields
-        const modelSchema = models[category].schema.obj;
-        const searchableFields = Object.keys(modelSchema).filter(key =>
-            !['createdAt', 'updatedAt', '__v', '_id'].includes(key)
-        );
-
-        // Create OR query for all searchable fields
-        searchQuery.$or = searchableFields.map(field => {
-            const fieldType = modelSchema[field].type || modelSchema[field];
-
-            // For string fields, use regex search
-            if (fieldType === String || (Array.isArray(fieldType) && fieldType[0] === String)) {
-                return { [field]: { $regex: search, $options: 'i' } };
-            }
-
-            // For number fields, try exact match if search is a number
-            if (fieldType === Number && !isNaN(search)) {
-                return { [field]: Number(search) };
-            }
-
-            return null;
-        }).filter(query => query !== null);
-    }
+    // Build sort object menggunakan utility
+    const sortObject = buildSortObject(sortBy, sortOrder);
 
     // Execute query with pagination
     const [data, totalRecords] = await Promise.all([
         models[category]
             .find(searchQuery)
-            .sort({ [sortBy]: sortOrder })
+            .sort(sortObject)
             .skip(skip)
             .limit(limit)
             .lean(), // Use lean() for better performance
         models[category].countDocuments(searchQuery)
     ]);
 
-    // Transform data to convert MongoDB Long to string
-    const transformedData = data.map(item => {
-        const transformed = { ...item };
+    // Transform data menggunakan utility
+    const transformedData = transformMongoLongToString(data);
 
-        // Convert Long types to string for pengguna_kode fields
-        if (transformed.pengguna_kode && typeof transformed.pengguna_kode === 'object') {
-            transformed.pengguna_kode = transformed.pengguna_kode.toString();
-        }
-        if (transformed._personil_data_ketua_kode && typeof transformed._personil_data_ketua_kode === 'object') {
-            transformed._personil_data_ketua_kode = transformed._personil_data_ketua_kode.toString();
-        }
-
-        return transformed;
-    });
-
-    const totalPages = Math.ceil(totalRecords / limit);
+    // Build pagination object menggunakan utility
+    const pagination = buildPaginationObject(page, limit, totalRecords);
 
     res.status(200).json({
         success: true,
         message: 'Data retrieved successfully',
         data: transformedData,
-        pagination: {
-            currentPage: page,
-            totalPages,
-            totalRecords,
-            limit,
-            hasNextPage: page < totalPages,
-            hasPrevPage: page > 1
-        }
+        pagination
     });
 });
 
 exports.createData = catchAsync(async (req, res, next) => {
     let category = req.params.category;
 
-    // ✅ Validasi category dengan whitelist
-    if (!models[category]) {
-        return next(new AppError('Kategori tidak valid', 400));
+    // ✅ Validasi category dengan utility
+    const categoryValidation = validateCategory(category, models);
+    if (!categoryValidation.isValid) {
+        return next(new AppError(categoryValidation.error, 400));
     }
 
-    // Validasi request body tidak kosong
-    if (!req.body || Object.keys(req.body).length === 0) {
-        return next(new AppError('Data tidak boleh kosong', 400));
+    // Validasi request body menggunakan utility
+    const bodyValidation = validateRequestBody(req.body);
+    if (!bodyValidation.isValid) {
+        return next(new AppError(bodyValidation.error, 400));
     }
 
     // Buat instance model baru dengan data dari req.body
@@ -132,9 +105,10 @@ exports.deleteData = catchAsync(async (req, res, next) => {
     let category = req.params.category;
     let id = req.params.id;
 
-    // ✅ Validasi category dengan whitelist
-    if (!models[category]) {
-        return next(new AppError('Kategori tidak valid', 400));
+    // ✅ Validasi category dengan utility
+    const categoryValidation = validateCategory(category, models);
+    if (!categoryValidation.isValid) {
+        return next(new AppError(categoryValidation.error, 400));
     }
 
     const deletedData = await models[category].findByIdAndDelete(id);
@@ -153,14 +127,16 @@ exports.updateData = catchAsync(async (req, res, next) => {
     let category = req.params.category;
     let id = req.params.id;
 
-    // ✅ Validasi category dengan whitelist
-    if (!models[category]) {
-        return next(new AppError('Kategori tidak valid', 400));
+    // ✅ Validasi category dengan utility
+    const categoryValidation = validateCategory(category, models);
+    if (!categoryValidation.isValid) {
+        return next(new AppError(categoryValidation.error, 400));
     }
 
-    // Validasi request body tidak kosong
-    if (!req.body || Object.keys(req.body).length === 0) {
-        return next(new AppError('Data tidak boleh kosong', 400));
+    // Validasi request body menggunakan utility
+    const bodyValidation = validateRequestBody(req.body);
+    if (!bodyValidation.isValid) {
+        return next(new AppError(bodyValidation.error, 400));
     }
 
     const updatedData = await models[category].findByIdAndUpdate(id, req.body, {
