@@ -121,7 +121,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Pagination -->
                     <div class="flex items-center justify-between my-6">
                         <div class="text-sm text-gray-700">
@@ -136,7 +136,7 @@
                             <!-- Pagination buttons will be inserted here -->
                         </div>
                     </div>
-                    
+
                     <!-- Data Table -->
                     <div class="overflow-hidden bg-white rounded-lg shadow">
                         <div class="overflow-x-auto max-h-[1000px]">
@@ -272,8 +272,18 @@
                 }
             };
         </script>
+
+        <!-- Load modular scripts -->
         <script src="/script/language-switcher.js"></script>
-        <script src="/script/tabelDashboard.js"></script>
+        <script src="/script/dashboard/config.js"></script>
+        <script src="/script/dashboard/state.js"></script>
+        <script src="/script/dashboard/formatter.js"></script>
+        <script src="/script/dashboard/tableRenderer.js"></script>
+        <script src="/script/dashboard/paginationRenderer.js"></script>
+        <script src="/script/dashboard/apiService.js"></script>
+        <script src="/script/dashboard/formBuilder.js"></script>
+        <script src="/script/dashboard/modalManager.js"></script>
+        <script src="/script/dashboard/app.js"></script>
     </body>
 
 </html>
