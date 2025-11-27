@@ -285,36 +285,46 @@ exports.downloadTemplate = catchAsync(async (req, res, next) => {
 
     // Baca dan parse file Excel
     const data = await readExcelFile(file);
-    console.log(data);
+    
     if (!data || data.length === 0) {
         return next(new AppError('File Excel kosong atau format tidak valid', 400));
     }
+
+    // Get model schema fields
+    const modelSchema = models[category].schema.obj;
+    const schemaFields = Object.keys(modelSchema);
+
+    // Create case-insensitive mapping between Excel headers and schema fields
+    const headerMapping = {};
+    data.length > 0 && Object.keys(data[0]).forEach(excelHeader => {
+        const matchingField = schemaFields.find(schemaField =>
+            schemaField.toLowerCase() === excelHeader.toLowerCase()
+        );
+        if (matchingField) {
+            headerMapping[excelHeader] = matchingField;
+        }
+    });
 
     // Validate and clean data before inserting
     const cleanedData = data.map(item => {
         const cleaned = {};
 
-        // Get model schema fields
-        const modelSchema = models[category].schema.obj;
-        const schemaFields = Object.keys(modelSchema);
-
-        // Only include fields that exist in schema
-        Object.keys(item).forEach(key => {
-            if (schemaFields.includes(key) && item[key] !== null && item[key] !== undefined) {
-                cleaned[key] = item[key];
+        // Map Excel headers to schema fields using case-insensitive mapping
+        Object.keys(item).forEach(excelHeader => {
+            const schemaField = headerMapping[excelHeader];
+            if (schemaField && item[excelHeader] !== null && item[excelHeader] !== undefined) {
+                cleaned[schemaField] = item[excelHeader];
             }
         });
 
         return cleaned;
     });
-    console.log(cleanedData);
 
     // Insert data to database
     const savedData = await models[category].insertMany(cleanedData, {
         ordered: false, // Continue on error
         rawResult: true
     });
-    console.log(savedData);
 
     // Delete uploaded file after processing
     await deleteTempFile(file.path);

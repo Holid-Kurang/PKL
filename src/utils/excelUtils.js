@@ -194,16 +194,14 @@ const formatHeader = (key) => {
 /**
  * Normalize header from Excel to valid object key
  * @param {String} header - Header text from Excel
- * @returns {String} Normalized key
+ * @returns {String} Normalized key (keeps original case, removes spaces)
  */
 const normalizeHeader = (header) => {
     if (!header) return '';
 
     return String(header)
-        .toLowerCase()
         .trim()
-        .replace(/\s+/g, '_')
-        .replace(/[^a-z0-9_]/g, '');
+        .replace(/\s+/g, '');
 };
 
 /**

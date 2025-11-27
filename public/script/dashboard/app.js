@@ -159,7 +159,6 @@ class DashboardApp {
             }
 
             if (result.success) {
-                alert(result.message || 'Data berhasil disimpan');
                 this.modalManager.closeFormModal();
                 this.loadData();
             } else {
@@ -178,7 +177,6 @@ class DashboardApp {
             const result = await this.api.deleteData(this.state.deleteId);
 
             if (result.success) {
-                alert(result.message || 'Data berhasil dihapus');
                 this.modalManager.closeDeleteModal();
                 this.state.deleteId = null;
                 this.loadData();
@@ -200,7 +198,6 @@ class DashboardApp {
             const result = await this.api.importData(formData);
 
             if (result.success) {
-                alert(result.message || 'Data berhasil diimpor');
                 this.modalManager.closeImportModal();
                 this.loadData();
             } else {
