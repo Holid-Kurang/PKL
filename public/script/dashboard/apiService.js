@@ -62,6 +62,10 @@ class ApiService {
         return `${this.baseUrl}/export`;
     }
 
+    getTemplateUrl() {
+        return `${this.baseUrl}/template`;
+    }
+
     async importData(formData) {
         const response = await fetch(`${this.baseUrl}/import`, {
             method: 'POST',

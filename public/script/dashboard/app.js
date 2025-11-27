@@ -61,6 +61,7 @@ class DashboardApp {
         // Import modal controls
         document.getElementById('close-import-modal').addEventListener('click', () => this.modalManager.closeImportModal());
         document.getElementById('btn-cancel-import').addEventListener('click', () => this.modalManager.closeImportModal());
+        document.getElementById('btn-download-template').addEventListener('click', () => this.handleDownloadTemplate());
         document.getElementById('import-form').addEventListener('submit', (e) => this.handleImport(e));
 
         // Close modal on outside click
@@ -116,6 +117,10 @@ class DashboardApp {
 
     handleImportModal() {
         this.modalManager.openImportModal();
+    }
+
+    handleDownloadTemplate() {
+        window.location.href = this.api.getTemplateUrl();
     }
 
     handleExport() {

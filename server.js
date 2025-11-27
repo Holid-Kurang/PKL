@@ -10,9 +10,18 @@ const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 const i18n = require('./src/middlewares/i18n');
 const { errorHandler } = require('./src/middlewares/errorHandler');
+const { cleanupTempFiles } = require('./src/utils/excelUtils');
 require('dotenv').config();
 
 connectDB(); // Connect to MongoDB
+
+// Cleanup temp files setiap 1 jam
+setInterval(() => {
+    cleanupTempFiles();
+}, 60 * 60 * 1000); // 1 hour
+
+// Cleanup on startup
+cleanupTempFiles();
 
 // Set view engine dan folder views
 app.use('/js', express.static('node_modules/chart.js/dist'));

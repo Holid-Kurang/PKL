@@ -18,6 +18,7 @@ const { transformMongoLongToString } = require('../utils/mongoUtils');
 const { buildSearchQuery, buildSortObject } = require('../utils/queryBuilder');
 const { parsePaginationParams, validatePaginationParams, calculateSkip, buildPaginationObject } = require('../utils/paginationUtils');
 const { validateCategory, validateRequestBody } = require('../utils/validationUtils');
+const { createExcelFile, readExcelFile, deleteTempFile } = require('../utils/excelUtils');
 
 exports.getAllData = catchAsync(async (req, res, next) => {
     let category = req.params.category;
@@ -155,161 +156,221 @@ exports.updateData = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.exportDataToExcel = async (req, res) => {
-    try {
-        let category = req.params.category;
-        // ✅ Validasi category dengan whitelist
-        if (!models[category]) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid category',
-                validCategories: Object.keys(models)
-            });
+exports.exportDataToExcel = catchAsync(async (req, res, next) => {
+    let category = req.params.category;
+
+    // ✅ Validasi category dengan utility
+    const categoryValidation = validateCategory(category, models);
+    if (!categoryValidation.isValid) {
+        return next(new AppError(categoryValidation.error, 400));
+    }
+
+    // Get all data without pagination for export
+    const data = await models[category].find({}).lean();
+
+    if (!data || data.length === 0) {
+        return next(new AppError('Tidak ada data untuk diekspor', 404));
+    }
+
+    // Transform MongoDB Long to String
+    const transformedData = transformMongoLongToString(data);
+
+    // Konversi data ke format Excel-friendly
+    const excelData = transformedData.map(item => {
+        const cleanItem = { ...item };
+
+        // Convert ObjectId to string
+        if (cleanItem._id) {
+            cleanItem._id = cleanItem._id.toString();
         }
 
-        const data = await models[category].find({});
-        if (!data || data.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'No data found'
-            });
+        // Format dates to readable format
+        if (cleanItem.createdAt) {
+            cleanItem.createdAt = new Date(cleanItem.createdAt);
+        }
+        if (cleanItem.updatedAt) {
+            cleanItem.updatedAt = new Date(cleanItem.updatedAt);
         }
 
-        // Konversi data ke format Excel
-        const excelData = data.map(item => {
-            return {
-                ...item._doc,
-                createdAt: item.createdAt.toISOString(),
-                updatedAt: item.updatedAt.toISOString()
-            };
-        });
+        // Remove __v field
+        delete cleanItem.__v;
 
-        // Kirim file Excel sebagai response
-        const filePath = await createExcelFile(excelData);
-        res.download(filePath, 'data.xlsx', err => {
-            if (err) {
-                console.error('Error downloading file:', err);
-                res.status(500).json({
-                    message: 'Failed to download file',
-                    error: 'Internal Server Error'
-                });
+        return cleanItem;
+    });
+
+    // Create Excel file
+    const filePath = await createExcelFile(excelData, category);
+    const filename = `${category}_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+    // Send file as download
+    res.download(filePath, filename, async (err) => {
+        // Delete temp file after download (success or error)
+        await deleteTempFile(filePath);
+
+        if (err && !res.headersSent) {
+            return next(new AppError('Gagal mendownload file', 500));
+        }
+    });
+});
+
+exports.downloadTemplate = catchAsync(async (req, res, next) => {
+    let category = req.params.category;
+
+    // ✅ Validasi category dengan utility
+    const categoryValidation = validateCategory(category, models);
+    if (!categoryValidation.isValid) {
+        return next(new AppError(categoryValidation.error, 400));
+    }
+
+    // Get model schema to create template
+    const modelSchema = models[category].schema.obj;
+    const fields = Object.keys(modelSchema).filter(key =>
+        !['createdAt', 'updatedAt', '__v', '_id'].includes(key)
+    );
+
+    // Create empty template data with one example row
+    const templateData = [{}];
+
+    // Add field names as keys with empty values and example descriptions
+    fields.forEach(field => {
+        const fieldType = modelSchema[field].type || modelSchema[field];
+
+        // Add example value based on field type
+        if (fieldType === String) {
+            templateData[0][field] = 'Contoh text';
+        } else if (fieldType === Number) {
+            templateData[0][field] = 0;
+        } else if (fieldType === Date) {
+            templateData[0][field] = new Date();
+        } else if (Array.isArray(fieldType)) {
+            if (fieldType[0] === String) {
+                templateData[0][field] = ['Contoh1', 'Contoh2'];
+            } else if (fieldType[0] === Number) {
+                templateData[0][field] = [1, 2];
+            } else {
+                templateData[0][field] = [];
+            }
+        } else {
+            templateData[0][field] = '';
+        }
+    });
+
+    // Create Excel file
+    const filePath = await createExcelFile(templateData, `Template ${category}`);
+    const filename = `Template_${category}.xlsx`;
+
+    // Send file as download
+    res.download(filePath, filename, async (err) => {
+        // Delete temp file after download (success or error)
+        await deleteTempFile(filePath);
+
+        if (err && !res.headersSent) {
+            return next(new AppError('Gagal mendownload template', 500));
+        }
+    });
+}); exports.importDataFromExcel = catchAsync(async (req, res, next) => {
+    let category = req.params.category;
+
+    // ✅ Validasi category dengan utility
+    const categoryValidation = validateCategory(category, models);
+    if (!categoryValidation.isValid) {
+        return next(new AppError(categoryValidation.error, 400));
+    }
+
+    // Validasi file upload
+    const file = req.file;
+    if (!file) {
+        return next(new AppError('File tidak ditemukan. Silakan upload file Excel', 400));
+    }
+
+    // Baca dan parse file Excel
+    const data = await readExcelFile(file);
+    console.log(data);
+    if (!data || data.length === 0) {
+        return next(new AppError('File Excel kosong atau format tidak valid', 400));
+    }
+
+    // Validate and clean data before inserting
+    const cleanedData = data.map(item => {
+        const cleaned = {};
+
+        // Get model schema fields
+        const modelSchema = models[category].schema.obj;
+        const schemaFields = Object.keys(modelSchema);
+
+        // Only include fields that exist in schema
+        Object.keys(item).forEach(key => {
+            if (schemaFields.includes(key) && item[key] !== null && item[key] !== undefined) {
+                cleaned[key] = item[key];
             }
         });
-    } catch (error) {
-        console.error('Error exporting data to Excel:', error);
-        res.status(500).json({
-            message: 'Failed to export data',
-            error: 'Internal Server Error'
-        });
+
+        return cleaned;
+    });
+    console.log(cleanedData);
+
+    // Insert data to database
+    const savedData = await models[category].insertMany(cleanedData, {
+        ordered: false, // Continue on error
+        rawResult: true
+    });
+    console.log(savedData);
+
+    // Delete uploaded file after processing
+    await deleteTempFile(file.path);
+
+    res.status(201).json({
+        success: true,
+        message: `Berhasil mengimport ${savedData.insertedCount || cleanedData.length} data`,
+        data: {
+            inserted: savedData.insertedCount || cleanedData.length,
+            total: cleanedData.length
+        }
+    });
+});
+
+exports.renderDashboard = catchAsync(async (req, res, next) => {
+    // Get statistics from all categories
+    const stats = {};
+    for (const [category, model] of Object.entries(models)) {
+        stats[category] = await model.countDocuments({});
     }
-}
 
-exports.importDataFromExcel = async (req, res) => {
-    try {
-        let category = req.params.category;
-        // ✅ Validasi category dengan whitelist
-        if (!models[category]) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid category',
-                validCategories: Object.keys(models)
-            });
-        }
+    res.render('dashboard/homeDashboard', {
+        title: 'Dashboard',
+        stats
+    });
+});
 
-        // Proses upload file Excel
-        const file = req.file;
-        if (!file) {
-            return res.status(400).json({
-                success: false,
-                message: 'No file uploaded'
-            });
-        }
+exports.renderDashboardTable = catchAsync(async (req, res, next) => {
+    const { section, category } = req.params;
+    const fullCategory = `${section}-${category}`;
 
-        // Baca dan proses file Excel
-        const data = await readExcelFile(file);
-        if (!data || data.length === 0) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid Excel file'
-            });
-        }
-
-        // Simpan data ke database
-        const savedData = await models[category].insertMany(data);
-        res.status(201).json({
-            success: true,
-            message: 'Data imported successfully',
-            data: savedData
-        });
-    } catch (error) {
-        console.error('Error importing data from Excel:', error);
-        res.status(500).json({
-            message: 'Failed to import data',
-            error: 'Internal Server Error'
-        });
+    // Validate category
+    const categoryValidation = validateCategory(fullCategory, models);
+    if (!categoryValidation.isValid) {
+        return next(new AppError('Kategori tidak valid', 404));
     }
-}
 
-exports.renderDashboard = async (req, res) => {
-    try {
-        // Get statistics from all categories
-        const stats = {};
-        for (const [category, model] of Object.entries(models)) {
-            stats[category] = await model.countDocuments({});
-        }
+    // Get prodi options for the modal
+    let prodiOptions = await kategoriModel.find({ kategori: 'Program Studi' });
+    prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
 
-        res.render('dashboard/homeDashboard', {
-            title: 'Dashboard',
-            stats
-        });
-    } catch (error) {
-        console.error('Error rendering dashboard:', error);
-        res.status(500).render('404page', {
-            title: 'Error',
-            message: 'Failed to load dashboard'
-        });
-    }
-};
+    // Get HAKI options if needed
+    let hakiOptions = await kategoriModel.find({ kategori: 'Jenis HAKI' });
+    hakiOptions = hakiOptions.length > 0 ? hakiOptions[0].option : [];
 
-exports.renderDashboardTable = async (req, res) => {
-    try {
-        const { section, category } = req.params;
-        const fullCategory = `${section}-${category}`;
+    // Get model schema to determine fields
+    const modelSchema = models[fullCategory].schema.obj;
+    const fields = Object.keys(modelSchema).filter(key => !['createdAt', 'updatedAt', '__v', '_id'].includes(key));
 
-        // Validate category
-        if (!models[fullCategory]) {
-            return res.status(404).render('404page', {
-                title: 'Error',
-                message: 'Invalid category'
-            });
-        }
-
-        // Get prodi options for the modal
-        let prodiOptions = await kategoriModel.find({ kategori: 'Program Studi' });
-        prodiOptions = prodiOptions.length > 0 ? prodiOptions[0].option : [];
-
-        // Get HAKI options if needed
-        let hakiOptions = await kategoriModel.find({ kategori: 'Jenis HAKI' });
-        hakiOptions = hakiOptions.length > 0 ? hakiOptions[0].option : [];
-
-        // Get model schema to determine fields
-        const modelSchema = models[fullCategory].schema.obj;
-        const fields = Object.keys(modelSchema).filter(key => !['createdAt', 'updatedAt', '__v', '_id'].includes(key));
-
-        res.render('dashboard/tabelDashboard', {
-            title: `Dashboard - ${section} ${category}`,
-            section,
-            category,
-            fullCategory,
-            fields,
-            prodiOptions: JSON.stringify(prodiOptions),
-            hakiOptions: JSON.stringify(hakiOptions)
-        });
-    } catch (error) {
-        console.error('Error rendering dashboard table:', error);
-        res.status(500).render('404page', {
-            title: 'Error',
-            message: 'Failed to load dashboard'
-        });
-    }
-};
+    res.render('dashboard/tabelDashboard', {
+        title: `Dashboard - ${section} ${category}`,
+        section,
+        category,
+        fullCategory,
+        fields,
+        prodiOptions: JSON.stringify(prodiOptions),
+        hakiOptions: JSON.stringify(hakiOptions)
+    });
+});
