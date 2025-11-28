@@ -1,3 +1,8 @@
+// Import chart configurations
+import { getPenelitianChartConfig } from './charts/home/penelitianChart.js';
+import { getPengabdianChartConfig } from './charts/home/pengabdianChart.js';
+import { getPublikasiChartConfig } from './charts/home/publikasiChart.js';
+
 // Global variables to store data
 let publikasiCounts = {};
 let penelitianCounts = {};
@@ -17,6 +22,9 @@ function getTranslation(key) {
 
     return value || key;
 }
+
+// Make getTranslation available globally for plugins
+window.getTranslation = getTranslation;
 
 // Function to fetch dashboard data from API
 async function fetchDashboardData() {
@@ -199,37 +207,6 @@ function initializeCharts() {
 }
 
 
-const centerTextPlugin = {
-    id: 'centerText',
-    afterDraw: function (chart) {
-        // Plugin ini akan dieksekusi setelah chart selesai digambar
-        if (chart.config.type !== 'doughnut') {
-            return; // Hanya jalankan untuk doughnut chart
-        }
-
-        const ctx = chart.ctx;
-        const chartArea = chart.chartArea;
-        const centerX = (chartArea.left + chartArea.right) / 2;
-        const centerY = (chartArea.top + chartArea.bottom) / 2;
-
-        // Hitung total dari semua data
-        const total = chart.data.datasets[0].data.reduce((sum, value) => sum + value, 0);
-
-        // Pengaturan Font untuk teks "Total"
-        ctx.font = 'bold 16px Arial';
-        ctx.fillStyle = '#6B7280'; // Warna abu-abu
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        // Gambar teks "Total" sedikit di atas tengah
-        ctx.fillText(getTranslation('home.total'), centerX, centerY - 15);
-
-        // Pengaturan Font untuk Angka Total
-        ctx.font = 'bold 36px Arial';
-        ctx.fillStyle = '#111827'; // Warna hitam keabu-abuan
-        // Gambar angka total sedikit di bawah tengah
-        ctx.fillText(total, centerX, centerY + 15);
-    }
-};
 // Function to get chart data dynamically
 function getChartData(chartType) {
     switch (chartType) {
@@ -255,193 +232,11 @@ function getChartData(chartType) {
     }
 }
 
+// Get chart configurations from imported modules
 const chartConfigs = [
-    {
-        id: 'penelitianChart',
-        type: 'penelitian',
-        config: {
-            type: 'doughnut',
-            data: {
-                labels: [translations.categories.pnbp, translations.categories.pusat, translations.categories.mandiri],
-                datasets: [{
-                    data: [],  // Will be filled dynamically
-                    hoverOffset: 50,
-                    backgroundColor: [
-                        '#9342DA',
-                        '#FF1B1C',
-                        '#FFD700'
-                    ],
-                    borderColor: [
-                        '#232F58',
-                        '#232F58',
-                        '#232F58'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            color: '#232F58',
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: translations.home.charts.penelitian,
-                        font: {
-                            size: 30,
-                            weight: 'lighter'
-                        },
-                        color: '#232F58',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const label = context.label || '';
-                                const value = context.parsed;
-                                const data = context.dataset.data;
-                                const total = data.reduce((sum, val) => sum + val, 0);
-                                const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
-                                return `${label}: ${value} (${percentage}%)`;
-                            }
-                        }
-                    }
-                },
-                layout: {
-                    padding: 10
-                },
-            },
-            plugins: [centerTextPlugin]
-        }
-    },
-    {
-        id: 'pengabdianChart',
-        type: 'pengabdian',
-        config: {
-            type: 'doughnut',
-            data: {
-                labels: [translations.categories.pnbp, translations.categories.pusat],
-                datasets: [{
-                    data: [],  // Will be filled dynamically
-                    hoverOffset: 50,
-                    backgroundColor: [
-                        '#9342DA',
-                        '#FF1B1C'
-                    ],
-                    borderColor: [
-                        '#232F58',
-                        '#232F58'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            color: '#232F58',
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: translations.home.charts.pengabdian,
-                        font: {
-                            size: 30,
-                            weight: 'lighter'
-                        },
-                        color: '#232F58',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const label = context.label || '';
-                                const value = context.parsed;
-                                const data = context.dataset.data;
-                                const total = data.reduce((sum, val) => sum + val, 0);
-                                const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
-                                return `${label}: ${value} (${percentage}%)`;
-                            }
-                        }
-                    }
-                },
-                layout: {
-                    padding: 10
-                },
-            },
-            plugins: [centerTextPlugin]
-        }
-    },
-    {
-        id: 'publikasiChart',
-        type: 'publikasi',
-        config: {
-            type: 'doughnut',
-            data: {
-                labels: [translations.categories.haki, translations.categories.buku, translations.categories.jupeng],
-                datasets: [{
-                    data: [],  // Will be filled dynamically
-                    hoverOffset: 50,
-                    backgroundColor: [
-                        '#9342DA',
-                        '#FF1B1C',
-                        '#FFD700'
-                    ],
-                    borderColor: [
-                        '#232F58',
-                        '#232F58',
-                        '#232F58'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            color: '#232F58',
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: translations.home.charts.publikasi,
-                        font: {
-                            size: 30,
-                            weight: 'lighter'
-                        },
-                        color: '#232F58',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const label = context.label || '';
-                                const value = context.parsed;
-                                const data = context.dataset.data;
-                                const total = data.reduce((sum, val) => sum + val, 0);
-                                const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
-                                return `${label}: ${value} (${percentage}%)`;
-                            }
-                        }
-                    }
-                },
-                layout: {
-                    padding: 10
-                },
-            },
-            plugins: [centerTextPlugin]
-        }
-    }
+    getPenelitianChartConfig(translations),
+    getPengabdianChartConfig(translations),
+    getPublikasiChartConfig(translations)
 ];
 
 // Initialize when DOM is loaded
