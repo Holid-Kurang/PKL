@@ -3,7 +3,12 @@ function isLogin(req, res, next) {
     if (req.session.isLogin) {
         return next();
     }
-    res.send(`<script>alert('Unauthorized: Please log in first'); window.location.href = '/login';</script>`);
+
+    // Render halaman login dengan pesan error
+    return res.status(401).render('login', {
+        error: 'Anda harus login terlebih dahulu untuk mengakses halaman ini',
+        success: null
+    });
 }
 
 module.exports = isLogin;
