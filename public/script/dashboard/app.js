@@ -159,14 +159,15 @@ class DashboardApp {
             }
 
             if (result.success) {
+                this.showToast('Data berhasil disimpan', 'success');
                 this.modalManager.closeFormModal();
                 this.loadData();
             } else {
-                alert('Gagal menyimpan data: ' + (result.message || 'Unknown error'));
+                this.showToast('Gagal menyimpan data: ' + (result.message || 'Unknown error'), 'error');
             }
         } catch (error) {
             console.error('Error submitting form:', error);
-            alert('Terjadi kesalahan saat menyimpan data');
+            this.showToast('Terjadi kesalahan saat menyimpan data', 'error');
         }
     }
 
@@ -177,15 +178,16 @@ class DashboardApp {
             const result = await this.api.deleteData(this.state.deleteId);
 
             if (result.success) {
+                this.showToast('Data berhasil dihapus', 'success');
                 this.modalManager.closeDeleteModal();
                 this.state.deleteId = null;
                 this.loadData();
             } else {
-                alert('Gagal menghapus data: ' + (result.message || 'Unknown error'));
+                this.showToast('Gagal menghapus data: ' + (result.message || 'Unknown error'), 'error');
             }
         } catch (error) {
             console.error('Error deleting data:', error);
-            alert('Terjadi kesalahan saat menghapus data');
+            this.showToast('Terjadi kesalahan saat menghapus data', 'error');
         }
     }
 
@@ -276,6 +278,43 @@ class DashboardApp {
         warningContainer.classList.add('hidden');
         this.modalManager.closeImportModal();
         this.loadData();
+    }
+
+    // ========== Toast Notification ==========
+    showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        const bgColor = type === 'success' ? 'bg-green-500' :
+            type === 'error' ? 'bg-red-500' :
+                type === 'warning' ? 'bg-yellow-500' :
+                    'bg-blue-500';
+
+        toast.className = `fixed top-20 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 ${bgColor} text-white font-semibold flex items-center gap-2`;
+        toast.style.transform = 'translateX(400px)';
+
+        // Add icon based on type
+        const icon = type === 'success' ? '✓' :
+            type === 'error' ? '✕' :
+                type === 'warning' ? '⚠' :
+                    'ℹ';
+
+        toast.innerHTML = `<span class="text-xl">${icon}</span><span>${message}</span>`;
+
+        document.body.appendChild(toast);
+
+        // Slide in
+        setTimeout(() => {
+            toast.style.transform = 'translateX(0)';
+        }, 10);
+
+        // Slide out and remove
+        setTimeout(() => {
+            toast.style.transform = 'translateX(400px)';
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
     }
 
     // ========== Array Field Helpers ==========

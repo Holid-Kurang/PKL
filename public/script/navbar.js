@@ -16,49 +16,51 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
-<<<<<<< HEAD
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-        // Show loading state
-        const logoutBtn = this;
-        const originalText = logoutBtn.textContent;
-        logoutBtn.textContent = 'Logging out...';
-        logoutBtn.disabled = true;
 
-        fetch('/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'same-origin'
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Show success toast
-                    showToast('Logout berhasil', 'success');
-                    setTimeout(() => {
-                        window.location.href = data.redirect || '/';
-                    }, 500);
-                } else {
-                    showToast(data.message || 'Logout gagal. Silakan coba lagi.', 'error');
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+            // Show loading state
+            const originalText = logoutBtn.textContent;
+            logoutBtn.textContent = 'Logging out...';
+            logoutBtn.disabled = true;
+
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success toast
+                        showToast('Logout berhasil', 'success');
+                        setTimeout(() => {
+                            window.location.href = data.redirect || '/';
+                        }, 500);
+                    } else {
+                        showToast(data.message || 'Logout gagal. Silakan coba lagi.', 'error');
+                        logoutBtn.textContent = originalText;
+                        logoutBtn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
                     logoutBtn.textContent = originalText;
                     logoutBtn.disabled = false;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
-                logoutBtn.textContent = originalText;
-                logoutBtn.disabled = false;
-            });
-    });
+                });
+        });
+    }
 
     // Toast notification function
     function showToast(message, type = 'info') {
         const toast = document.createElement('div');
         toast.className = `fixed top-20 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 ${type === 'success' ? 'bg-green-500' :
-                type === 'error' ? 'bg-red-500' :
-                    'bg-blue-500'
+            type === 'error' ? 'bg-red-500' :
+                'bg-blue-500'
             } text-white font-semibold`;
         toast.style.transform = 'translateX(400px)';
         toast.textContent = message;
@@ -77,32 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.body.removeChild(toast);
             }, 300);
         }, 3000);
-=======
-
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function () {
-            fetch('/logout', {
-                method: 'POST',  // Menggunakan metode POST untuk logout
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin' // Pastikan session dikirim dalam permintaan
-            })
-                .then(response => {
-                    if (response.ok) {
-                        // alert('Successfully logged out!');
-                        window.location.href = '/';  // Arahkan ke halaman utama atau login
-                    } else {
-                        alert('Logout failed!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Logout failed!');
-                });
-        });
->>>>>>> 9ab0cf66d6ced904458633dbf736cbb4697c8078
     }
 });
 
