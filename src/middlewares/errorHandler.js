@@ -1,4 +1,5 @@
 const AppError = require('../utils/AppError');
+const logger = require('../utils/logger');
 
 /**
  * Error Handler Middleware Terpusat
@@ -7,18 +8,18 @@ const AppError = require('../utils/AppError');
 
 // Helper function untuk log error detail
 const logError = (err, req) => {
-    console.error('═══════════════════════════════════════════════════');
-    console.error('🚨 ERROR OCCURRED');
-    console.error('═══════════════════════════════════════════════════');
-    console.error('Timestamp:', new Date().toISOString());
-    console.error('URL:', req.originalUrl);
-    console.error('Method:', req.method);
-    console.error('IP:', req.ip);
-    console.error('User Agent:', req.get('user-agent'));
-    console.error('Error Message:', err.message);
-    console.error('Status Code:', err.statusCode || 500);
-    console.error('Stack Trace:', err.stack);
-    console.error('═══════════════════════════════════════════════════\n');
+    const errorDetails = {
+        timestamp: new Date().toISOString(),
+        url: req.originalUrl,
+        method: req.method,
+        ip: req.ip,
+        userAgent: req.get('user-agent'),
+        message: err.message,
+        statusCode: err.statusCode || 500,
+        stack: err.stack
+    };
+
+    logger.error('Error occurred:', errorDetails);
 };
 
 // Handle MongoDB Duplicate Key Error

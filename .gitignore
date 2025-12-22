@@ -2,5 +2,7 @@
 .env
 /temp
 /uploads
+/logs
 *.xlsx
 *.xls
+*.log
