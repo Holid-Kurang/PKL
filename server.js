@@ -9,7 +9,6 @@ const morgan = require('morgan');
 const routes = require("./src/routes/routes");
 const rateLimit = require('express-rate-limit');
 const methodOverride = require('method-override');
-const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 const i18n = require('./src/middlewares/i18n');
 const { errorHandler } = require('./src/middlewares/errorHandler');
@@ -96,7 +95,20 @@ app.use(express.json()); // Middleware untuk parsing JSON
 app.use(express.urlencoded({ extended: false })); // Middleware untuk parsing x-www-form-urlencoded
 app.use(cookieParser()); // Middleware untuk parsing cookies
 app.use(methodOverride('_method'));
-app.use(mongoSanitize());
+
+// Sanitize data manually to avoid express-mongo-sanitize issues with readonly properties
+const sanitizeData = (data) => {
+    if (!data) return data;
+    const stringData = JSON.stringify(data);
+    return JSON.parse(stringData.replace(/\$/g, '_').replace(/\\./g, '_'));
+};
+
+app.use((req, res, next) => {
+    req.body = sanitizeData(req.body);
+    req.params = sanitizeData(req.params);
+    next();
+});
+
 app.use(generalLimiter);
 
 // Session configuration with MongoDB store
