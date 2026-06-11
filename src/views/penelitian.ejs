@@ -1,45 +1,37 @@
 <!DOCTYPE html>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
-    <link href="/style/main.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <script>
-        window.pageTranslations = <%- pageTranslations %>;
-        window.pusatData = {
-            jumlahPerTahun: <%- JSON.stringify(pusatData.jumlahPerTahun) %>,
-            jumlahPerProdi: <%- JSON.stringify(pusatData.jumlahPerProdi) %>,
-            jumlahDanaPerTahun: <%- JSON.stringify(pusatData.jumlahDanaPerTahun) %>,
-            jumlahDanaPerProdi: <%- JSON.stringify(pusatData.jumlahDanaPerProdi) %>,
-            avgDanaPerTahun: <%- JSON.stringify(pusatData.avgDanaPerTahun) %>,
-            avgDanaPerProdi: <%- JSON.stringify(pusatData.avgDanaPerProdi) %>
-        };
+<%- include('partials/head', {title}) %>
 
-        window.pnbpData = {
-            jumlahPerTahun: <%- JSON.stringify(pnbpData.jumlahPerTahun) %>,
-            jumlahPerProdi: <%- JSON.stringify(pnbpData.jumlahPerProdi) %>,
-            jumlahDanaPerTahun: <%- JSON.stringify(pnbpData.jumlahDanaPerTahun) %>,
-            jumlahDanaPerProdi: <%- JSON.stringify(pnbpData.jumlahDanaPerProdi) %>,
-            avgDanaPerTahun: <%- JSON.stringify(pnbpData.avgDanaPerTahun) %>,
-            avgDanaPerProdi: <%- JSON.stringify(pnbpData.avgDanaPerProdi) %>,
-            avgNilaiPerTahun: <%- JSON.stringify(pnbpData.avgNilaiPerTahun) %>,
-            avgNilaiPerProdi: <%- JSON.stringify(pnbpData.avgNilaiPerProdi) %>
-        };
+<script nonce="<%= nonce %>">
+    window.pusatData = {
+        jumlahPerTahun: <%- JSON.stringify(pusatData.jumlahPerTahun) %>,
+        jumlahPerProdi: <%- JSON.stringify(pusatData.jumlahPerProdi) %>,
+        jumlahDanaPerTahun: <%- JSON.stringify(pusatData.jumlahDanaPerTahun) %>,
+        jumlahDanaPerProdi: <%- JSON.stringify(pusatData.jumlahDanaPerProdi) %>,
+        avgDanaPerTahun: <%- JSON.stringify(pusatData.avgDanaPerTahun) %>,
+        avgDanaPerProdi: <%- JSON.stringify(pusatData.avgDanaPerProdi) %>
+    };
 
-        window.mandiriData = {
-            jumlahPerTahun: <%- JSON.stringify(mandiriData.jumlahPerTahun) %>,
-            jumlahPerProdi: <%- JSON.stringify(mandiriData.jumlahPerProdi) %>,
-            jumlahDanaPerTahun: <%- JSON.stringify(mandiriData.jumlahDanaPerTahun) %>,
-            jumlahDanaPerProdi: <%- JSON.stringify(mandiriData.jumlahDanaPerProdi) %>,
-            avgDanaPerTahun: <%- JSON.stringify(mandiriData.avgDanaPerTahun) %>,
-            avgDanaPerProdi: <%- JSON.stringify(mandiriData.avgDanaPerProdi) %>
-        };
-    </script>
-</head>
+    window.pnbpData = {
+        jumlahPerTahun: <%- JSON.stringify(pnbpData.jumlahPerTahun) %>,
+        jumlahPerProdi: <%- JSON.stringify(pnbpData.jumlahPerProdi) %>,
+        jumlahDanaPerTahun: <%- JSON.stringify(pnbpData.jumlahDanaPerTahun) %>,
+        jumlahDanaPerProdi: <%- JSON.stringify(pnbpData.jumlahDanaPerProdi) %>,
+        avgDanaPerTahun: <%- JSON.stringify(pnbpData.avgDanaPerTahun) %>,
+        avgDanaPerProdi: <%- JSON.stringify(pnbpData.avgDanaPerProdi) %>,
+        avgNilaiPerTahun: <%- JSON.stringify(pnbpData.avgNilaiPerTahun) %>,
+        avgNilaiPerProdi: <%- JSON.stringify(pnbpData.avgNilaiPerProdi) %>
+    };
+
+    window.mandiriData = {
+        jumlahPerTahun: <%- JSON.stringify(mandiriData.jumlahPerTahun) %>,
+        jumlahPerProdi: <%- JSON.stringify(mandiriData.jumlahPerProdi) %>,
+        jumlahDanaPerTahun: <%- JSON.stringify(mandiriData.jumlahDanaPerTahun) %>,
+        jumlahDanaPerProdi: <%- JSON.stringify(mandiriData.jumlahDanaPerProdi) %>,
+        avgDanaPerTahun: <%- JSON.stringify(mandiriData.avgDanaPerTahun) %>,
+        avgDanaPerProdi: <%- JSON.stringify(mandiriData.avgDanaPerProdi) %>
+    };
+</script>
 
 <body class="text-center bg-[#EDF0F1] ">
     <%- include('partials/navbar', {isLogin}) %>

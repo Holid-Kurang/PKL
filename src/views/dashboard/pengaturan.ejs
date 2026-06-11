@@ -150,6 +150,7 @@
                     <span class="close" id="close-add-kategori">&times;</span>
                 </div>
                 <form id="form-add-kategori">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <div class="mb-4">
                         <label class="block mb-2 text-sm font-medium text-gray-700">Nama Kategori</label>
                         <input type="text" id="kategori-name" name="kategori" required
@@ -187,6 +188,7 @@
                     <span class="close" id="close-edit-kategori">&times;</span>
                 </div>
                 <form id="form-edit-kategori">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <input type="hidden" id="edit-kategori-id">
                     <div class="mb-4">
                         <label class="block mb-2 text-sm font-medium text-gray-700">Nama Kategori</label>
@@ -216,6 +218,7 @@
                     <span class="close" id="close-add-option">&times;</span>
                 </div>
                 <form id="form-add-option">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <input type="hidden" id="add-option-kategori-id">
                     <div class="mb-4">
                         <label class="block mb-2 text-sm font-medium text-gray-700">Kategori</label>

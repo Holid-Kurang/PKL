@@ -1,27 +1,6 @@
 <!DOCTYPE html>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
-    <link href="/style/main.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <style>
-        .chart-section {
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .kategori-select {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .kategori-select:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-    </style>
-</head>
+<%- include('partials/head', {title}) %>
 
 <body class="text-center bg-[#EDF0F1] ">
     <%- include('partials/navbar', {isLogin}) %>
@@ -141,7 +120,7 @@
     <%- include('partials/footer') %>
 
     <script src="/libs/chart.js/dist/chart.umd.js"></script>
-    <script>
+    <script nonce="<%= nonce %>">
         window.penelitian = {
             pusat: {
                 jumlahPerTahun: <%- JSON.stringify(penelitianPusat.jumlahPerTahun) %>,

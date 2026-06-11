@@ -3,6 +3,30 @@ let currentKategoriId = null;
 let deleteAction = null;
 let deleteData = null;
 
+// Helper function to get CSRF token
+function getCsrfToken() {
+    const tokenInput = document.querySelector('input[name="_csrf"]');
+    if (tokenInput) {
+        return tokenInput.value;
+    }
+    return document.querySelector('meta[name="csrf-token"]')?.content || '';
+}
+
+// Helper function to get headers with CSRF token
+function getHeaders(customHeaders = {}) {
+    const headers = {
+        'Content-Type': 'application/json',
+        ...customHeaders
+    };
+
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+        headers['X-CSRF-Token'] = csrfToken;
+    }
+
+    return headers;
+}
+
 // DOM Ready
 document.addEventListener('DOMContentLoaded', function () {
     loadKategori();
@@ -131,9 +155,7 @@ async function handleAddKategori(event) {
     try {
         const response = await fetch('/api/kategori', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: getHeaders(),
             body: JSON.stringify(data)
         });
 
@@ -170,9 +192,7 @@ async function handleEditKategori(event) {
     try {
         const response = await fetch(`/api/kategori/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: getHeaders(),
             body: JSON.stringify({ kategori })
         });
 
@@ -210,9 +230,7 @@ async function handleAddOption(event) {
     try {
         const response = await fetch(`/api/kategori/${id}/option`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: getHeaders(),
             body: JSON.stringify({ option })
         });
 
@@ -249,14 +267,13 @@ async function handleDelete() {
 
         if (deleteAction === 'kategori') {
             response = await fetch(`/api/kategori/${deleteData.id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: getHeaders()
             });
         } else if (deleteAction === 'option') {
             response = await fetch(`/api/kategori/${deleteData.id}/option`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: getHeaders(),
                 body: JSON.stringify({ option: deleteData.option })
             });
         }

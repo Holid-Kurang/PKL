@@ -2,10 +2,11 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const session = require("express-session");
-const MongoStore = require('connect-mongo');
+const {default: MongoStore} = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const csrf = require('csurf');
 const routes = require("./src/routes/routes");
 const rateLimit = require('express-rate-limit');
 const methodOverride = require('method-override');
@@ -16,7 +17,26 @@ const { cleanupTempFiles } = require('./src/utils/excelUtils');
 const logger = require('./src/utils/logger');
 require('dotenv').config();
 
+// Validate required environment variables in production
+if (process.env.NODE_ENV === 'production') {
+    if (!process.env.SESSION_SECRET) {
+        console.error('ERROR: SESSION_SECRET must be set in production environment');
+        process.exit(1);
+    }
+    if (!process.env.MONGODB_URI) {
+        console.error('ERROR: MONGODB_URI must be set in production environment');
+        process.exit(1);
+    }
+}
+
 connectDB(); // Connect to MongoDB
+
+// Nonce middleware for CSP (must be before any other middleware)
+const crypto = require('crypto');
+app.use((req, res, next) => {
+    res.locals.nonce = crypto.randomBytes(16).toString('hex');
+    next();
+});
 
 // HTTP Request Logging
 if (process.env.NODE_ENV === 'production') {
@@ -31,24 +51,32 @@ if (process.env.NODE_ENV === 'production') {
     app.use(morgan('dev'));
 }
 
-// Security Headers with Helmet
-app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "cdn.jsdelivr.net"],
-            styleSrc: ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com"],
-            fontSrc: ["'self'", "fonts.gstatic.com", "cdn.jsdelivr.net"],
-            imgSrc: ["'self'", "data:", "https:"],
-            connectSrc: ["'self'"],
+// Security Headers with Helmet + Dynamic CSP with Nonce
+app.use((req, res, next) => {
+    const nonce = res.locals.nonce;
+
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'", `'nonce-${nonce}'`],
+                styleSrc: ["'self'", "fonts.googleapis.com"],
+                fontSrc: ["'self'", "fonts.gstatic.com" ],
+                imgSrc: ["'self'", "data:", "https:"],
+                connectSrc: ["'self'"],
+                frameAncestors: ["'none'"],
+                objectSrc: ["'none'"],
+                baseUri: ["'self'"],
+                formAction: ["'self'"]
+            },
         },
-    },
-    hsts: {
-        maxAge: 31536000,
-        includeSubDomains: true,
-        preload: true
-    },
-}));
+        hsts: {
+            maxAge: 31536000,
+            includeSubDomains: true,
+            preload: true
+        },
+    })(req, res, next);
+});
 
 // Cleanup temp files setiap 1 jam
 setInterval(() => {
@@ -113,7 +141,7 @@ app.use(generalLimiter);
 
 // Session configuration with MongoDB store
 const sessionConfig = {
-    secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production',
+    secret: process.env.SESSION_SECRET || (process.env.NODE_ENV !== 'production' ? 'dev-fallback-secret-only' : undefined),
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -130,7 +158,7 @@ if (process.env.MONGODB_URI) {
         mongoUrl: process.env.MONGODB_URI,
         touchAfter: 24 * 3600, // lazy session update
         crypto: {
-            secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production'
+            secret: process.env.SESSION_SECRET || (process.env.NODE_ENV !== 'production' ? 'dev-fallback-secret-only' : undefined)
         }
     });
     logger.info('Session store: MongoDB');
@@ -139,6 +167,16 @@ if (process.env.MONGODB_URI) {
 }
 
 app.use(session(sessionConfig)); // Middleware untuk session
+
+// CSRF Protection Middleware
+const csrfProtection = csrf({ cookie: false });
+app.use(csrfProtection);
+
+// Middleware untuk pass CSRF token ke semua views
+app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
 
 // Middleware internationalization
 app.use(i18n);
@@ -171,12 +209,16 @@ app.use("/", routes); // Gunakan routes yang sudah dibuat
 // 404 Handler - harus setelah semua routes
 app.use(async (req, res, next) => {
     logger.warn(`404 Not Found: ${req.method} ${req.originalUrl} - IP: ${req.ip}`);
+    const { languages } = require('./config/lang');
+    const currentLang = req.language || 'id';
+    
     // Mengatur status 404 dan merender halaman 404 kustom
     res.status(404).render('404page', {
         title: "404 Not Found",
         message: "Halaman yang Anda cari tidak ditemukan",
         url: req.originalUrl, // Mengirim URL yang coba diakses ke view
         isLogin: req.session.isLogin || false, // Mengirim status login ke view
+        pageTranslations: JSON.stringify(languages[currentLang])
     });
 });
 

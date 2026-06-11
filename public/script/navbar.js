@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function () {
+            // Ambil token CSRF dari meta tag
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
             // Show loading state
             const originalText = logoutBtn.textContent;
             logoutBtn.textContent = 'Logging out...';
@@ -28,7 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch('/logout', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken 
                 },
                 credentials: 'same-origin'
             })

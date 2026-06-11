@@ -79,6 +79,8 @@ class LanguageSwitcher {
     async changeLanguage(lang) {
         if (lang === this.currentLang) return;
         
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
         try {
             // Tampilkan loading
             const toggle = document.getElementById('languageToggle');
@@ -94,7 +96,8 @@ class LanguageSwitcher {
             const response = await fetch('/api/change-language', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken 
                 },
                 body: JSON.stringify({ language: lang })
             });

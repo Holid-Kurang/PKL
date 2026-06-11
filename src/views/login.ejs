@@ -1,34 +1,6 @@
 <!DOCTYPE html>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="/style/main.css" rel="stylesheet">
-    <style>
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .error-message {
-            animation: slideDown 0.3s ease-out;
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-        .shake {
-            animation: shake 0.5s ease-in-out;
-        }
-    </style>
-</head>
+<%- include('partials/head', {title}) %>
 
 <body class="flex h-screen bg-indigo ">
     <div class="relative w-full max-w-xs p-5 m-auto bg-white rounded <%= typeof error !== 'undefined' && error ? 'shake' : '' %>">
@@ -64,6 +36,7 @@
         <% } %>
 
         <form action="/login" method="POST" id="loginForm">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div>
                 <label class="block mb-2 text-indigo" for="username"><%= translate('auth.user') %></label>
                 <input class="w-full p-2 mb-6 transition-colors border-b-2 outline-none text-indigo border-indigo focus:bg-gray-300"

@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
-    <link href="/style/main.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <script>
-        // Set translations globally for JavaScript
-        window.pageTranslations = <%- pageTranslations %>;
-    </script>
-</head>
+<%- include('partials/head', {title}) %>
 
 <body class="bg-[#EDF0F1] text-[#232F58]">
     <%- include('partials/navbar', {isLogin}) %>

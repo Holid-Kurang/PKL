@@ -6,3 +6,7 @@
 *.xlsx
 *.xls
 *.log
+*.github
+/github
+*.vscode
+/.vscode

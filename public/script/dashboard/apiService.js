@@ -7,6 +7,32 @@ class ApiService {
     constructor(config) {
         this.config = config;
         this.baseUrl = `/api/dashboard/${config.fullCategory}`;
+        this.csrfToken = this.getCsrfToken();
+    }
+
+    getCsrfToken() {
+        // Try to get CSRF token from hidden input in forms
+        const tokenInput = document.querySelector('input[name="_csrf"]');
+        if (tokenInput) {
+            return tokenInput.value;
+        }
+        // Fallback: try to get from meta tag or window object
+        return document.querySelector('meta[name="csrf-token"]')?.content ||
+            window._csrfToken || '';
+    }
+
+    getHeaders(customHeaders = {}) {
+        const headers = {
+            'Content-Type': 'application/json',
+            ...customHeaders
+        };
+
+        // Add CSRF token to headers for state-changing requests
+        if (this.csrfToken) {
+            headers['X-CSRF-Token'] = this.csrfToken;
+        }
+
+        return headers;
     }
 
     async fetchData(params) {
@@ -23,7 +49,7 @@ class ApiService {
     async createData(data) {
         const response = await fetch(`${this.baseUrl}/create`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: this.getHeaders(),
             body: JSON.stringify(data)
         });
 
@@ -37,7 +63,7 @@ class ApiService {
     async updateData(id, data) {
         const response = await fetch(`${this.baseUrl}/update/${id}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: this.getHeaders(),
             body: JSON.stringify(data)
         });
 
@@ -50,8 +76,11 @@ class ApiService {
 
     async deleteData(id) {
         const response = await fetch(`${this.baseUrl}/delete/${id}`, {
-            method: 'DELETE'
-        }); if (!response.ok) {
+            method: 'DELETE',
+            headers: this.getHeaders()
+        });
+
+        if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
@@ -67,6 +96,11 @@ class ApiService {
     }
 
     async importData(formData) {
+        // For multipart/form-data, add CSRF token if not already present
+        if (!formData.has('_csrf') && this.csrfToken) {
+            formData.append('_csrf', this.csrfToken);
+        }
+
         const response = await fetch(`${this.baseUrl}/import`, {
             method: 'POST',
             body: formData

@@ -4,20 +4,20 @@ Aplikasi web ini dirancang untuk menampilkan indeks kinerja penelitian, pengabdi
 
 ## Fitur Utama
 
--   🔒 Login untuk pengguna
--   📥 Import dan export data dalam format CSV/Excel
--   📊 Visualisasi grafik interaktif (kinerja penelitian, pengabdian, publikasi)
--   🧾 Penjelasan mendalam terkait grafik
--   ⚙️ Desain responsif menggunakan Tailwind CSS
+- 🔒 Login untuk pengguna
+- 📥 Import dan export data dalam format CSV/Excel
+- 📊 Visualisasi grafik interaktif (kinerja penelitian, pengabdian, publikasi)
+- 🧾 Penjelasan mendalam terkait grafik
+- ⚙️ Desain responsif menggunakan Tailwind CSS
 
 ## Teknologi yang Digunakan
 
--   Node.js
--   Express.js
--   MongoDB (Mongoose)
--   Tailwind CSS
--   Chart.js
--   EJS (View Engine)
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- Tailwind CSS
+- Chart.js
+- EJS (View Engine)
 
 ## Struktur Folder
 
@@ -52,7 +52,6 @@ PKL/
     ```
 
 3. **Setup MongoDB:**
-
     - Pastikan MongoDB sudah terinstal dan berjalan di komputer Anda, atau gunakan layanan MongoDB Atlas.
     - Buat database baru sesuai kebutuhan proyek.
     - Tambahkan URI koneksi MongoDB ke file `.env`, misal:
@@ -77,6 +76,6 @@ PKL/
 
 ## Catatan
 
--   Pastikan Node.js versi terbaru telah terinstal.
--   Tambahkan file `.env` jika proyek ini membutuhkan konfigurasi lingkungan.
--   Pastikan MongoDB sudah berjalan sebelum menjalankan aplikasi.
+- Pastikan Node.js versi terbaru telah terinstal.
+- Tambahkan file `.env` jika proyek ini membutuhkan konfigurasi lingkungan.
+- Pastikan MongoDB sudah berjalan sebelum menjalankan aplikasi.
