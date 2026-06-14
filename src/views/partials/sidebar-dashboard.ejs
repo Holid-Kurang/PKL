@@ -7,8 +7,8 @@
 
         <!-- Item Menu Penelitian (dengan dropdown) -->
         <div>
-            <button onclick="toggleMenu('penelitianMenu')"
-                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
+            <button data-target="penelitianMenu"
+                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg sidebar-toggle bg-white/20">
                 <span class="flex items-center">
                     <span class="mr-3 material-icons-outlined">science</span>
                     <%= translate('navbar.penelitian') %>
@@ -24,8 +24,8 @@
 
         <!-- Item Menu Pengabdian (dengan dropdown) -->
         <div>
-            <button onclick="toggleMenu('pengabdianMenu')"
-                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
+            <button data-target="pengabdianMenu"
+                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg sidebar-toggle bg-white/20">
                 <span class="flex items-center">
                     <span class="mr-3 material-icons-outlined">local_library</span>
                     <%= translate('navbar.pengabdian') %>
@@ -40,8 +40,8 @@
 
         <!-- Item Menu Publikasi (dengan dropdown) -->
         <div>
-            <button onclick="toggleMenu('publikasiMenu')"
-                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg bg-white/20">
+            <button data-target="publikasiMenu"
+                class="flex items-center justify-between w-full px-4 py-3 transition-colors rounded-lg sidebar-toggle bg-white/20">
                 <span class="flex items-center">
                     <span class="mr-3 material-icons-outlined">groups</span>
                     <%= translate('navbar.publikasi') %>

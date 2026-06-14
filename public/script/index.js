@@ -72,9 +72,7 @@ function updateStatisticsText() {
     document.getElementById('penelitianText').innerHTML = `
         ${getTranslation('home.penelitianText.prefix')} <strong>${penelitianStats.total}</strong> ${getTranslation('home.penelitianText.middle')} 
         <strong>${penelitianStats.topCategory}</strong> ${getTranslation('home.penelitianText.suffix')} <strong>${penelitianStats.topPercentage.toFixed(1)}%</strong> ${getTranslation('home.penelitianText.percent')}
-        <a href="/penelitian" class="text-blue-600" style="text-decoration: none;" 
-           onmouseover="this.style.textDecoration='underline'" 
-           onmouseout="this.style.textDecoration='none'">${getTranslation('home.seeDetail')}.</a>
+        <a href="/penelitian" class="text-blue-600 hover:underline">${getTranslation('home.seeDetail')}.</a>
     `;
 
     // Update pengabdian text
@@ -82,18 +80,14 @@ function updateStatisticsText() {
         ${getTranslation('home.pengabdianText.prefix')} <strong>${pengabdianStats.total}</strong> ${getTranslation('home.pengabdianText.middle')} 
         <strong>${pengabdianStats.topCategory}</strong> 
         ${getTranslation('home.pengabdianText.suffix')} <strong>${pengabdianStats.topPercentage.toFixed(1)}%</strong>.
-        <a href="/pengabdian" class="text-blue-600" style="text-decoration: none;" 
-           onmouseover="this.style.textDecoration='underline'" 
-           onmouseout="this.style.textDecoration='none'">${getTranslation('home.seeDetail')}.</a>
+        <a href="/pengabdian" class="text-blue-600 hover:underline">${getTranslation('home.seeDetail')}.</a>
     `;
 
     // Update publikasi text
     document.getElementById('publikasiText').innerHTML = `
         ${getTranslation('home.publikasiText.prefix')} <strong>${publikasiStats.total}</strong> ${getTranslation('home.publikasiText.middle')} <strong>${publikasiStats.topCategory}</strong>, 
         ${getTranslation('home.publikasiText.suffix')} <strong>${publikasiStats.topPercentage.toFixed(1)}%</strong> ${getTranslation('home.publikasiText.percent')}
-        <a href="/publikasi" class="text-blue-600" style="text-decoration: none;" 
-           onmouseover="this.style.textDecoration='underline'" 
-           onmouseout="this.style.textDecoration='none'">${getTranslation('home.seeDetail')}.</a>
+        <a href="/publikasi" class="text-blue-600 hover:underline">${getTranslation('home.seeDetail')}.</a>
     `;
 }
 

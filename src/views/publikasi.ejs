@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<%- include('partials/head', {title}) %>
+<%- include('partials/head', {title, isTranslationEnabled: true}) %>
 
 <script nonce="<%= nonce %>">
     window.jupengData = {
@@ -115,7 +115,7 @@
         </div>
 
         <!-- Grafik HAKI -->
-        <div id="haki-section" class="chart-section" style="display: none;">
+        <div id="haki-section" class="hidden chart-section">
             <h1 class="text-4xl font-bold text-center text-indigo"><%= translate('categories.haki') %></h1>
             <div class="grid grid-cols-2 grid-rows-2 gap-8 px-32 py-2 h-[100vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
@@ -131,7 +131,7 @@
         </div>
 
         <!-- Grafik Jurnal Pengabdian -->
-        <div id="jupeng-section" class="chart-section" style="display: none;">
+        <div id="jupeng-section" class="hidden chart-section">
             <h1 class="text-4xl font-bold text-center text-indigo"><%= translate('categories.jupeng') %></h1>
             <div class="grid grid-cols-2 grid-rows-1 gap-8 px-32 py-2 h-[70vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">

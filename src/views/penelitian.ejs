@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<%- include('partials/head', {title}) %>
+<%- include('partials/head', {title, isTranslationEnabled: true}) %>
 
 <script nonce="<%= nonce %>">
     window.pusatData = {
@@ -156,7 +156,7 @@
         </div>
 
         <!-- Grafik PNBP -->
-        <div id="pnbp-section" class="chart-section" style="display: none;">
+        <div id="pnbp-section" class="hidden chart-section" >
             <h1 class="text-4xl font-bold text-center text-indigo"><%= translate('categories.pnbp') %></h1>
             <div class="grid grid-cols-2 grid-rows-4 gap-8 px-32 py-2 h-[200vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
@@ -187,7 +187,7 @@
         </div>
 
         <!-- Grafik Mandiri -->
-        <div id="mandiri-section" class="chart-section" style="display: none;">
+        <div id="mandiri-section" class="hidden chart-section" >
             <h1 class="text-4xl font-bold text-center text-indigo"><%= translate('categories.mandiri') %></h1>
             <div class="grid grid-cols-2 grid-rows-3 gap-8 px-32 py-2 h-[100vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">

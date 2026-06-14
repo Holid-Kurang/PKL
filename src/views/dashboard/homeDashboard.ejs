@@ -1,14 +1,6 @@
 <!DOCTYPE html>
-<html lang="<%= currentLang %>">
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><%= title %></title>
-        <link href="/style/main.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-    </head>
-
+<html >
+    <%- include('../partials/head', {title, isTranslationEnabled: false}) %>
     <body class="bg-gray-50">
         <div class="flex h-screen overflow-hidden">
             <!-- Sidebar -->
@@ -18,7 +10,7 @@
             <div class="flex flex-col flex-1 overflow-hidden">
                 <!-- Header -->
                 <header class="bg-white shadow-sm">
-                    <div class="flex items-center justify-between px-8 h-20">
+                    <div class="flex items-center justify-between h-20 px-8">
                         <div>
                             <h1 class="text-2xl font-bold text-gray-800"><%= translate('navbar.dashboard') %></h1>
                             <p class="text-sm text-gray-600"><%= translate('auth.user') %>: Admin</p>
@@ -210,8 +202,5 @@
                 </main>
             </div>
         </div>
-
-        <script src="/script/language-switcher.js"></script>
     </body>
-
 </html>

@@ -21,6 +21,32 @@ function toggleMenu(menuId) {
 
 // Auto-open menu if current page is within that menu
 document.addEventListener('DOMContentLoaded', function () {
+    // Cari semua tombol dengan class sidebar-toggle
+    const toggleButtons = document.querySelectorAll('.sidebar-toggle');
+
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Ambil target menu dari atribut data-target
+            const menuId = this.getAttribute('data-target');
+            const menu = document.getElementById(menuId);
+            const iconId = menuId.replace('Menu', 'Icon');
+            const icon = document.getElementById(iconId);
+
+            if (menu && icon) {
+                // Toggle kelas hidden Tailwind
+                menu.classList.toggle('hidden');
+
+                // Ganti logika transform dengan class Tailwind agar lebih bersih
+                // Atau ubah transform style secara programatik
+                if (menu.classList.contains('hidden')) {
+                    icon.classList.toggle('rotate-180');
+                } else {
+                    icon.classList.toggle('rotate-0');
+                }
+            }
+        });
+    });
+
     const currentPath = window.location.pathname;
 
     // Check if current path matches any menu item

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<%- include('partials/head', {title}) %>
+<%- include('partials/head', {title, isTranslationEnabled: false}) %>
 
 <body class="text-center bg-[#EDF0F1] ">
     <%- include('partials/navbar', {isLogin}) %>
@@ -74,7 +74,7 @@
         </div>
 
         <!-- Section Pengabdian -->
-        <div id="pengabdian-section" class="chart-section" style="display: none;">
+        <div id="pengabdian-section" class="hidden chart-section">
             <h2 class="text-3xl font-bold text-indigo">Pengabdian PNBP</h2>
             <div class="grid grid-cols-2 grid-rows-2 gap-8 px-32 py-2   h-[100vh]">
                 <div class="bg-white shadow-xl rounded-xl shadow-gray-800/25">
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Section Publikasi -->
-        <div id="publikasi-section" class="chart-section" style="display: none;">
+        <div id="publikasi-section" class="hidden chart-section">
             <h2 class="text-3xl font-bold text-indigo">Publikasi Buku</h2>
             <div class="grid grid-cols-1 grid-rows-1 gap-8 px-32 py-2   h-[50vh]">
                 <div class="bg-white shadow-xl rounded-3xl shadow-gray-800/25">

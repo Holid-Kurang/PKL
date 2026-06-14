@@ -8,13 +8,13 @@ document.getElementById('jenispenelitian').addEventListener('change', function (
 
     // Hide all sections
     sections.forEach(section => {
-        section.style.display = 'none';
+        section.classList.add('hidden');
     });
 
     // Show selected section
     const selectedSection = document.getElementById(selectedValue + '-section');
     if (selectedSection) {
-        selectedSection.style.display = 'block';
+        selectedSection.classList.remove('hidden');
     }
 });
 
