@@ -17,7 +17,7 @@ router.post("/login", async (req, res) => {
         if (!username || !password) {
             return res.status(400).render("login", {
                 error: "Username dan password harus diisi",
-                success: null
+                success: null, title: "Login"
             });
         }
 
@@ -25,7 +25,7 @@ router.post("/login", async (req, res) => {
         if (username.length < 3) {
             return res.status(400).render("login", {
                 error: "Username minimal 3 karakter",
-                success: null
+                success: null, title: "Login"
             });
         }
 
@@ -38,7 +38,7 @@ router.post("/login", async (req, res) => {
             logger.error('ADMIN_PASSWORD_HASH not configured in environment');
             return res.status(500).render("login", {
                 error: "Terjadi kesalahan konfigurasi sistem",
-                success: null
+                success: null, title: "Login"
             });
         }
 
@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
                         logger.error('Session regeneration error:', err);
                         return res.status(500).render("login", {
                             error: "Terjadi kesalahan saat login",
-                            success: null
+                            success: null, title: "Login"
                         });
                     }
 
@@ -68,7 +68,7 @@ router.post("/login", async (req, res) => {
                             logger.error('Session save error:', err);
                             return res.status(500).render("login", {
                                 error: "Terjadi kesalahan saat menyimpan sesi",
-                                success: null
+                                success: null, title: "Login"
                             });
                         }
 
@@ -84,13 +84,13 @@ router.post("/login", async (req, res) => {
         logger.warn(`Failed login attempt for username: ${username}`);
         return res.status(401).render("login", {
             error: "Username atau password salah",
-            success: null
+            success: null, title: "Login"
         });
     } catch (error) {
         logger.error('Login error:', error);
         return res.status(500).render("login", {
             error: "Terjadi kesalahan sistem. Silakan coba lagi.",
-            success: null
+            success: null, title: "Login"
         });
     }
 });

@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const session = require("express-session");
-const {default: MongoStore} = require('connect-mongo');
+const { default: MongoStore } = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -61,7 +61,7 @@ app.use((req, res, next) => {
                 defaultSrc: ["'self'"],
                 scriptSrc: ["'self'", `'nonce-${nonce}'`],
                 styleSrc: ["'self'", "fonts.googleapis.com"],
-                fontSrc: ["'self'", "fonts.gstatic.com" ],
+                fontSrc: ["'self'", "fonts.gstatic.com"],
                 imgSrc: ["'self'", "data:", "https:"],
                 connectSrc: ["'self'"],
                 frameAncestors: ["'none'"],
@@ -206,20 +206,12 @@ app.use('/login', loginLimiter);
 // Routes
 app.use("/", routes); // Gunakan routes yang sudah dibuat
 
-// 404 Handler - harus setelah semua routes
-app.use(async (req, res, next) => {
-    logger.warn(`404 Not Found: ${req.method} ${req.originalUrl} - IP: ${req.ip}`);
-    const { languages } = require('./config/lang');
-    const currentLang = req.language || 'id';
-    
-    // Mengatur status 404 dan merender halaman 404 kustom
-    res.status(404).render('404page', {
-        title: "404 Not Found",
-        message: "Halaman yang Anda cari tidak ditemukan",
-        url: req.originalUrl, // Mengirim URL yang coba diakses ke view
-        isLogin: req.session.isLogin || false, // Mengirim status login ke view
-        pageTranslations: JSON.stringify(languages[currentLang])
-    });
+app.use((req, res, next) => {
+    const err = new Error('Oops! Halaman yang Anda cari tidak ditemukan.');
+    err.statusCode = 404;
+    err.status = 'fail';
+    err.isOperational = true; // Supaya lolos pengecekan di production mode
+    next(err);
 });
 
 // Global Error Handler - harus terakhir

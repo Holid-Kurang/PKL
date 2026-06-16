@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<%- include('partials/head', {title, isTranslationEnabled: false}) %>
+<%- include('partials/head', {title}) %>
 
 <body class="flex h-screen bg-indigo ">
     <div class="relative w-full max-w-xs p-5 m-auto bg-white rounded <%= typeof error !== 'undefined' && error ? 'shake' : '' %>">

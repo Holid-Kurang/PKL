@@ -1,24 +1,3 @@
-// Sidebar Dashboard Toggle Functionality
-
-// Toggle menu function
-function toggleMenu(menuId) {
-    const menu = document.getElementById(menuId);
-    const iconId = menuId.replace('Menu', 'Icon');
-    const icon = document.getElementById(iconId);
-
-    if (menu && icon) {
-        // Toggle hidden class
-        menu.classList.toggle('hidden');
-
-        // Rotate icon
-        if (menu.classList.contains('hidden')) {
-            icon.style.transform = 'rotate(0deg)';
-        } else {
-            icon.style.transform = 'rotate(180deg)';
-        }
-    }
-}
-
 // Auto-open menu if current page is within that menu
 document.addEventListener('DOMContentLoaded', function () {
     // Cari semua tombol dengan class sidebar-toggle

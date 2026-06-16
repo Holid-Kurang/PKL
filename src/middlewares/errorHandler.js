@@ -62,9 +62,9 @@ const sendErrorDev = (err, req, res) => {
     // Log error ke console
     logError(err, req);
 
-    // API Error
+    // API Error render error page
     if (req.originalUrl.startsWith('/api')) {
-        return res.status(err.statusCode).json({
+        return res.status(err.statusCode).render('errorPage', {
             success: false,
             status: err.status,
             error: err,
@@ -74,7 +74,7 @@ const sendErrorDev = (err, req, res) => {
     }
 
     // Rendered Website Error
-    return res.status(err.statusCode).render('404page', {
+    return res.status(err.statusCode).render('errorPage', {
         title: `Error ${err.statusCode}`,
         message: err.message,
         error: err,
@@ -100,7 +100,7 @@ const sendErrorProd = (err, req, res) => {
         }
 
         // Rendered Website Error
-        return res.status(err.statusCode).render('404page', {
+        return res.status(err.statusCode).render('errorPage', {
             title: `Error ${err.statusCode}`,
             message: err.message,
             isLogin: req.session?.isLogin || false
@@ -121,7 +121,7 @@ const sendErrorProd = (err, req, res) => {
     }
 
     // Rendered Website Error
-    return res.status(500).render('404page', {
+    return res.status(500).render('errorPage', {
         title: 'Error 500',
         message: 'Terjadi kesalahan pada server. Silakan coba lagi nanti.',
         isLogin: req.session?.isLogin || false
