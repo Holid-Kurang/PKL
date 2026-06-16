@@ -60,7 +60,8 @@ async function fetchDashboardData() {
         }
     } catch (error) {
         console.error('Error fetching dashboard data:', error);
-        showError('Gagal memuat data. Silakan refresh halaman.');
+        const userFriendlyMessage = window.handleClientError ? window.handleClientError(error) : 'Gagal memuat data. Silakan refresh halaman.';
+        showError(userFriendlyMessage);
     }
 }
 

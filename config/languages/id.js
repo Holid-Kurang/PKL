@@ -133,6 +133,20 @@ module.exports = {
         kembali: "Kembali"
     },
 
+    errors: {
+        400: "Permintaan tidak valid. Silakan periksa kembali data yang Anda masukkan.",
+        401: "Sesi Anda telah berakhir atau Anda tidak memiliki akses. Silakan login kembali.",
+        403: "Anda tidak memiliki izin untuk mengakses halaman ini.",
+        404: "Halaman atau data yang Anda cari tidak dapat ditemukan.",
+        429: "Terlalu banyak permintaan. Silakan tunggu beberapa saat sebelum mencoba lagi.",
+        500: "Terjadi gangguan pada server kami. Tim teknis kami sedang menanganinya.",
+        503: "Layanan sedang tidak tersedia. Silakan coba beberapa saat lagi.",
+        network: "Koneksi internet terputus. Periksa jaringan Anda.",
+        generic: "Terjadi kesalahan yang tidak terduga. Silakan hubungi admin jika masalah berlanjut.",
+        backToHome: "Kembali ke Beranda",
+        retry: "Coba Lagi"
+    },
+
     // Penelitian page
     penelitianPage: {
         title: "Penelitian tahun ini",
