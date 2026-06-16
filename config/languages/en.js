@@ -133,6 +133,20 @@ module.exports = {
         kembali: "Back"
     },
 
+    errors: {
+        400: "Invalid request. Please double-check the information you entered.",
+        401: "Your session has expired or you do not have access. Please log in again.",
+        403: "You do not have permission to access this page.",
+        404: "The page or data you are looking for could not be found.",
+        429: "Too many requests. Please wait a moment before trying again.",
+        500: "Our server is experiencing issues. Our technical team is working on it.",
+        503: "Service is currently unavailable. Please try again in a moment.",
+        network: "Internet connection lost. Please check your network.",
+        generic: "An unexpected error occurred. Please contact admin if the problem persists.",
+        backToHome: "Back to Home",
+        retry: "Try Again"
+    },
+
     // Research page
     penelitianPage: {
         title: "Research this year",

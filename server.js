@@ -96,8 +96,9 @@ const generalLimiter = rateLimit({
     legacyHeaders: false,
     handler: (req, res) => {
         logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
+        const message = res.locals.translate ? res.locals.translate('errors.429') : 'Too many requests, please try again later.';
         res.status(429).json({
-            error: 'Too many requests, please try again later.'
+            error: message
         });
     }
 });
@@ -108,8 +109,9 @@ const loginLimiter = rateLimit({
     skipSuccessfulRequests: true,
     handler: (req, res) => {
         logger.warn(`Login rate limit exceeded for IP: ${req.ip}`);
+        const message = res.locals.translate ? res.locals.translate('errors.429') : 'Too many login attempts, please try again later.';
         res.status(429).json({
-            error: 'Too many login attempts, please try again after 15 minutes.'
+            error: message
         });
     }
 });
@@ -211,11 +213,19 @@ app.use(async (req, res, next) => {
     logger.warn(`404 Not Found: ${req.method} ${req.originalUrl} - IP: ${req.ip}`);
     const { languages } = require('./config/lang');
     const currentLang = req.language || 'id';
+
+    if (req.originalUrl.startsWith('/api')) {
+        return res.status(404).json({
+            success: false,
+            status: 'fail',
+            message: res.locals.translate('errors.404')
+        });
+    }
     
     // Mengatur status 404 dan merender halaman 404 kustom
     res.status(404).render('404page', {
         title: "404 Not Found",
-        message: "Halaman yang Anda cari tidak ditemukan",
+        message: res.locals.translate('errors.404'),
         url: req.originalUrl, // Mengirim URL yang coba diakses ke view
         isLogin: req.session.isLogin || false, // Mengirim status login ke view
         pageTranslations: JSON.stringify(languages[currentLang])
