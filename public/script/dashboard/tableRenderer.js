@@ -21,7 +21,7 @@ class TableRenderer {
 
             headerHTML += `
                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-700 uppercase cursor-pointer hover:bg-gray-200 transition-colors select-none" 
-                    onclick="dashboardApp.handleSort('${field}')" 
+                    data-sort-field="${field}"
                     title="Klik untuk mengurutkan">
                     <div class="flex items-center gap-2">
                         <span>${this.config.getFieldLabel(field)}</span>
@@ -67,11 +67,11 @@ class TableRenderer {
 
         html += `
             <td class="sticky-col px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
-                <button onclick="dashboardApp.handleEdit('${item._id}')" 
+                <button data-action="edit" data-id="${item._id}"
                         class="text-indigo hover:text-indigo/80 mr-3">
                     <span class="material-icons-outlined">edit</span>
                 </button>
-                <button onclick="dashboardApp.handleDeleteModal('${item._id}')" 
+                <button data-action="delete" data-id="${item._id}"
                         class="text-red-600 hover:text-red-800">
                     <span class="material-icons-outlined">delete</span>
                 </button>
@@ -85,7 +85,7 @@ class TableRenderer {
         return `
             <tr>
                 <td colspan="100" class="px-6 py-8 text-center text-gray-500">
-                    <span class="material-icons-outlined" style="font-size: 48px;">inbox</span>
+                    <span class="material-icons-outlined text-5xl">inbox</span>
                     <p class="mt-2">${this.config.translations.noData}</p>
                 </td>
             </tr>
@@ -97,7 +97,7 @@ class TableRenderer {
         tbody.innerHTML = `
             <tr>
                 <td colspan="100" class="px-6 py-8 text-center text-gray-500">
-                    <span class="material-icons-outlined animate-spin" style="font-size: 48px;">hourglass_empty</span>
+                    <span class="material-icons-outlined animate-spin text-5xl">hourglass_empty</span>
                     <p class="mt-2">${this.config.translations.loading}</p>
                 </td>
             </tr>
@@ -109,7 +109,7 @@ class TableRenderer {
         tbody.innerHTML = `
             <tr>
                 <td colspan="100" class="px-6 py-8 text-center text-red-500">
-                    <span class="material-icons-outlined" style="font-size: 48px;">error_outline</span>
+                    <span class="material-icons-outlined text-5xl">error_outline</span>
                     <p class="mt-2">${message}</p>
                 </td>
             </tr>

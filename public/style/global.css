@@ -1,6 +1,69 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@source "../../src/views/**/*.ejs";
+@source "../../public/**/*.js";
+
+@theme {
+    /* Indigo Palette */
+    --color-indigo: #400060;
+    --color-indigo-100: #0d0013;
+    --color-indigo-200: #1a0027;
+    --color-indigo-300: #27003a;
+    --color-indigo-400: #34004e;
+    --color-indigo-500: #400060;
+    --color-indigo-600: #7800b4;
+    --color-indigo-700: #ac07ff;
+    --color-indigo-800: #c85aff;
+    --color-indigo-900: #e3acff;
+
+    /* Veronica Palette */
+    --color-veronica: #9342DA;
+    --color-veronica-100: #1e0930;
+    --color-veronica-200: #3c135f;
+    --color-veronica-300: #5a1c8f;
+    --color-veronica-400: #7726bf;
+    --color-veronica-500: #9342da;
+    --color-veronica-600: #a969e1;
+    --color-veronica-700: #bf8fe9;
+    --color-veronica-800: #d4b4f0;
+    --color-veronica-900: #eadaf8;
+
+    /* Gold Palette */
+    --color-gold: #ffd700;
+    --color-gold-100: #332b00;
+    --color-gold-200: #665700;
+    --color-gold-300: #998200;
+    --color-gold-400: #ccad00;
+    --color-gold-500: #ffd700;
+    --color-gold-600: #ffe033;
+    --color-gold-700: #ffe866;
+    --color-gold-800: #fff099;
+    --color-gold-900: #fff7cc;
+
+    /* Red Palette (Ini akan menimpa warna merah default bawaan Tailwind) */
+    --color-red: #ff1b1c;
+    --color-red-100: #380000;
+    --color-red-200: #700000;
+    --color-red-300: #a80000;
+    --color-red-400: #e00000;
+    --color-red-500: #ff1b1c;
+    --color-red-600: #ff4747;
+    --color-red-700: #ff7575;
+    --color-red-800: #ffa3a3;
+    --color-red-900: #ffd1d1;
+
+    /* Turquoise Palette */
+    --color-turquoise: #41e2ba;
+    --color-turquoise-100: #083328;
+    --color-turquoise-200: #0f6550;
+    --color-turquoise-300: #179877;
+    --color-turquoise-400: #1eca9f;
+    --color-turquoise-500: #41e2ba;
+    --color-turquoise-600: #66e8c8;
+    --color-turquoise-700: #8deed6;
+    --color-turquoise-800: #b3f4e3;
+    --color-turquoise-900: #d9f9f1;
+}
 
 .scrollbar-none::-webkit-scrollbar {
     display: none;
@@ -9,6 +72,7 @@
 * {
     font-family: 'Poppins', sans-serif;
 }
+
 .slide-left-fade-in {
     opacity: 0;
     transform: translateX(-100px);
@@ -43,8 +107,13 @@
 }
 
 @keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
 /* Menghilangkan scrollbar di Firefox

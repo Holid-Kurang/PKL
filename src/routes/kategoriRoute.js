@@ -15,7 +15,7 @@ router.delete('/api/kategori/:id/option', isLogin, kategoriControl.removeOption)
 // Route untuk render halaman pengaturan
 router.get('/dashboard/pengaturan', isLogin, (req, res) => {
     res.render('dashboard/pengaturan', {
-        title: 'Pengaturan Kategori'
+        title: 'Pengaturan'
     });
 });
 

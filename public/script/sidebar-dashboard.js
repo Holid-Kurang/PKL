@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Ganti logika transform dengan class Tailwind agar lebih bersih
                 // Atau ubah transform style secara programatik
                 if (menu.classList.contains('hidden')) {
-                    icon.classList.toggle('rotate-180');
+                    icon.style.transform = 'rotate(0deg)';
                 } else {
-                    icon.classList.toggle('rotate-0');
+                    icon.style.transform = 'rotate(180deg)';
                 }
             }
         });

@@ -56,6 +56,30 @@ function setupEventListeners() {
     document.getElementById('close-delete').addEventListener('click', () => closeModal('modal-delete'));
     document.getElementById('btn-confirm-delete').addEventListener('click', handleDelete);
 
+    const container = document.getElementById('kategori-container');
+    if (container) {
+        container.addEventListener('click', function (event) {
+            // Cari elemen tombol terdekat berdasarkan class-nya
+            const editBtn = event.target.closest('.btn-edit-kategori');
+            const addOptBtn = event.target.closest('.btn-add-option');
+            const delOptBtn = event.target.closest('.btn-delete-option');
+
+            if (editBtn) {
+                const id = editBtn.getAttribute('data-id');
+                const name = editBtn.getAttribute('data-name');
+                openEditKategoriModal(id, name);
+            } else if (addOptBtn) {
+                const id = addOptBtn.getAttribute('data-id');
+                const name = addOptBtn.getAttribute('data-name');
+                openAddOptionModal(id, name);
+            } else if (delOptBtn) {
+                const id = delOptBtn.getAttribute('data-id');
+                const option = delOptBtn.getAttribute('data-option');
+                openDeleteOptionModal(id, option);
+            }
+        });
+    }
+
     // Close modal when clicking outside
     window.addEventListener('click', function (event) {
         const modals = document.querySelectorAll('.modal');
@@ -76,15 +100,14 @@ async function loadKategori() {
         if (result.success) {
             displayKategori(result.data);
         } else {
-            showMessage('error', 'Gagal memuat data kategori');
+            showToast('error', 'Gagal memuat data kategori');
         }
     } catch (error) {
         console.error('Error loading kategori:', error);
-        showMessage('error', 'Terjadi kesalahan saat memuat data');
+        showToast('error', 'Terjadi kesalahan saat memuat data');
     }
 }
 
-// Display kategori cards
 function displayKategori(kategoriList) {
     const container = document.getElementById('kategori-container');
 
@@ -102,8 +125,8 @@ function displayKategori(kategoriList) {
             <div class="flex justify-between items-start mb-4">
                 <h3 class="text-lg font-semibold text-gray-800">${kategori.kategori}</h3>
                 <div class="flex gap-2">
-                    <button onclick="openEditKategoriModal('${kategori._id}', '${kategori.kategori}')" 
-                            class="text-indigo hover:text-indigo/80 transition-colors">
+                    <button data-id="${kategori._id}" data-name="${kategori.kategori}" 
+                            class="btn-edit-kategori text-indigo hover:text-indigo/80 transition-colors">
                         <span class="material-icons-outlined text-sm">edit</span>
                     </button>
                 </div>
@@ -112,24 +135,24 @@ function displayKategori(kategoriList) {
             <div class="mb-4">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-gray-600">Options (${kategori.option.length}):</span>
-                    <button onclick="openAddOptionModal('${kategori._id}', '${kategori.kategori}')" 
-                            class="text-green-600 hover:text-green-800 transition-colors">
+                    <button data-id="${kategori._id}" data-name="${kategori.kategori}" 
+                            class="btn-add-option text-green-600 hover:text-green-800 transition-colors">
                         <span class="material-icons-outlined text-sm">add_circle</span>
                     </button>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     ${kategori.option.length === 0
-            ? '<span class="text-gray-400 text-sm italic">Belum ada opsi</span>'
-            : kategori.option.map(opt => `
+                        ? '<span class="text-gray-400 text-sm italic">Belum ada opsi</span>'
+                        : kategori.option.map(opt => `
                             <span class="inline-flex items-center gap-1 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full">
                                 ${opt}
-                                <button onclick="openDeleteOptionModal('${kategori._id}', '${opt}')" 
-                                        class="ml-1 text-blue-700 hover:text-blue-900 font-bold">
+                                <button data-id="${kategori._id}" data-option="${opt}" 
+                                        class="btn-delete-option ml-1 text-blue-700 hover:text-blue-900 font-bold">
                                     ×
                                 </button>
                             </span>
                         `).join('')
-        }
+                    }
                 </div>
             </div>
         </div>
@@ -210,7 +233,6 @@ async function handleEditKategori(event) {
         showToast('error', 'Terjadi kesalahan saat mengupdate kategori');
     }
 }
-
 
 // Open add option modal
 function openAddOptionModal(id, kategoriNama) {
@@ -307,29 +329,19 @@ function closeModal(modalId) {
 
 // Show toast notification
 function showToast(type, message) {
-    // Remove existing toast if any
     const existingToast = document.querySelector('.toast');
     if (existingToast) {
         existingToast.remove();
     }
 
-    // Create toast element
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.textContent = message;
 
-    // Add to body
     document.body.appendChild(toast);
 
-    // Auto remove after 3 seconds
     setTimeout(() => {
         toast.style.animation = 'slideOut 0.3s ease-in';
         setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
-
-// Make functions globally accessible
-window.openAddKategoriModal = openAddKategoriModal;
-window.openEditKategoriModal = openEditKategoriModal;
-window.openAddOptionModal = openAddOptionModal;
-window.openDeleteOptionModal = openDeleteOptionModal;

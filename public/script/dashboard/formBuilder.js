@@ -84,7 +84,9 @@ class FormBuilder {
                     ${itemsHTML}
                 </div>
                 <button type="button" 
-                        onclick="dashboardApp.addArrayItem('${field}', '${label}')" 
+                        data-action="add-array-item"
+                        data-field="${field}"
+                        data-label="${label}"
                         class="mt-2 px-3 py-1 text-sm text-indigo border border-indigo rounded hover:bg-indigo hover:text-white transition-colors">
                     + Tambah ${label}
                 </button>
@@ -95,7 +97,7 @@ class FormBuilder {
     _generateArrayItem(value = '', isFirst = false) {
         const removeButton = !isFirst ? `
             <button type="button" 
-                    onclick="dashboardApp.removeArrayItem(this)" 
+                    data-action="remove-array-item"
                     class="px-3 py-2 text-white transition-colors bg-red-600 rounded hover:bg-red-700">
                 <span class="material-icons-outlined text-sm">remove</span>
             </button>

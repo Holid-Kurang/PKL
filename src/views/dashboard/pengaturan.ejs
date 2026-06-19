@@ -1,100 +1,7 @@
 <!DOCTYPE html>
-<html lang="<%= currentLang %>">
+<html>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><%= title %></title>
-        <link href="/style/main.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-        <style>
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 1000;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0, 0, 0, 0.5);
-            }
-
-            .modal.active {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .modal-content {
-                background-color: #fefefe;
-                margin: auto;
-                padding: 20px;
-                border-radius: 8px;
-                width: 90%;
-                max-width: 500px;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-                cursor: pointer;
-            }
-
-            .close:hover,
-            .close:focus {
-                color: #000;
-            }
-
-            .toast {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 20px;
-                border-radius: 8px;
-                color: white;
-                font-weight: 500;
-                z-index: 2000;
-                animation: slideIn 0.3s ease-out;
-            }
-
-            .toast.success {
-                background-color: #10b981;
-            }
-
-            .toast.error {
-                background-color: #ef4444;
-            }
-
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-
-            @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-        </style>
-    </head>
+    <%- include('../partials/head', {title}) %>
 
     <body class="bg-gray-50">
         <div class="flex h-screen overflow-hidden">
@@ -133,8 +40,9 @@
                         <!-- Loading state -->
                         <div class="col-span-full">
                             <div class="flex items-center justify-center py-12">
-                                <span class="material-icons-outlined animate-spin text-indigo"
-                                    style="font-size: 48px;">hourglass_empty</span>
+                                <span class="text-5xl material-icons-outlined animate-spin text-indigo"> 
+                                    hourglass_empty
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -269,7 +177,6 @@
             </div>
         </div>
 
-        <script src="/script/language-switcher.js"></script>
         <script src="/script/pengaturan.js"></script>
     </body>
 

@@ -70,6 +70,13 @@ class DashboardApp {
                 this.modalManager.closeAll();
             }
         });
+
+        // Event delegation for dynamic elements
+        document.getElementById('table-header').addEventListener('click', (e) => this.handleTableSort(e));
+        document.getElementById('table-body').addEventListener('click', (e) => this.handleTableAction(e));
+        document.getElementById('pagination-controls').addEventListener('click', (e) => this.handlePaginationClick(e));
+        document.getElementById('modal-form').addEventListener('click', (e) => this.handleFormActions(e));
+        document.getElementById('modal-import').addEventListener('click', (e) => this.handleImportActions(e));
     }
 
     // ========== Data Operations ==========
@@ -91,6 +98,57 @@ class DashboardApp {
         } catch (error) {
             console.error('Error loading data:', error);
             this.tableRenderer.renderError('Terjadi kesalahan saat memuat data');
+        }
+    }
+
+    // ========== Event Handlers for Delegation ==========
+    handleTableSort(e) {
+        const header = e.target.closest('th[data-sort-field]');
+        if (header) {
+            const field = header.dataset.sortField;
+            this.handleSort(field);
+        }
+    }
+
+    handleTableAction(e) {
+        const button = e.target.closest('button[data-id]');
+        if (!button) return;
+
+        const action = button.dataset.action;
+        const id = button.dataset.id;
+
+        if (action === 'edit') {
+            this.handleEdit(id);
+        } else if (action === 'delete') {
+            this.handleDeleteModal(id);
+        }
+    }
+
+    handlePaginationClick(e) {
+        const button = e.target.closest('button[data-page]');
+        if (button && !button.disabled) {
+            const page = parseInt(button.dataset.page, 10);
+            this.handlePageChange(page);
+        }
+    }
+
+    handleFormActions(e) {
+        const button = e.target.closest('button[data-action]');
+        if (!button) return;
+
+        const action = button.dataset.action;
+
+        if (action === 'add-array-item') {
+            this.addArrayItem(button);
+        } else if (action === 'remove-array-item') {
+            this.removeArrayItem(button);
+        }
+    }
+
+    handleImportActions(e) {
+        const button = e.target.closest('button[data-action="close-warning-reload"]');
+        if (button) {
+            this.closeWarningAndReload();
         }
     }
 
@@ -251,7 +309,7 @@ class DashboardApp {
         }
 
         warningHtml += '<p class="text-xs text-yellow-800 mt-2">Gunakan template yang disediakan untuk menghindari masalah ini.</p>';
-        warningHtml += '<button type="button" onclick="dashboardApp.closeWarningAndReload()" class="mt-3 px-3 py-1.5 text-xs bg-yellow-600 text-white rounded hover:bg-yellow-700">Tutup & Refresh</button>';
+        warningHtml += '<button type="button" data-action="close-warning-reload" class="mt-3 px-3 py-1.5 text-xs bg-yellow-600 text-white rounded hover:bg-yellow-700">Tutup & Refresh</button>';
         warningHtml += '</div></div></div>';
 
         warningContainer.innerHTML = warningHtml;
@@ -318,7 +376,9 @@ class DashboardApp {
     }
 
     // ========== Array Field Helpers ==========
-    addArrayItem(field, label) {
+    addArrayItem(button) {
+        const field = button.dataset.field;
+        const label = button.dataset.label;
         const container = document.getElementById(`array-container-${field}`);
         const newItem = document.createElement('div');
         newItem.className = 'flex gap-2 array-item';
@@ -327,7 +387,7 @@ class DashboardApp {
                 class="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo" 
                 placeholder="Masukkan ${label.toLowerCase()}">
             <button type="button" 
-                onclick="dashboardApp.removeArrayItem(this)" 
+                data-action="remove-array-item"
                 class="px-3 py-2 text-white transition-colors bg-red-600 rounded hover:bg-red-700">
                 <span class="material-icons-outlined text-sm">remove</span>
             </button>

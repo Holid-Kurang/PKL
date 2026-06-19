@@ -1,71 +1,7 @@
 <!DOCTYPE html>
-<html lang="<%= currentLang %>">
+<html>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><%= title %></title>
-        <link href="/style/main.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-        <style>
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 1000;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0, 0, 0, 0.5);
-            }
-
-            .modal.active {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .modal-content {
-                background-color: #fefefe;
-                margin: auto;
-                padding: 20px;
-                border-radius: 8px;
-                width: 90%;
-                max-width: 600px;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-                cursor: pointer;
-            }
-
-            .close:hover,
-            .close:focus {
-                color: #000;
-            }
-
-            /* Sticky action column */
-            .sticky-col {
-                position: sticky;
-                right: 0;
-                background-color: white;
-                box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
-            }
-
-            .sticky-col-header {
-                position: sticky;
-                right: 0;
-                background-color: rgb(243, 244, 246);
-                box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
-            }
-        </style>
-    </head>
+    <%- include('../partials/head', {title}) %>
 
     <body class="bg-gray-50">
         <div class="flex h-screen overflow-hidden">
@@ -156,8 +92,7 @@
                                     <!-- Dynamic rows will be inserted here -->
                                     <tr>
                                         <td colspan="100" class="px-6 py-8 text-center text-gray-500">
-                                            <span class="material-icons-outlined"
-                                                style="font-size: 48px;">hourglass_empty</span>
+                                            <span class="text-5xl material-icons-outlined">hourglass_empty</span>
                                             <p class="mt-2"><%= translate('home.loading') %></p>
                                         </td>
                                     </tr>
@@ -232,7 +167,7 @@
                 <!-- Download Template Section -->
                 <div class="p-4 mb-4 border border-blue-200 rounded-lg bg-blue-50">
                     <div class="flex items-start gap-3">
-                        <span class="material-icons-outlined text-blue-600">info</span>
+                        <span class="text-blue-600 material-icons-outlined">info</span>
                         <div class="flex-1">
                             <h3 class="mb-2 text-sm font-semibold text-blue-900">Belum punya template?</h3>
                             <p class="mb-3 text-xs text-blue-800">
@@ -241,7 +176,7 @@
                             </p>
                             <button type="button" id="btn-download-template"
                                 class="flex items-center gap-2 px-3 py-2 text-sm text-white transition-colors bg-blue-600 rounded hover:bg-blue-700">
-                                <span class="material-icons-outlined" style="font-size: 18px;">download</span>
+                                <span class="text-lg material-icons-outlined">download</span>
                                 Download Template
                             </button>
                         </div>
@@ -301,7 +236,6 @@
         </script>
 
         <!-- Load modular scripts -->
-        <script src="/script/language-switcher.js"></script>
         <script src="/script/dashboard/config.js"></script>
         <script src="/script/dashboard/state.js"></script>
         <script src="/script/dashboard/formatter.js"></script>

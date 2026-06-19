@@ -65,11 +65,13 @@ const sendErrorDev = (err, req, res) => {
     // API Error render error page
     if (req.originalUrl.startsWith('/api')) {
         return res.status(err.statusCode).render('errorPage', {
+            title: `Error ${err.statusCode}`,
             success: false,
             status: err.status,
             error: err,
             message: err.message,
-            stack: err.stack
+            stack: err.stack,
+            isLogin: req.session?.isLogin || false
         });
     }
 

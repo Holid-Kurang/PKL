@@ -207,7 +207,7 @@ app.use('/login', loginLimiter);
 app.use("/", routes); // Gunakan routes yang sudah dibuat
 
 app.use((req, res, next) => {
-    const err = new Error('Oops! Halaman yang Anda cari tidak ditemukan.');
+    const err = new Error('Halaman tidak ditemukan.');
     err.statusCode = 404;
     err.status = 'fail';
     err.isOperational = true; // Supaya lolos pengecekan di production mode

@@ -42,7 +42,7 @@ class PaginationRenderer {
     _renderPrevButton() {
         const disabled = this.state.currentPage === 1;
         return `
-            <button onclick="dashboardApp.handlePageChange(${this.state.currentPage - 1})" 
+            <button data-page="${this.state.currentPage - 1}" 
                     ${disabled ? 'disabled' : ''} 
                     class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
                 &laquo; Prev
@@ -53,7 +53,7 @@ class PaginationRenderer {
     _renderNextButton() {
         const disabled = this.state.currentPage === this.state.totalPages || this.state.totalPages === 0;
         return `
-            <button onclick="dashboardApp.handlePageChange(${this.state.currentPage + 1})" 
+            <button data-page="${this.state.currentPage + 1}" 
                     ${disabled ? 'disabled' : ''} 
                     class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
                 Next &raquo;
@@ -77,7 +77,7 @@ class PaginationRenderer {
                 : 'border-gray-300 hover:bg-gray-100';
 
             html += `
-                <button onclick="dashboardApp.handlePageChange(${i})" 
+                <button data-page="${i}" 
                         class="px-3 py-1 text-sm border rounded ${activeClass}">
                     ${i}
                 </button>

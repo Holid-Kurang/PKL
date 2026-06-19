@@ -6,6 +6,7 @@ function isLogin(req, res, next) {
 
     // Render halaman login dengan pesan error
     return res.status(401).render('login', {
+        title: 'Login',
         error: 'Anda harus login terlebih dahulu untuk mengakses halaman ini',
         success: null
     });
