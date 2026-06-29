@@ -35,17 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Setup event listeners
 function setupEventListeners() {
-    // Add kategori button and form
-    document.getElementById('btn-add-kategori').addEventListener('click', openAddKategoriModal);
-    document.getElementById('form-add-kategori').addEventListener('submit', handleAddKategori);
-    document.getElementById('btn-cancel-add-kategori').addEventListener('click', () => closeModal('modal-add-kategori'));
-    document.getElementById('close-add-kategori').addEventListener('click', () => closeModal('modal-add-kategori'));
-
-    // Edit kategori form
-    document.getElementById('form-edit-kategori').addEventListener('submit', handleEditKategori);
-    document.getElementById('btn-cancel-edit-kategori').addEventListener('click', () => closeModal('modal-edit-kategori'));
-    document.getElementById('close-edit-kategori').addEventListener('click', () => closeModal('modal-edit-kategori'));
-
     // Add option form
     document.getElementById('form-add-option').addEventListener('submit', handleAddOption);
     document.getElementById('btn-cancel-add-option').addEventListener('click', () => closeModal('modal-add-option'));
@@ -60,15 +49,10 @@ function setupEventListeners() {
     if (container) {
         container.addEventListener('click', function (event) {
             // Cari elemen tombol terdekat berdasarkan class-nya
-            const editBtn = event.target.closest('.btn-edit-kategori');
             const addOptBtn = event.target.closest('.btn-add-option');
             const delOptBtn = event.target.closest('.btn-delete-option');
-
-            if (editBtn) {
-                const id = editBtn.getAttribute('data-id');
-                const name = editBtn.getAttribute('data-name');
-                openEditKategoriModal(id, name);
-            } else if (addOptBtn) {
+            
+            if (addOptBtn) {
                 const id = addOptBtn.getAttribute('data-id');
                 const name = addOptBtn.getAttribute('data-name');
                 openAddOptionModal(id, name);
@@ -159,80 +143,6 @@ function displayKategori(kategoriList) {
     `).join('');
 }
 
-// Open add kategori modal
-function openAddKategoriModal() {
-    document.getElementById('kategori-name').value = '';
-    document.getElementById('first-option').value = '';
-    openModal('modal-add-kategori');
-}
-
-// Handle add kategori
-async function handleAddKategori(event) {
-    event.preventDefault();
-
-    const data = {
-        kategori: document.getElementById('kategori-name').value,
-        firstOption: document.getElementById('first-option').value
-    };
-
-    try {
-        const response = await fetch('/api/kategori', {
-            method: 'POST',
-            headers: getHeaders(),
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showToast('success', result.message);
-            closeModal('modal-add-kategori');
-            document.getElementById('form-add-kategori').reset();
-            loadKategori();
-        } else {
-            showToast('error', result.message);
-        }
-    } catch (error) {
-        console.error('Error adding kategori:', error);
-        showToast('error', 'Terjadi kesalahan saat menambah kategori');
-    }
-}
-
-// Open edit kategori modal
-function openEditKategoriModal(id, nama) {
-    document.getElementById('edit-kategori-id').value = id;
-    document.getElementById('edit-kategori-name').value = nama;
-    openModal('modal-edit-kategori');
-}
-
-// Handle edit kategori
-async function handleEditKategori(event) {
-    event.preventDefault();
-
-    const id = document.getElementById('edit-kategori-id').value;
-    const kategori = document.getElementById('edit-kategori-name').value;
-
-    try {
-        const response = await fetch(`/api/kategori/${id}`, {
-            method: 'PUT',
-            headers: getHeaders(),
-            body: JSON.stringify({ kategori })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showToast('success', result.message);
-            closeModal('modal-edit-kategori');
-            loadKategori();
-        } else {
-            showToast('error', result.message);
-        }
-    } catch (error) {
-        console.error('Error editing kategori:', error);
-        showToast('error', 'Terjadi kesalahan saat mengupdate kategori');
-    }
-}
 
 // Open add option modal
 function openAddOptionModal(id, kategoriNama) {

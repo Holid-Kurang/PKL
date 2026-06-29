@@ -10,20 +10,23 @@ const languageRoute = require('./languageRoute');
 
 // dashboard for prodi
 const prodiRoutes = require("./prodiRoute");
-
 // dashboard routes
-const dashboardRoutes = require("./dashboardRoute");
+const dashboardAPIRoutes = require("./dashboardAPIRoute");
+const dashboardViewRoutes = require("./dashboardViewRoute");
 const kategoriRoutes = require("./kategoriRoute");
 
 // Gunakan route yang sudah dibuat
-route.use('/api', languageRoute);
 route.use("/", homeRoutes);
 route.use("/", loginRoutes);
 route.use("/", pengabdianRoutes);
 route.use("/", penelitianRoutes);
 route.use("/", publikasiRoutes);
 route.use("/", prodiRoutes);
-route.use("/", dashboardRoutes);
+route.use("/", dashboardViewRoutes);
 route.use("/", kategoriRoutes);
+
+// API routes
+route.use("/api", dashboardAPIRoutes);
+route.use('/api', languageRoute);
 
 module.exports = route;

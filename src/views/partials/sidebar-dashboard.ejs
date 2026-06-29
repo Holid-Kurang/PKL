@@ -65,16 +65,15 @@
             </a>
         </div>
     </nav>
-    <div class="px-4 py-6 border-t border-white/20">
+    <div class="flex flex-col px-4 py-6 border-t border-white/20">
         <a href="/" class="flex items-center px-4 py-3 transition-colors rounded-lg hover:bg-white/10">
             <span class="mr-3 material-icons-outlined">
                 home
             </span>
             <%= translate('auth.kembali') %>
         </a>
-        <meta name="csrf-token" content="<%= csrfToken %>">
         <button id="logoutBtn"
-            class="flex items-center px-4 py-3 transition-colors rounded-lg hover:bg-white/10">
+            class="flex items-center px-4 py-3 transition-colors rounded-lg hover:bg-white/10 hover:cursor-pointer">
             <span class="mr-3 material-icons-outlined">logout</span>
             <%= translate('auth.logout') %>
         </button>

@@ -29,7 +29,7 @@ window.getTranslation = getTranslation;
 // Function to fetch dashboard data from API
 async function fetchDashboardData() {
     try {
-        const response = await fetch('/api/dashboard-data');
+        const response = await fetch('/api/dashboard/summary');
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

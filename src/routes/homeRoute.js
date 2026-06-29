@@ -96,7 +96,7 @@ async function getProdiData() {
 }
 
 // API endpoint untuk mendapatkan data dashboard
-router.get("/api/dashboard-data", async (req, res) => {
+router.get("/api/dashboard/summary", async (req, res) => {
     try {
         const [totalHAKI, totalBuku, totalJupeng,
             totalPNBP, totalPusat, totalMandiri,

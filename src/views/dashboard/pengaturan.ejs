@@ -28,11 +28,6 @@
                     <!-- Action Bar -->
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-xl font-semibold text-gray-800">Daftar Kategori</h2>
-                        <button id="btn-add-kategori"
-                            class="flex items-center gap-2 px-4 py-2 text-white transition-colors rounded bg-indigo hover:bg-indigo/80">
-                            <span class="material-icons-outlined">add</span>
-                            Tambah Kategori
-                        </button>
                     </div>
 
                     <!-- Categories Grid -->
@@ -47,74 +42,6 @@
                         </div>
                     </div>
                 </main>
-            </div>
-        </div>
-
-        <!-- Add Kategori Modal -->
-        <div id="modal-add-kategori" class="modal">
-            <div class="modal-content">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold text-gray-800">Tambah Kategori Baru</h2>
-                    <span class="close" id="close-add-kategori">&times;</span>
-                </div>
-                <form id="form-add-kategori">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <div class="mb-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Nama Kategori</label>
-                        <input type="text" id="kategori-name" name="kategori" required
-                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo"
-                            placeholder="Contoh: Jenis Penelitian">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Opsi Pertama (Opsional)</label>
-                        <input type="text" id="first-option" name="firstOption"
-                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo"
-                            placeholder="Contoh: Penelitian Dasar">
-                        <p class="mt-1 text-xs text-gray-500">Anda dapat menambahkan opsi lain setelah kategori dibuat
-                        </p>
-                    </div>
-                    <div class="flex justify-end gap-2">
-                        <button type="button"
-                            class="px-4 py-2 text-gray-700 transition-colors bg-gray-200 rounded hover:bg-gray-300"
-                            id="btn-cancel-add-kategori">
-                            Batal
-                        </button>
-                        <button type="submit"
-                            class="px-4 py-2 text-white transition-colors rounded bg-indigo hover:bg-indigo/80">
-                            Simpan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Edit Kategori Modal -->
-        <div id="modal-edit-kategori" class="modal">
-            <div class="modal-content">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold text-gray-800">Edit Kategori</h2>
-                    <span class="close" id="close-edit-kategori">&times;</span>
-                </div>
-                <form id="form-edit-kategori">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <input type="hidden" id="edit-kategori-id">
-                    <div class="mb-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Nama Kategori</label>
-                        <input type="text" id="edit-kategori-name" name="kategori" required
-                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo">
-                    </div>
-                    <div class="flex justify-end gap-2">
-                        <button type="button"
-                            class="px-4 py-2 text-gray-700 transition-colors bg-gray-200 rounded hover:bg-gray-300"
-                            id="btn-cancel-edit-kategori">
-                            Batal
-                        </button>
-                        <button type="submit"
-                            class="px-4 py-2 text-white transition-colors rounded bg-indigo hover:bg-indigo/80">
-                            Update
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
 
