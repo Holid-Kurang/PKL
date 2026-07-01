@@ -97,42 +97,46 @@ function displayKategori(kategoriList) {
 
     if (kategoriList.length === 0) {
         container.innerHTML = `
-            <div class="col-span-full text-center py-8">
-                <p class="text-gray-500">Belum ada kategori yang dibuat</p>
+            <div class="col-span-full text-center py-12">
+                <span class="material-icons-outlined text-6xl text-gray-300 mb-3 block">settings_suggest</span>
+                <p class="text-gray-500 text-lg font-medium">Belum ada kategori yang dibuat</p>
+                <p class="text-gray-400 text-sm mt-1">Kategori akan muncul di sini setelah ditambahkan</p>
             </div>
         `;
         return;
     }
 
     container.innerHTML = kategoriList.map(kategori => `
-        <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-            <div class="flex justify-between items-start mb-4">
-                <h3 class="text-lg font-semibold text-gray-800">${kategori.kategori}</h3>
-                <div class="flex gap-2">
-                    <button data-id="${kategori._id}" data-name="${kategori.kategori}" 
-                            class="btn-edit-kategori text-indigo hover:text-indigo/80 transition-colors">
-                        <span class="material-icons-outlined text-sm">edit</span>
-                    </button>
+        <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-lg transition-all duration-300 border border-gray-100">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center gap-3">
+                    <h3 class="text-lg font-semibold text-gray-800">${kategori.kategori}</h3>
                 </div>
             </div>
             
-            <div class="mb-4">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm font-medium text-gray-600">Options (${kategori.option.length}):</span>
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-sm font-medium text-gray-500">Opsi tersedia (${kategori.option.length})</span>
                     <button data-id="${kategori._id}" data-name="${kategori.kategori}" 
-                            class="btn-add-option text-green-600 hover:text-green-800 transition-colors">
-                        <span class="material-icons-outlined text-sm">add_circle</span>
+                            class="btn-add-option inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-900/40 rounded-lg hover:bg-indigo-900/60 transition-colors duration-200"
+                            title="Tambah opsi baru">
+                        <span class="material-icons-outlined text-base">add</span>
+                        Tambah
                     </button>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     ${kategori.option.length === 0
-                        ? '<span class="text-gray-400 text-sm italic">Belum ada opsi</span>'
+                        ? `<div class="w-full text-center py-6 border-2 border-dashed border-gray-200 rounded-lg">
+                               <span class="material-icons-outlined text-3xl text-gray-300 block mb-1">playlist_add</span>
+                               <span class="text-gray-400 text-sm">Belum ada opsi</span>
+                           </div>`
                         : kategori.option.map(opt => `
-                            <span class="inline-flex items-center gap-1 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full">
+                            <span class="group inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-indigo-900/40 text-indigo-700 rounded-lg transition-all duration-200 hover:bg-indigo-900/60">
                                 ${opt}
                                 <button data-id="${kategori._id}" data-option="${opt}" 
-                                        class="btn-delete-option ml-1 text-blue-700 hover:text-blue-900 font-bold">
-                                    ×
+                                        class="btn-delete-option opacity-60 hover:opacity-100 transition-opacity duration-200"
+                                        title="Hapus opsi ${opt}">
+                                    <span class="material-icons-outlined text-base leading-none">close</span>
                                 </button>
                             </span>
                         `).join('')

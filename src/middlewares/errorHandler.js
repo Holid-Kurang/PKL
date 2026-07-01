@@ -59,19 +59,16 @@ const handleMongooseConnectionError = () => {
 
 // Send error response untuk Development
 const sendErrorDev = (err, req, res) => {
-    // Log error ke console
     logError(err, req);
 
-    // API Error render error page
+    // KEMBALIKAN JSON JIKA ENDPOINT API
     if (req.originalUrl.startsWith('/api')) {
-        return res.status(err.statusCode).render('errorPage', {
-            title: `Error ${err.statusCode}`,
+        return res.status(err.statusCode).json({
             success: false,
             status: err.status,
             error: err,
             message: err.message,
-            stack: err.stack,
-            isLogin: req.session?.isLogin || false
+            stack: err.stack
         });
     }
 
@@ -84,6 +81,7 @@ const sendErrorDev = (err, req, res) => {
         isLogin: req.session?.isLogin || false
     });
 };
+
 
 // Send error response untuk Production
 const sendErrorProd = (err, req, res) => {

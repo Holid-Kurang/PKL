@@ -13,9 +13,14 @@
                 <!-- Header -->
                 <header class="bg-white shadow-sm">
                     <div class="flex items-center justify-between h-20 px-8">
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-800"><%= translate('navbar.pengaturan') %></h1>
-                            <p class="text-sm text-gray-600">Kelola kategori dan opsi dropdown</p>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-indigo/10">
+                                <span class="text-xl material-icons-outlined text-indigo">settings</span>
+                            </div>
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-800"><%= translate('navbar.pengaturan') %></h1>
+                                <p class="text-sm text-gray-500">Kelola kategori dan opsi dropdown</p>
+                            </div>
                         </div>
                         <div class="flex items-center gap-4">
                             <%- include('../partials/dropdown') %>
@@ -48,8 +53,13 @@
         <!-- Add Option Modal -->
         <div id="modal-add-option" class="modal">
             <div class="modal-content">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold text-gray-800">Tambah Opsi</h2>
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-indigo-900/50">
+                            <span class="text-lg material-icons-outlined text-indigo-700">add_circle_outline</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800">Tambah Opsi</h2>
+                    </div>
                     <span class="close" id="close-add-option">&times;</span>
                 </div>
                 <form id="form-add-option">
@@ -58,23 +68,23 @@
                     <div class="mb-4">
                         <label class="block mb-2 text-sm font-medium text-gray-700">Kategori</label>
                         <input type="text" id="add-option-kategori-name" readonly
-                            class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded">
+                            class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-500">
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-6">
                         <label class="block mb-2 text-sm font-medium text-gray-700">Opsi Baru</label>
                         <input type="text" id="new-option" name="option" required
-                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo"
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-700/30 focus:border-indigo-700 transition-all"
                             placeholder="Masukkan opsi baru">
                     </div>
-                    <div class="flex justify-end gap-2">
+                    <div class="flex justify-end gap-3">
                         <button type="button"
-                            class="px-4 py-2 text-gray-700 transition-colors bg-gray-200 rounded hover:bg-gray-300"
+                            class="px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors bg-gray-100 rounded-lg hover:bg-gray-200"
                             id="btn-cancel-add-option">
                             Batal
                         </button>
                         <button type="submit"
-                            class="px-4 py-2 text-white transition-colors rounded bg-indigo hover:bg-indigo/80">
-                            Tambah
+                            class="px-5 py-2.5 text-sm font-medium text-white transition-all rounded-lg bg-indigo hover:bg-indigo/80 shadow-sm hover:shadow">
+                            Tambah Opsi
                         </button>
                     </div>
                 </form>
@@ -85,18 +95,23 @@
         <div id="modal-delete" class="modal">
             <div class="modal-content">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold text-gray-800">Konfirmasi Hapus</h2>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-red-900/30">
+                            <span class="text-lg material-icons-outlined text-red-700">warning_amber</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800">Konfirmasi Hapus</h2>
+                    </div>
                     <span class="close" id="close-delete">&times;</span>
                 </div>
-                <p class="mb-6 text-gray-600" id="delete-message">Apakah Anda yakin ingin menghapus item ini?</p>
-                <div class="flex justify-end gap-2">
+                <p class="mb-6 text-gray-600 pl-12" id="delete-message">Apakah Anda yakin ingin menghapus item ini?</p>
+                <div class="flex justify-end gap-3">
                     <button type="button"
-                        class="px-4 py-2 text-gray-700 transition-colors bg-gray-200 rounded hover:bg-gray-300"
+                        class="px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors bg-gray-100 rounded-lg hover:bg-gray-200"
                         id="btn-cancel-delete">
                         Batal
                     </button>
                     <button type="button"
-                        class="px-4 py-2 text-white transition-colors bg-red-600 rounded hover:bg-red-700"
+                        class="px-5 py-2.5 text-sm font-medium text-white transition-all bg-red-500 rounded-lg hover:bg-red-600 shadow-sm hover:shadow"
                         id="btn-confirm-delete">
                         Hapus
                     </button>

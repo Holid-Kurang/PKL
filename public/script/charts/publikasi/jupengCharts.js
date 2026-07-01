@@ -21,7 +21,7 @@ export function getJupengChartConfigs(jupengData, translations) {
             jupengData.jumlahPerProdi,
             translations.publikasiPage.charts.jupeng.jupengPerProdi,
             {
-                dataKey: 'count',
+                dataKey: 'totalPublikasi',
                 labelCallback: (context) => context.parsed + " " + translations.home.charts.publikasi,
                 legendPosition: 'bottom'
             }

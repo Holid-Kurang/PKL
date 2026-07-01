@@ -12,6 +12,7 @@ const models = {
 const kategoriModel = require('../models/kategoriOptionModel');
 const AppError = require('../utils/AppError');
 const { catchAsync } = require('../middlewares/errorHandler');
+const { getDocumentCount } = require('../services/statsService');
 
 // Import utilities
 const { transformMongoLongToString } = require('../utils/mongoUtils');
@@ -364,11 +365,15 @@ exports.importDataFromExcel = catchAsync(async (req, res, next) => {
 });
 
 exports.renderDashboard = catchAsync(async (req, res, next) => {
-    // Get statistics from all categories
+    // Get statistics from all categories in parallel
+    const categories = Object.keys(models);
+    const countPromises = categories.map(category => getDocumentCount(category));
+    const counts = await Promise.all(countPromises);
+
     const stats = {};
-    for (const [category, model] of Object.entries(models)) {
-        stats[category] = await model.countDocuments({});
-    }
+    categories.forEach((category, index) => {
+        stats[category] = counts[index];
+    });
 
     res.render('dashboard/homeDashboard', {
         title: 'Dashboard',
