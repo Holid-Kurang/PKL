@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const logger = require('../utils/logger');
+const logger = require('../../utils/logger');
 
 // Halaman login
 router.get("/login", (req, res) => {

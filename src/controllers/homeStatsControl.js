@@ -62,8 +62,8 @@ async function getProdiData() {
     return prodiData.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-// API endpoint untuk mendapatkan data dashboard summary
-exports.getDashboardSummary = catchAsync(async (req, res) => {
+// API endpoint untuk mendapatkan data summary
+exports.getDataSummary = catchAsync(async (req, res) => {
     const [
         totalHAKI, totalBuku, totalJupeng,
         totalPNBP, totalPusat, totalMandiri,

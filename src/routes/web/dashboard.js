@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const dashboardControl = require("../controllers/dashboardControl");
-const isLogin = require("../middlewares/isLogin");
+const dashboardControl = require("../../controllers/dashboardControl");
+const isLogin = require("../../middlewares/isLogin");
 
 // Route untuk render halaman dashboard tanpa kategori (default)
 router.get('/dashboard', isLogin, dashboardControl.renderDashboard);

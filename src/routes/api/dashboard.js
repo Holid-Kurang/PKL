@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const dashboardControl = require("../controllers/dashboardControl");
-const isLogin = require("../middlewares/isLogin");
-const { uploadSingle } = require("../middlewares/uploadMiddleware");
+const dashboardControl = require("../../controllers/dashboardControl");
+const isLogin = require("../../middlewares/isLogin");
+const { uploadSingle } = require("../../middlewares/uploadMiddleware");
 
 // API routes untuk backend dashboard
 router.get('/dashboard/:category', isLogin, dashboardControl.getAllData);
