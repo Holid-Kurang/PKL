@@ -1,4 +1,5 @@
 const modelFieldMap = require('../config/modelFieldMap');
+const { getOrSet } = require('./cacheService');
 
 /**
  * Build a MongoDB $match stage from filter options.
@@ -120,24 +121,31 @@ async function getModelStats(categoryKey, facetNames, filters = {}) {
     const config = modelFieldMap[categoryKey];
     if (!config) throw new Error(`Unknown category: ${categoryKey}`);
 
-    const match = buildMatchStage(config, filters);
-    const available = buildAvailableFacets(config, match);
+    // Build deterministic cache key from parameters
+    const sortedFacets = [...facetNames].sort().join(',');
+    const filterKey = JSON.stringify(filters, Object.keys(filters).sort());
+    const cacheKey = `stats:${categoryKey}:${sortedFacets}:${filterKey}`;
 
-    // Build $facet with only the requested facets that are available
-    const facet = {};
-    for (const name of facetNames) {
-        if (available[name]) {
-            facet[name] = available[name];
+    return getOrSet(cacheKey, async () => {
+        const match = buildMatchStage(config, filters);
+        const available = buildAvailableFacets(config, match);
+
+        // Build $facet with only the requested facets that are available
+        const facet = {};
+        for (const name of facetNames) {
+            if (available[name]) {
+                facet[name] = available[name];
+            }
         }
-    }
 
-    // If no valid facets were requested, return empty object
-    if (Object.keys(facet).length === 0) {
-        return {};
-    }
+        // If no valid facets were requested, return empty object
+        if (Object.keys(facet).length === 0) {
+            return {};
+        }
 
-    const result = await config.model.aggregate([{ $facet: facet }]);
-    return result[0];
+        const result = await config.model.aggregate([{ $facet: facet }]);
+        return result[0];
+    });
 }
 
 /**
@@ -186,7 +194,11 @@ function getCountValue(entry, categoryKey) {
 async function getDocumentCount(categoryKey, query = {}) {
     const config = modelFieldMap[categoryKey];
     if (!config) throw new Error(`Unknown category: ${categoryKey}`);
-    return config.model.countDocuments(query);
+
+    const queryKey = JSON.stringify(query, Object.keys(query).sort());
+    const cacheKey = `count:${categoryKey}:${queryKey}`;
+
+    return getOrSet(cacheKey, () => config.model.countDocuments(query));
 }
 
 module.exports = {

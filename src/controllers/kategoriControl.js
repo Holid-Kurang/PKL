@@ -1,6 +1,7 @@
 const KategoriOption = require('../models/kategoriOptionModel');
 const AppError = require('../utils/AppError');
 const { catchAsync } = require('../middlewares/errorHandler');
+const { invalidateKategoriCache } = require('../services/cacheService');
 
 // Get all kategori
 const getAllKategori = catchAsync(async (req, res, next) => {
@@ -29,6 +30,9 @@ const addKategori = catchAsync(async (req, res, next) => {
 
     await newKategori.save();
 
+    // Invalidate kategori cache after adding new kategori
+    invalidateKategoriCache();
+
     res.json({
         success: true,
         message: 'Kategori berhasil ditambahkan',
@@ -50,6 +54,9 @@ const updateKategori = catchAsync(async (req, res, next) => {
     if (!updatedKategori) {
         return next(new AppError('Kategori tidak ditemukan', 404));
     }
+
+    // Invalidate kategori cache after updating
+    invalidateKategoriCache();
 
     res.json({
         success: true,
@@ -77,6 +84,9 @@ const addOption = catchAsync(async (req, res, next) => {
     kategori.option.push(option);
     await kategori.save();
 
+    // Invalidate kategori cache after adding option
+    invalidateKategoriCache();
+
     res.json({
         success: true,
         message: 'Option berhasil ditambahkan',
@@ -96,6 +106,9 @@ const removeOption = catchAsync(async (req, res, next) => {
 
     kategori.option = kategori.option.filter(opt => opt !== option);
     await kategori.save();
+
+    // Invalidate kategori cache after removing option
+    invalidateKategoriCache();
 
     res.json({
         success: true,

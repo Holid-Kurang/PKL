@@ -13,6 +13,7 @@ const kategoriModel = require('../models/kategoriOptionModel');
 const AppError = require('../utils/AppError');
 const { catchAsync } = require('../middlewares/errorHandler');
 const { getDocumentCount } = require('../services/statsService');
+const { invalidateStatsCache } = require('../services/cacheService');
 
 // Import utilities
 const { transformMongoLongToString } = require('../utils/mongoUtils');
@@ -96,6 +97,9 @@ exports.createData = catchAsync(async (req, res, next) => {
     const newData = new models[category](req.body);
     await newData.save();
 
+    // Invalidate stats cache after adding new data
+    invalidateStatsCache();
+
     res.status(201).json({
         success: true,
         message: 'Data berhasil ditambahkan',
@@ -117,6 +121,9 @@ exports.deleteData = catchAsync(async (req, res, next) => {
     if (!deletedData) {
         return next(new AppError('Data tidak ditemukan', 404));
     }
+
+    // Invalidate stats cache after deleting data
+    invalidateStatsCache();
 
     res.status(200).json({
         success: true,
@@ -149,6 +156,9 @@ exports.updateData = catchAsync(async (req, res, next) => {
     if (!updatedData) {
         return next(new AppError('Data tidak ditemukan', 404));
     }
+
+    // Invalidate stats cache after updating data
+    invalidateStatsCache();
 
     res.status(200).json({
         success: true,
@@ -349,6 +359,9 @@ exports.importDataFromExcel = catchAsync(async (req, res, next) => {
 
     // Delete uploaded file after processing
     await deleteTempFile(file.path);
+
+    // Invalidate stats cache after importing data
+    invalidateStatsCache();
 
     res.status(201).json({
         success: true,

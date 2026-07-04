@@ -26,8 +26,8 @@ function getTranslation(key) {
 // Make getTranslation available globally for plugins
 window.getTranslation = getTranslation;
 
-// Function to fetch dashboard data from API
-async function fetchDashboardData() {
+// Function to fetch data summary from API
+async function fetchDataSummary() {
     try {
         const response = await fetch('/api/data-summary');
 
@@ -235,5 +235,5 @@ const chartConfigs = [
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
-    fetchDashboardData();
+    fetchDataSummary();
 });
