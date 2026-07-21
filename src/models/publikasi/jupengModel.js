@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 
 const JupengSchema = new mongoose.Schema({
     Judul: { type: String, required: true },
-    jurnal_url: { type: String },
-    jurnal_file: { type: String },
-    jurnal_tahun: { type: Number },
-    jurnal_bulan: { type: String },
-    pengguna_kode: { type: String },
-    _pengguna_jenis: { type: String },
-    _pengguna_nama: { type: String },
+    JurnalUrl: { type: String },
+    JurnalFile: { type: String },
+    Tahun: { type: Number },
+    JurnalBulan: { type: String },
+    PenggunaKode: { type: String },
+    PenggunaJenis: { type: String },
+    PenggunaNama: { type: String },
     Prodi: { type: String },
-    _personil_data_ketua: { type: String },
-    _personil_data_ketua_kode: { type: String },
-    _personil_data_ketua_jenis: { type: String }
+    PersonilDataKetua: { type: String },
+    PersonilDataKetuaKode: { type: String },
+    PersonilDataKetuaJenis: { type: String }
 }, {
     collection: 'publikasiJupeng'
 });

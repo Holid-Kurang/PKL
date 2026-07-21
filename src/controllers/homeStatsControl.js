@@ -144,7 +144,7 @@ exports.getProdiOptionsAPI = catchAsync(async (req, res) => {
 // Halaman utama
 exports.renderHome = catchAsync(async (req, res) => {
     const isLogin = req.session.isLogin || false;
-    const { languages } = require('../../config/lang');
+    const { languages } = require('../config/lang');
     const currentLang = req.language || 'id';
 
     res.render("index", {

@@ -19,19 +19,15 @@ class DashboardConfig {
 
     _initFieldTypeMap() {
         return {
+            // ─── Penelitian & Pengabdian ─────────────────────
             'Judul': 'text',
-            'SKEMA': 'text',
             'Skema': 'text',
             'Ketua': 'text',
-            'NAMA': 'text',
             'Nama': 'text',
             'Anggota': 'array',
             'Biaya': 'number',
-            'BIAYA': 'number',
             'Dana': 'number',
             'Tahun': 'number',
-            'TAHUN': 'number',
-            'tahun': 'number',
             'Prodi': 'select-prodi',
             'Nilai': 'number',
             'NIDN': 'text',
@@ -39,43 +35,39 @@ class DashboardConfig {
             'NomorKontrakLPPM': 'text',
             'JumlahAnggota': 'number',
             'JumlahMshTerlibat': 'number',
-            'buku_isbn': 'text',
-            'buku_jumlah_halaman': 'number',
-            'buku_penerbit': 'text',
-            'buku_file': 'text',
-            'buku_tahun': 'number',
-            'pengguna_kode': 'text',
-            '_pengguna_jenis': 'text',
-            '_pengguna_nama': 'text',
-            'hki_jenis': 'select-haki',
-            'hki_file': 'text',
-            'hki_bulan': 'text',
-            'hki_tahun': 'number',
-            'jurnal_url': 'text',
-            'jurnal_file': 'text',
-            'jurnal_tahun': 'number',
-            'jurnal_bulan': 'text',
-            '_personil_data_ketua': 'text',
-            '_personil_data_ketua_kode': 'text',
-            '_personil_data_ketua_jenis': 'text'
+            // ─── Publikasi Buku ──────────────────────────────
+            'BukuIsbn': 'text',
+            'BukuJumlahHalaman': 'number',
+            'BukuPenerbit': 'text',
+            'BukuFile': 'text',
+            'PenggunaKode': 'text',
+            'PenggunaJenis': 'text',
+            'PenggunaNama': 'text',
+            // ─── Publikasi HAKI ──────────────────────────────
+            'HkiJenis': 'select-haki',
+            'HkiFile': 'text',
+            'HkiBulan': 'text',
+            // ─── Publikasi Jupeng ────────────────────────────
+            'JurnalUrl': 'text',
+            'JurnalFile': 'text',
+            'JurnalBulan': 'text',
+            'PersonilDataKetua': 'text',
+            'PersonilDataKetuaKode': 'text',
+            'PersonilDataKetuaJenis': 'text'
         };
     }
 
     _initFieldLabels() {
         return {
+            // ─── Penelitian & Pengabdian ─────────────────────
             'Judul': 'Judul',
-            'SKEMA': 'Skema',
             'Skema': 'Skema',
             'Ketua': 'Ketua',
-            'NAMA': 'Nama',
             'Nama': 'Nama',
             'Anggota': 'Anggota',
             'Biaya': 'Biaya',
-            'BIAYA': 'Biaya',
             'Dana': 'Dana',
             'Tahun': 'Tahun',
-            'TAHUN': 'Tahun',
-            'tahun': 'Tahun',
             'Prodi': 'Program Studi',
             'Nilai': 'Nilai',
             'NIDN': 'NIDN',
@@ -83,25 +75,25 @@ class DashboardConfig {
             'NomorKontrakLPPM': 'Nomor Kontrak LPPM',
             'JumlahAnggota': 'Jumlah Anggota',
             'JumlahMshTerlibat': 'Jumlah Mahasiswa Terlibat',
-            'buku_isbn': 'ISBN',
-            'buku_jumlah_halaman': 'Jumlah Halaman',
-            'buku_penerbit': 'Penerbit',
-            'buku_file': 'File',
-            'buku_tahun': 'Tahun',
-            'pengguna_kode': 'Kode Pengguna',
-            '_pengguna_jenis': 'Jenis Pengguna',
-            '_pengguna_nama': 'Nama Pengguna',
-            'hki_jenis': 'Jenis HAKI',
-            'hki_file': 'File',
-            'hki_bulan': 'Bulan',
-            'hki_tahun': 'Tahun',
-            'jurnal_url': 'URL Jurnal',
-            'jurnal_file': 'File',
-            'jurnal_tahun': 'Tahun',
-            'jurnal_bulan': 'Bulan',
-            '_personil_data_ketua': 'Ketua',
-            '_personil_data_ketua_kode': 'Kode Ketua',
-            '_personil_data_ketua_jenis': 'Jenis Ketua'
+            // ─── Publikasi Buku ──────────────────────────────
+            'BukuIsbn': 'ISBN',
+            'BukuJumlahHalaman': 'Jumlah Halaman',
+            'BukuPenerbit': 'Penerbit',
+            'BukuFile': 'File',
+            'PenggunaKode': 'Kode Pengguna',
+            'PenggunaJenis': 'Jenis Pengguna',
+            'PenggunaNama': 'Nama Pengguna',
+            // ─── Publikasi HAKI ──────────────────────────────
+            'HkiJenis': 'Jenis HAKI',
+            'HkiFile': 'File',
+            'HkiBulan': 'Bulan',
+            // ─── Publikasi Jupeng ────────────────────────────
+            'JurnalUrl': 'URL Jurnal',
+            'JurnalFile': 'File',
+            'JurnalBulan': 'Bulan',
+            'PersonilDataKetua': 'Ketua',
+            'PersonilDataKetuaKode': 'Kode Ketua',
+            'PersonilDataKetuaJenis': 'Jenis Ketua'
         };
     }
 

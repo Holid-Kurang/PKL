@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const PengabdianPusatSchema = new mongoose.Schema({
     Judul: { type: String, required: true },
-    SKEMA: { type: String, required: true },
+    Skema: { type: String, required: true },
     Nama: { type: String, required: true },
     Anggota: [{ type: String }],
     Dana: { type: Number, required: true },

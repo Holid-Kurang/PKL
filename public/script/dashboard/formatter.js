@@ -28,7 +28,7 @@ class DataFormatter {
     }
 
     static formatFileField(value, field) {
-        const fileFields = ['jurnal_file', 'hki_file', 'buku_file'];
+        const fileFields = ['JurnalFile', 'HkiFile', 'BukuFile'];
         if (!fileFields.includes(field) || !value) return null;
 
         return `<a href="${value}" target="_blank" rel="noopener noreferrer" 
@@ -38,7 +38,7 @@ class DataFormatter {
     }
 
     static formatUrlField(value, field) {
-        if (field !== 'jurnal_url' || !value) return null;
+        if (field !== 'JurnalUrl' || !value) return null;
 
         const url = value.startsWith('http://') || value.startsWith('https://')
             ? value
@@ -73,6 +73,6 @@ class DataFormatter {
     }
 
     static isConstrainedWidth(field) {
-        return ['jurnal_file', 'hki_file', 'buku_file', 'jurnal_url'].includes(field);
+        return ['JurnalFile', 'HkiFile', 'BukuFile', 'JurnalUrl'].includes(field);
     }
 }

@@ -6,7 +6,7 @@ const MandiriSchema = new mongoose.Schema({
     Ketua: { type: String, required: true },
     Anggota: [{ type: String }],
     Dana: { type: Number, required: true },
-    tahun: { type: Number, required: true },
+    Tahun: { type: Number, required: true },
     Prodi: { type: String, required: true },
 }, {
     collection: 'penelitianMandiri'

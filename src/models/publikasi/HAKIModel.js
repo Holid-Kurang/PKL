@@ -5,27 +5,27 @@ const HAKISchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    hki_jenis: {
+    HkiJenis: {
         type: String,
         required: true
     },
-    hki_file: {
+    HkiFile: {
         type: String,
         required: true
     },
-    hki_bulan: {
+    HkiBulan: {
         type: String,
         required: true
     },
-    hki_tahun: {
+    Tahun: {
         type: Number,
         required: true
     },
-    pengguna_kode: {
+    PenggunaKode: {
         type: String,
         required: true
     },
-    _pengguna_nama: {
+    PenggunaNama: {
         type: String,
         required: true
     },

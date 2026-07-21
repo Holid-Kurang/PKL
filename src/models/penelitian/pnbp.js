@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const pnbpSchema = new mongoose.Schema({
     Judul: { type: String, required: true },
-    SKEMA: { type: String, required: true },
+    Skema: { type: String, required: true },
     Ketua: { type: String, required: true },
     Anggota: [{ type: String }],
     Biaya: { type: Number, required: true },

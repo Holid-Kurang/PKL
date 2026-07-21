@@ -29,7 +29,12 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "concurrently \"nodemon server.js\" \"npx @tailwindcss/cli -i ./public/style/global.css -o ./public/style/main.css --watch\""
+    "dev": "concurrently \"nodemon server.js\" \"npx @tailwindcss/cli -i ./public/style/global.css -o ./public/style/main.css --watch\"",
+    "migrate": "node src/migrations/migrationRunner.js up",
+    "migrate:status": "node src/migrations/migrationRunner.js status",
+    "migrate:dry-run": "node src/migrations/migrationRunner.js dry-run",
+    "migrate:down": "node src/migrations/migrationRunner.js down",
+    "migrate:create": "node src/migrations/migrationRunner.js create"
   },
   "name": "web",
   "version": "1.0.0",

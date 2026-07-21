@@ -1,4 +1,4 @@
-const { languages, getTranslation, defaultLanguage } = require('../../config/lang');
+const { languages, getTranslation, defaultLanguage } = require('../config/lang');
 
 const i18n = (req, res, next) => {
     // Ambil bahasa dari session, cookie, atau default

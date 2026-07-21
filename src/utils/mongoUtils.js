@@ -9,7 +9,7 @@
  * @param {Array} fields - Array of field names yang perlu di-transform
  * @returns {Array} Transformed data dengan Long types converted to strings
  */
-const transformMongoLongToString = (data, fields = ['pengguna_kode', '_personil_data_ketua_kode']) => {
+const transformMongoLongToString = (data, fields = ['PenggunaKode', 'PersonilDataKetuaKode']) => {
     return data.map(item => {
         const transformed = { ...item };
 

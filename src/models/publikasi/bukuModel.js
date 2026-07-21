@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 
 const BukuSchema = new mongoose.Schema({
     Judul: { type: String, required: true },
-    buku_isbn: { type: String, required: true },
-    buku_jumlah_halaman: { type: Number, required: true },
-    buku_penerbit: { type: String, required: true },
-    buku_file: { type: String, required: false },
-    buku_tahun: { type: Number, required: true },
-    pengguna_kode: { type: String, required: true },
-    _pengguna_jenis: { type: String, required: true },
-    _pengguna_nama: { type: String, required: true },
+    BukuIsbn: { type: String, required: true },
+    BukuJumlahHalaman: { type: Number, required: true },
+    BukuPenerbit: { type: String, required: true },
+    BukuFile: { type: String, required: false },
+    Tahun: { type: Number, required: true },
+    PenggunaKode: { type: String, required: true },
+    PenggunaJenis: { type: String, required: true },
+    PenggunaNama: { type: String, required: true },
     Prodi: { type: String, required: true }
 }, {
     collection: 'publikasiBuku'

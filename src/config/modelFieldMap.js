@@ -12,8 +12,8 @@
 const modelFieldMap = {
     'penelitian-pusat': {
         model: require('../models/penelitian/pusat'),
-        yearField: 'TAHUN',
-        costField: 'BIAYA',
+        yearField: 'Tahun',
+        costField: 'Biaya',
         prodiField: 'Prodi',
         countAlias: 'total',
     },
@@ -27,7 +27,7 @@ const modelFieldMap = {
     },
     'penelitian-mandiri': {
         model: require('../models/penelitian/mandiri'),
-        yearField: 'tahun',
+        yearField: 'Tahun',
         costField: 'Dana',
         prodiField: 'Prodi',
         countAlias: 'total',
@@ -49,20 +49,20 @@ const modelFieldMap = {
     },
     'publikasi-buku': {
         model: require('../models/publikasi/bukuModel'),
-        yearField: 'buku_tahun',
+        yearField: 'Tahun',
         prodiField: 'Prodi',
         countAlias: 'jumlahBuku',
     },
     'publikasi-haki': {
         model: require('../models/publikasi/HAKIModel'),
-        yearField: 'hki_tahun',
+        yearField: 'Tahun',
         prodiField: 'Prodi',
-        typeField: 'hki_jenis',
+        typeField: 'HkiJenis',
         countAlias: 'jumlahHKI',
     },
     'publikasi-jupeng': {
         model: require('../models/publikasi/jupengModel'),
-        yearField: 'jurnal_tahun',
+        yearField: 'Tahun',
         prodiField: 'Prodi',
         countAlias: 'totalPublikasi',
     },

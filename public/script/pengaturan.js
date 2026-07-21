@@ -151,8 +151,20 @@ function displayKategori(kategoriList) {
 // Open add option modal
 function openAddOptionModal(id, kategoriNama) {
     document.getElementById('add-option-kategori-id').value = id;
-    document.getElementById('add-option-kategori-name').value = kategoriNama;
     document.getElementById('new-option').value = '';
+    document.getElementById('new-option').placeholder = 'Tambah Opsi ' + kategoriNama + '...';
+
+    // Show strata dropdown only for Program Studi
+    const strataContainer = document.getElementById('strata-container');
+    if (kategoriNama === 'Program Studi') {
+        strataContainer.classList.remove('hidden');
+        strataContainer.classList.add('block');
+        document.getElementById('strata-select').value = 'S1';
+    } else {
+        strataContainer.classList.remove('block');
+        strataContainer.classList.add('hidden');
+    }
+
     openModal('modal-add-option');
 }
 
@@ -161,7 +173,17 @@ async function handleAddOption(event) {
     event.preventDefault();
 
     const id = document.getElementById('add-option-kategori-id').value;
-    const option = document.getElementById('new-option').value;
+    let option = document.getElementById('new-option').value;
+    // title case
+    option = option.toLowerCase().split(/\s+/).map(word => word[0]?.toUpperCase() + word.slice(1)).join(" ");
+
+    // Prepend strata prefix if strata dropdown is visible (Program Studi)
+    const strataContainer = document.getElementById('strata-container');
+    if (strataContainer.style.display !== 'none') {
+        let strata = document.getElementById('strata-select').value;
+        strata = strata.split(" ")[0]; // mengambil kata pertama
+        option = strata + " " + option;
+    }
 
     try {
         const response = await fetch(`/api/kategori/${id}/option`, {
