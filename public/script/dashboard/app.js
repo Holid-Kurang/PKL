@@ -48,6 +48,21 @@ class DashboardApp {
             this.handleSearch();
         });
 
+        // Filter dropdowns
+        const filterTahun = document.getElementById('filter-tahun');
+        const filterProdi = document.getElementById('filter-prodi');
+        const btnResetFilter = document.getElementById('btn-reset-filter');
+
+        if (filterTahun) {
+            filterTahun.addEventListener('change', () => this.handleFilter());
+        }
+        if (filterProdi) {
+            filterProdi.addEventListener('change', () => this.handleFilter());
+        }
+        if (btnResetFilter) {
+            btnResetFilter.addEventListener('click', () => this.handleResetFilter());
+        }
+
         // Form modal controls
         document.getElementById('close-form-modal').addEventListener('click', () => this.modalManager.closeFormModal());
         document.getElementById('btn-cancel-form').addEventListener('click', () => this.modalManager.closeFormModal());
@@ -182,8 +197,56 @@ class DashboardApp {
     }
 
     handleExport() {
-        window.location.href = this.api.getExportUrl();
+        const filterParams = {
+            tahun: this.state.filterTahun,
+            prodi: this.state.filterProdi,
+            search: this.state.searchTerm
+        };
+        window.location.href = this.api.getExportUrl(filterParams);
     }
+
+    handleFilter() {
+        const tahun = document.getElementById('filter-tahun')?.value || '';
+        const prodi = document.getElementById('filter-prodi')?.value || '';
+        this.state.setFilter(tahun, prodi);
+        this._updateResetFilterButton();
+        this.loadData();
+    }
+
+    handleResetFilter() {
+        const filterTahun = document.getElementById('filter-tahun');
+        const filterProdi = document.getElementById('filter-prodi');
+        if (filterTahun) filterTahun.value = '';
+        if (filterProdi) filterProdi.value = '';
+        this.state.resetFilter();
+        this._updateResetFilterButton();
+        this.loadData();
+    }
+
+    _updateResetFilterButton() {
+        const resetBtn = document.getElementById('btn-reset-filter');
+        const exportBtn = document.getElementById('btn-export');
+        const hasFilter = this.state.filterTahun || this.state.filterProdi;
+
+        // Toggle reset button visibility
+        if (resetBtn) {
+            resetBtn.classList.toggle('hidden', !hasFilter);
+        }
+
+        // Toggle export button: active (green) when filter is set, disabled (gray) otherwise
+        if (exportBtn) {
+            if (hasFilter) {
+                exportBtn.disabled = false;
+                exportBtn.title = 'Export data sesuai filter yang aktif';
+                exportBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded transition-all duration-200 text-white bg-green-600 hover:bg-green-700 cursor-pointer';
+            } else {
+                exportBtn.disabled = true;
+                exportBtn.title = 'Pilih filter Tahun atau Prodi untuk mengaktifkan export';
+                exportBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded transition-all duration-200 text-gray-400 bg-gray-200 cursor-not-allowed opacity-60';
+            }
+        }
+    }
+
 
     handlePageChange(page) {
         if (this.state.setPage(page)) {

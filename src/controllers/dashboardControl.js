@@ -17,7 +17,7 @@ const { invalidateStatsCache } = require('../services/cacheService');
 
 // Import utilities
 const { transformMongoLongToString } = require('../utils/mongoUtils');
-const { buildSearchQuery, buildSortObject } = require('../utils/queryBuilder');
+const { buildSearchQuery, buildSortObject, buildFilterQuery, buildCombinedQuery } = require('../utils/queryBuilder');
 const { parsePaginationParams, validatePaginationParams, calculateSkip, buildPaginationObject } = require('../utils/paginationUtils');
 const { validateCategory, validateRequestBody } = require('../utils/validationUtils');
 const { createExcelFile, readExcelFile, deleteTempFile } = require('../utils/excelUtils');
@@ -42,6 +42,8 @@ exports.getAllData = catchAsync(async (req, res, next) => {
     const sortBy = req.query.sortBy || 'createdAt';
     const sortOrder = req.query.sortOrder || 'desc';
     const search = req.query.search || '';
+    const filterTahun = req.query.tahun || '';
+    const filterProdi = req.query.prodi || '';
 
     // Calculate skip menggunakan utility
     const skip = calculateSkip(page, limit);
@@ -50,18 +52,24 @@ exports.getAllData = catchAsync(async (req, res, next) => {
     const modelSchema = models[category].schema.obj;
     const searchQuery = buildSearchQuery(search, modelSchema);
 
+    // Build filter query untuk tahun dan prodi
+    const filterQuery = buildFilterQuery(filterTahun, filterProdi, modelSchema);
+
+    // Gabungkan search dan filter
+    const combinedQuery = buildCombinedQuery(searchQuery, filterQuery);
+
     // Build sort object menggunakan utility
     const sortObject = buildSortObject(sortBy, sortOrder);
 
     // Execute query with pagination
     const [data, totalRecords] = await Promise.all([
         models[category]
-            .find(searchQuery)
+            .find(combinedQuery)
             .sort(sortObject)
             .skip(skip)
             .limit(limit)
             .lean(), // Use lean() for better performance
-        models[category].countDocuments(searchQuery)
+        models[category].countDocuments(combinedQuery)
     ]);
 
     // Transform data menggunakan utility
@@ -176,8 +184,24 @@ exports.exportDataToExcel = catchAsync(async (req, res, next) => {
         return next(new AppError(categoryValidation.error, 400));
     }
 
-    // Get all data without pagination for export
-    const data = await models[category].find({}).lean();
+    // Ambil filter dari query params (terfilter sama seperti tabel)
+    const filterTahun = req.query.tahun || '';
+    const filterProdi = req.query.prodi || '';
+    const search = req.query.search || '';
+
+    // ✅ Guard: Minimal satu filter harus aktif sebelum export diizinkan
+    if (!filterTahun && !filterProdi && !search) {
+        return next(new AppError('Export hanya diizinkan jika filter Tahun, Program Studi, atau pencarian aktif', 400));
+    }
+
+    // Build search & filter query
+    const modelSchema = models[category].schema.obj;
+    const searchQuery = buildSearchQuery(search, modelSchema);
+    const filterQuery = buildFilterQuery(filterTahun, filterProdi, modelSchema);
+    const combinedQuery = buildCombinedQuery(searchQuery, filterQuery);
+
+    // Get filtered data for export
+    const data = await models[category].find(combinedQuery).lean();
 
     if (!data || data.length === 0) {
         return next(new AppError('Tidak ada data untuk diekspor', 404));
@@ -209,9 +233,14 @@ exports.exportDataToExcel = catchAsync(async (req, res, next) => {
         return cleanItem;
     });
 
+    // Build filename with filter info
+    let filterSuffix = '';
+    if (filterTahun) filterSuffix += `_tahun${filterTahun}`;
+    if (filterProdi) filterSuffix += `_${filterProdi.replace(/\s+/g, '-')}`;
+
     // Create Excel file
     const filePath = await createExcelFile(excelData, category);
-    const filename = `${category}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    const filename = `${category}${filterSuffix}_${new Date().toISOString().split('T')[0]}.xlsx`;
 
     // Send file as download
     res.download(filePath, filename, async (err) => {

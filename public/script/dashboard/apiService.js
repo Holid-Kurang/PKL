@@ -87,8 +87,13 @@ class ApiService {
         return await response.json();
     }
 
-    getExportUrl() {
-        return `${this.baseUrl}/export`;
+    getExportUrl(filterParams = {}) {
+        const params = new URLSearchParams();
+        if (filterParams.tahun) params.set('tahun', filterParams.tahun);
+        if (filterParams.prodi) params.set('prodi', filterParams.prodi);
+        if (filterParams.search) params.set('search', filterParams.search);
+        const qs = params.toString();
+        return `${this.baseUrl}/export${qs ? '?' + qs : ''}`;
     }
 
     getTemplateUrl() {

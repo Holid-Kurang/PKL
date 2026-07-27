@@ -56,7 +56,70 @@ const buildSortObject = (sortBy = 'createdAt', sortOrder = 'desc') => {
     return { [sortBy]: order };
 };
 
+/**
+ * Build filter query untuk tahun dan prodi
+ * @param {String|Number} tahun - Filter tahun (opsional)
+ * @param {String} prodi - Filter prodi (opsional)
+ * @param {Object} modelSchema - Mongoose model schema object
+ * @returns {Object} MongoDB filter query object
+ */
+const buildFilterQuery = (tahun, prodi, modelSchema) => {
+    const filterConditions = {};
+
+    // Cari field yang berisi 'tahun' (case-insensitive) dengan tipe Number atau String
+    if (tahun) {
+        const tahunField = Object.keys(modelSchema).find(key =>
+            key.toLowerCase().includes('tahun')
+        );
+        if (tahunField) {
+            const fieldType = modelSchema[tahunField].type || modelSchema[tahunField];
+            if (fieldType === Number) {
+                filterConditions[tahunField] = Number(tahun);
+            } else {
+                filterConditions[tahunField] = String(tahun);
+            }
+        }
+    }
+
+    // Cari field yang berisi 'prodi' (case-insensitive) dengan tipe String
+    if (prodi) {
+        const prodiField = Object.keys(modelSchema).find(key =>
+            key.toLowerCase().includes('prodi')
+        );
+        if (prodiField) {
+            filterConditions[prodiField] = prodi;
+        }
+    }
+
+    return filterConditions;
+};
+
+/**
+ * Gabungkan search query dan filter query
+ * @param {Object} searchQuery - Query dari buildSearchQuery
+ * @param {Object} filterQuery - Query dari buildFilterQuery
+ * @returns {Object} Combined MongoDB query
+ */
+const buildCombinedQuery = (searchQuery, filterQuery) => {
+    const hasSearch = searchQuery && Object.keys(searchQuery).length > 0;
+    const hasFilter = filterQuery && Object.keys(filterQuery).length > 0;
+
+    if (!hasSearch && !hasFilter) return {};
+    if (!hasFilter) return searchQuery;
+    if (!hasSearch) return filterQuery;
+
+    // Gabungkan $or dari search dengan filter lainnya menggunakan $and
+    return {
+        $and: [
+            searchQuery,
+            filterQuery
+        ]
+    };
+};
+
 module.exports = {
     buildSearchQuery,
-    buildSortObject
+    buildSortObject,
+    buildFilterQuery,
+    buildCombinedQuery
 };

@@ -17,6 +17,8 @@ class DashboardState {
         this.totalPages = 0;
         this.searchTerm = '';
         this.searchDebounceTimer = null;
+        this.filterTahun = '';
+        this.filterProdi = '';
     }
 
     setData(data) {
@@ -58,13 +60,28 @@ class DashboardState {
         this.currentPage = 1;
     }
 
+    setFilter(tahun, prodi) {
+        this.filterTahun = tahun || '';
+        this.filterProdi = prodi || '';
+        this.currentPage = 1;
+    }
+
+    resetFilter() {
+        this.filterTahun = '';
+        this.filterProdi = '';
+        this.currentPage = 1;
+    }
+
     getQueryParams() {
-        return {
+        const params = {
             page: this.currentPage,
             limit: this.itemsPerPage,
             sortBy: this.sortColumn || 'createdAt',
             sortOrder: this.sortDirection,
             search: this.searchTerm
         };
+        if (this.filterTahun) params.tahun = this.filterTahun;
+        if (this.filterProdi) params.prodi = this.filterProdi;
+        return params;
     }
 }

@@ -36,11 +36,6 @@
                                 <span class="material-icons-outlined">add</span>
                                 <%= translate('dashboard.addButton') %>
                             </button>
-                            <button id="btn-export"
-                                class="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-green-600 rounded hover:bg-green-700">
-                                <span class="material-icons-outlined">download</span>
-                                <%= translate('dashboard.exportButton') %>
-                            </button>
                             <button id="btn-import"
                                 class="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-blue-600 rounded hover:bg-blue-700">
                                 <span class="material-icons-outlined">upload</span>
@@ -56,6 +51,56 @@
                                 <span class="material-icons-outlined">search</span>
                             </button>
                         </div>
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="flex flex-wrap items-center gap-3 p-3 mb-5 rounded-lg bg-gray-100 border border-gray-200">
+                        <span class="flex items-center gap-1 text-sm font-semibold text-gray-600">
+                            <span class="material-icons-outlined text-base">filter_list</span>
+                            Filter:
+                        </span>
+
+                        <!-- Filter Tahun -->
+                        <div class="flex items-center gap-2">
+                            <label for="filter-tahun" class="text-xs font-medium text-gray-500 whitespace-nowrap">Tahun</label>
+                            <select id="filter-tahun"
+                                class="px-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo bg-white">
+                                <option value="">Semua Tahun</option>
+                                <% for (let y = new Date().getFullYear(); y >= new Date().getFullYear() - 15; y--) { %>
+                                <option value="<%= y %>"><%= y %></option>
+                                <% } %>
+                            </select>
+                        </div>
+
+                        <!-- Filter Prodi -->
+                        <div class="flex items-center gap-2">
+                            <label for="filter-prodi" class="text-xs font-medium text-gray-500 whitespace-nowrap">Program Studi</label>
+                            <select id="filter-prodi"
+                                class="px-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo bg-white">
+                                <option value="">Semua Prodi</option>
+                                <% JSON.parse(prodiOptions).forEach(function(prodi) { %>
+                                <option value="<%= prodi %>"><%= prodi %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <!-- Reset Filter button (hidden by default) -->
+                        <button id="btn-reset-filter"
+                            class="hidden flex items-center gap-1 px-3 py-1.5 text-xs text-white bg-red-500 rounded hover:bg-red-600 transition-colors">
+                            <span class="material-icons-outlined text-sm">close</span>
+                            Reset Filter
+                        </button>
+
+                        <!-- Export Button (disabled until filter active) -->
+                        <button id="btn-export"
+                            disabled
+                            title="Pilih filter Tahun atau Prodi untuk mengaktifkan export"
+                            class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded transition-all duration-200
+                                   text-gray-400 bg-gray-200 cursor-not-allowed
+                                   disabled:opacity-60">
+                            <span class="material-icons-outlined text-base">download</span>
+                            <%= translate('dashboard.exportButton') %>
+                        </button>
                     </div>
 
                     <!-- Pagination -->
