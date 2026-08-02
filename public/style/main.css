@@ -434,9 +434,6 @@
   .ml-3 {
     margin-left: calc(var(--spacing) * 3);
   }
-  .ml-auto {
-    margin-left: auto;
-  }
   .block {
     display: block;
   }
@@ -569,6 +566,9 @@
   .w-\[30\%\] {
     width: 30%;
   }
+  .w-\[80px\] {
+    width: 80px;
+  }
   .w-fit {
     width: fit-content;
   }
@@ -577,6 +577,9 @@
   }
   .max-w-2xl {
     max-width: var(--container-2xl);
+  }
+  .max-w-\[80px\] {
+    max-width: 80px;
   }
   .max-w-sm {
     max-width: var(--container-sm);

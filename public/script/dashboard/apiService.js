@@ -101,13 +101,16 @@ class ApiService {
     }
 
     async importData(formData) {
-        // For multipart/form-data, add CSRF token if not already present
-        if (!formData.has('_csrf') && this.csrfToken) {
-            formData.append('_csrf', this.csrfToken);
+        // Build headers with CSRF token — do NOT set Content-Type so the
+        // browser can set multipart/form-data with the correct boundary itself.
+        const headers = {};
+        if (this.csrfToken) {
+            headers['X-CSRF-Token'] = this.csrfToken;
         }
 
         const response = await fetch(`${this.baseUrl}/import`, {
             method: 'POST',
+            headers,
             body: formData
         });
 

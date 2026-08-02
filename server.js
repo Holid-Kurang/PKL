@@ -119,8 +119,19 @@ app.use('/libs', express.static(path.join(__dirname, 'node_modules')));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src", "views"));
 app.use(express.static(path.join(__dirname, "public"))); // Set folder public untuk file statis
-app.use(express.json()); // Middleware untuk parsing JSON
-app.use(express.urlencoded({ extended: false })); // Middleware untuk parsing x-www-form-urlencoded
+// Skip body-parser for multipart/form-data — multer handles those
+app.use((req, res, next) => {
+    if (req.headers['content-type']?.startsWith('multipart/form-data')) {
+        return next();
+    }
+    express.json()(req, res, next);
+});
+app.use((req, res, next) => {
+    if (req.headers['content-type']?.startsWith('multipart/form-data')) {
+        return next();
+    }
+    express.urlencoded({ extended: false })(req, res, next);
+});
 app.use(cookieParser()); // Middleware untuk parsing cookies
 app.use(methodOverride('_method'));
 
